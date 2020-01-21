@@ -149,35 +149,35 @@ class Prince
         $this->scripts = '';
     }
     
-    //Add a file attachment that will be attached to the PDF file
-    //filePath: The filename of the file attachment.
+    // Add a file attachment that will be attached to the PDF file
+    // filePath: The filename of the file attachment.
     public function addFileAttachment($filePath)
     {
         $this->fileAttachments .= '--attach=' . '"' . $filePath .  '" ';
     }
     
-    //Clear all of the file attachments.
+    // Clear all of the file attachments.
     public function clearFileAttachments()
     {
         $this->fileAttachments = '';
     }
     
-    //Specify the license file.
-    //file: The filename of the license file.
+    // Specify the license file.
+    // file: The filename of the license file.
     public function setLicenseFile($file)
     {
         $this->licenseFile = $file;
     }
     
-    //Specify the license key.
-    //key: The license key
+    // Specify the license key.
+    // key: The license key
     public function setLicenseKey($key)
     {
         $this->licenseKey = $key;
     }
     
-    //Specify the input type of the document.
-    //inputType: Can take a value of : "xml", "html" or "auto".
+    // Specify the input type of the document.
+    // inputType: Can take a value of : "xml", "html" or "auto".
     public function setInputType($inputType)
     {
         $this->inputType = $inputType;
@@ -206,25 +206,25 @@ class Prince
 
     // Specify a file that Prince should use to log error/warning messages.
     // logFile: The filename that Prince should use to log error/warning
-    //      messages, or '' to disable logging.
+    //          messages, or '' to disable logging.
     public function setLog($logFile)
     {
         $this->logFile = $logFile;
     }
 
-    //Specify whether to log informative messages.
+    // Specify whether to log informative messages.
     public function setVerbose($verbose)
     {
         $this->verbose = $verbose;
     }
 
-    //Specify whether to log debug messages.
+    // Specify whether to log debug messages.
     public function setDebug($debug)
     {
         $this->debug = $debug;  
     }
 
-    //Specify whether to warn about CSS.
+    // Specify whether to warn about CSS.
     public function setNoWarnCss($noWarnCss)
     {
         $this->noWarnCss = $noWarnCss;
@@ -252,7 +252,7 @@ class Prince
         $this->xmlExternalEntities = $xmlExternalEntities ;
     }
 
-    //Specify whether to disable access to local files.
+    // Specify whether to disable access to local files.
     public function setNoLocalFiles($noLocalFiles)
     {
         $this->noLocalFiles = $noLocalFiles;    
@@ -276,7 +276,7 @@ class Prince
         $this->noNetwork = $noNetwork;
     }
 
-    //Specify HTTP authentication methods. (basic, digest, ntlm, negotiate)
+    // Specify HTTP authentication methods. (basic, digest, ntlm, negotiate)
     public function setAuthMethod($authMethod)
     {
     	  if(strcasecmp($authMethod, 'basic') == 0)
@@ -301,25 +301,25 @@ class Prince
    	  }
     }
     
-    //Specify username for HTTP authentication.
+    // Specify username for HTTP authentication.
     public function setAuthUser($authUser)
     {
     	 $this->authUser = $this->cmdlineArgEscape($authUser);
     }
     
-    //Specify password for HTTP authentication.
+    // Specify password for HTTP authentication.
     public function setAuthPassword($authPassword)
     {
     	 $this->authPassword = $this->cmdlineArgEscape($authPassword);
     }
     
-    //Only send USER:PASS to this server.
+    // Only send USER:PASS to this server.
     public function setAuthServer($authServer)
     {
        $this->authServer = $authServer;
     }
     
-    //Only send USER:PASS for this scheme. (HTTP, HTTPS)
+    // Only send USER:PASS for this scheme. (HTTP, HTTPS)
     public function setAuthScheme($authScheme)
     {
     	  if(strcasecmp($authScheme, 'http') == 0)
@@ -336,74 +336,74 @@ class Prince
     	  }
     }
     
-    //Do not authenticate with named servers until asked.
+    // Do not authenticate with named servers until asked.
     public function setNoAuthPreemptive($noAuthPreemptive)
     {
     	 $this->noAuthPreemptive = $noAuthPreemptive;
     }
 
-    //Specify the URL for the HTTP proxy server, if needed.
-    //proxy: The URL for the HTTP proxy server.
+    // Specify the URL for the HTTP proxy server, if needed.
+    // proxy: The URL for the HTTP proxy server.
     public function setHttpProxy($proxy)
     {
         $this->httpProxy = $proxy;
     }
     
-    //Specify the HTTP timeout in seconds.
+    // Specify the HTTP timeout in seconds.
     public function setHttpTimeout($timeout)
     {
         $this->httpTimeout = $timeout;    
     }
 
-    //Specify a Set-Cookie header value.
+    // Specify a Set-Cookie header value.
     public function setCookie($cookie)
     {
         $this->cookie = $cookie;
     }
 
-    //Specify a file containing HTTP cookies.
+    // Specify a file containing HTTP cookies.
     public function setCookieJar($cookieJar)
     {
         $this->cookieJar = $cookieJar;
     }
 
-    //Specify an SSL certificate file.
+    // Specify an SSL certificate file.
     public function setSslCaCert($sslCaCert)
     {
         $this->sslCaCert = $sslCaCert;
     }
 
-    //Specify an SSL certificate directory.
+    // Specify an SSL certificate directory.
     public function setSslCaPath($sslCaPath)
     {
         $this->sslCaPath = $sslCaPath;
     }
 
-    //Specify an SSL/TLS version to use.
+    // Specify an SSL/TLS version to use.
     public function setSslVersion($sslVersion)
     {
         $this->sslVersion = $sslVersion;
     }
 
-    //Specify whether to disable SSL verification.
-    //insecure: If set to true, SSL verification is disabled. (not recommended)
+    // Specify whether to disable SSL verification.
+    // insecure: If set to true, SSL verification is disabled. (not recommended)
     public function setInsecure($insecure)
     {
         $this->insecure = $insecure;
     }
     
-    //Specify whether to disable disable parallel downloads.
-    //noParallelDownloads: If set to true, parallel downloads are disabled.
+    // Specify whether to disable disable parallel downloads.
+    // noParallelDownloads: If set to true, parallel downloads are disabled.
     public function setNoParallelDownloads($noParallelDownloads)
     {
         $this->noParallelDownloads = $noParallelDownloads;  
     }
 
-    //Specify the root directory for absolute filenames. This can be used
-    //when converting a local file that uses absolute paths to refer to web
-    //resources. For example, /images/logo.jpg can be 
-    //rewritten to /usr/share/images/logo.jpg by specifying "/usr/share" as the root.
-    //fileRoot: The path to prepend to absolute filenames.
+    // Specify the root directory for absolute filenames. This can be used
+    // when converting a local file that uses absolute paths to refer to web
+    // resources. For example, /images/logo.jpg can be
+    // rewritten to /usr/share/images/logo.jpg by specifying "/usr/share" as the root.
+    // fileRoot: The path to prepend to absolute filenames.
     public function setFileRoot($fileRoot)
     {
         $this->fileRoot = $fileRoot;
@@ -433,7 +433,7 @@ class Prince
         $this->noArtificialFonts = $noArtificialFonts;
     }
 
-    //Specify whether to use force identity encoding.
+    // Specify whether to use force identity encoding.
     public function setForceIdentityEncoding($forceIdentityEncoding)
     {
         $this->forceIdentityEncoding = $forceIdentityEncoding;
@@ -447,22 +447,22 @@ class Prince
         $this->compress = $compress;
     }
 
-    //Specify the ICC profile to use.
-    //Also optionally specify whether to convert colors to output intent color space.
-    //$pdfOutputIntent is the ICC profile to be used.
+    // Specify the ICC profile to use.
+    // Also optionally specify whether to convert colors to output intent color space.
+    // $pdfOutputIntent is the ICC profile to be used.
     public function setPDFOutputIntent($pdfOutputIntent, $convertColors = false)
     {
         $this->pdfOutputIntent = $pdfOutputIntent;  
         $this->convertColors = $convertColors;  
     }
 
-    //Specify fallback ICC profile for uncalibrated CMYK.
+    // Specify fallback ICC profile for uncalibrated CMYK.
     public function setFallbackCmykProfile($fallbackCmykProfile)
     {
         $this->fallbackCmykProfile = $fallbackCmykProfile;
     }
 
-    //Specify the PDF profile to use.
+    // Specify the PDF profile to use.
     public function setPDFProfile($pdfProfile)
     {
         $this->pdfProfile = $pdfProfile;
@@ -486,43 +486,43 @@ class Prince
         $this->pdfAuthor = $pdfAuthor;
     }
 
-    //Specify the document keywords for PDF metadata.
+    // Specify the document keywords for PDF metadata.
     public function setPDFKeywords($pdfKeywords)
     {
         $this->pdfKeywords = $pdfKeywords;
     }
 
-    //Specify the document creator for PDF metadata.
+    // Specify the document creator for PDF metadata.
     public function setPDFCreator($pdfCreator)
     {
         $this->pdfCreator = $pdfCreator;
     }
    
-    //Specify the media type (eg. print, screen).
+    // Specify the media type (eg. print, screen).
     public function setMedia($media)
     {
         $this->media = $media;
     }
 
-    //Specify the page size (eg. A4).
+    // Specify the page size (eg. A4).
     public function setPageSize($pageSize)
     {
     	 $this->pageSize = $pageSize;
     }
     
-    //Specify the page margin (eg. 20mm).
+    // Specify the page margin (eg. 20mm).
     public function setPageMargin($pageMargin)
     {
     	 $this->pageMargin = $pageMargin;
     }
 
-    //Specify whether to ignore author style sheets.
+    // Specify whether to ignore author style sheets.
     public function setNoAuthorStyle($noAuthorStyle)
     {
         $this->noAuthorStyle = $noAuthorStyle;
     }
 
-    //Specify whether to ignore default style sheets.
+    // Specify whether to ignore default style sheets.
     public function setNoDefaultStyle($noDefaultStyle)
     {
         $this->noDefaultStyle = $noDefaultStyle;
@@ -588,7 +588,7 @@ class Prince
     }
     
   
-    //Set other options.
+    // Set other options.
     public function setOptions($options)
     {
     	  $this->options = $options;
@@ -627,7 +627,7 @@ class Prince
         return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
     }
     
-    //Convert multiple XML or HTML files to a PDF file.
+    // Convert multiple XML or HTML files to a PDF file.
     // xmlPaths: An array of the input XML or HTML documents.
     // msgs: An optional array in which to return error and warning messages.
     // dats: An optional array in which to return data messages.
@@ -1138,11 +1138,11 @@ class Prince
         return $this->cmdlineArgEscape2($this->cmdlineArgEscape1($argStr));
     }
         
-    //In the input string $argStr, a double quote with zero or more preceding backslash(es)
-    //will be replaced with: n*backslash + doublequote => (2*n+1)*backslash + doublequote
+    // In the input string $argStr, a double quote with zero or more preceding backslash(es)
+    // will be replaced with: n*backslash + doublequote => (2*n+1)*backslash + doublequote
     private function cmdlineArgEscape1($argStr)
     {
-        //chr(34) is character double quote ( " ), chr(92) is character backslash ( \ ).
+        // chr(34) is character double quote ( " ), chr(92) is character backslash ( \ ).
         $len = strlen($argStr);
         
         $outputStr = '';
@@ -1184,10 +1184,10 @@ class Prince
         return $outputStr;
     }
         
-    //Double the number of trailing backslash(es):      n*trailing backslash => (2*n)*trailing backslash.
+    // Double the number of trailing backslash(es): n*trailing backslash => (2*n)*trailing backslash.
     private function cmdlineArgEscape2($argStr)
     {
-        //chr(92) is character backslash ( \ ).
+        // chr(92) is character backslash ( \ ).
         $len = strlen($argStr);
         
         $numTrailingSlashes = 0;
