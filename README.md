@@ -1,20 +1,22 @@
 Prince PHP wrapper
 ==================
 
-The prince.php file defines a class called Prince that contains methods
+The `prince.php` file defines a class called `Prince` that contains methods
 that can be called to convert HTML and XML documents into PDF.
 
-Note that the Prince class is written for PHP 5, and requires
+Note that the `Prince` class is written for PHP 5, and requires
 modification to work with PHP 4.
 
 Constructor
 -----------
 
-When instantiating the Prince class, pass in the full path of the Prince
+When instantiating the `Prince` class, pass in the full path of the Prince
 executable to the constructor as a string argument. For example, on
 Linux or MacOS X:
 
-    $prince = new Prince('/usr/bin/prince');
+```php
+$prince = new Prince('/usr/bin/prince');
+```
 
 On Windows, be sure to specify the path to the `prince.exe` file located
 within the `Engine\bin` subfolder of the Prince installation.
@@ -77,7 +79,7 @@ Configuration methods
 ------------------------------------------------------------------------
 
 <a name="convert_file"></a>
-```
+```php
 public function convert_file($xmlPath, &$msgs = array())
 ```
 
@@ -101,7 +103,7 @@ successfully.
 ------------------------------------------------------------------------
 
 <a name="convert_file_to_file"></a>
-```
+```php
 public function convert_file_to_file($xmlPath, $pdfPath, &$msgs = array())
 ```
 
@@ -126,7 +128,7 @@ was generated successfully.
 ------------------------------------------------------------------------
 
 <a name="convert_multiple_files"></a>
-```
+```php
 public function convert_multiple_files($xmlPaths, $pdfPath, &$msgs = array())
 ```
 
@@ -151,7 +153,7 @@ file was generated successfully.
 ------------------------------------------------------------------------
 
 <a name="convert_string_to_file"></a>
-```
+```php
 public function convert_string_to_file($xmlString, $pdfPath, &$msgs = array())
 ```
 
@@ -176,7 +178,7 @@ was generated successfully.
 ------------------------------------------------------------------------
 
 <a name="convert_file_to_passthru"></a>
-```
+```php
 public function convert_file_to_passthru($xmlPath, &$msgs = array())
 ```
 
@@ -199,8 +201,10 @@ was generated successfully.
 Note that to have the browser correctly display the PDF output, the
 following two lines will be needed before the convert method is called:
 
-    header('Content-Type: application/pdf');
-    header('Content-Disposition: inline; filename="foo.pdf"');
+```php
+header('Content-Type: application/pdf');
+header('Content-Disposition: inline; filename="foo.pdf"');
+```
 
 You may also specify `attachment` for the Content-Disposition header
 instead of `inline`, so that the browser will prompt the user to save
@@ -209,7 +213,7 @@ the PDF file instead of displaying it.
 ------------------------------------------------------------------------
 
 <a name="convert_multiple_files_to_passthru"></a>
-```
+```php
 public function convert_multiple_files_to_passthru($xmlPaths, &$msgs = array())
 ```
 
@@ -232,8 +236,10 @@ PDF file was generated successfully.
 Note that to have the browser correctly display the PDF output, the
 following two lines will be needed before the convert method is called:
 
-    header('Content-Type: application/pdf');
-    header('Content-Disposition: inline; filename="foo.pdf"');
+```php
+header('Content-Type: application/pdf');
+header('Content-Disposition: inline; filename="foo.pdf"');
+```
 
 You may also specify `attachment` for the Content-Disposition header
 instead of `inline`, so that the browser will prompt the user to save
@@ -242,7 +248,7 @@ the PDF file instead of displaying it.
 ------------------------------------------------------------------------
 
 <a name="convert_string_to_passthru"></a>
-```
+```php
 public function convert_string_to_passthru($xmlString, &$msgs = array())
 ```
 
@@ -265,8 +271,10 @@ PDF file was generated successfully.
 Note that to have the browser correctly display the PDF output, the
 following two lines will be needed before the convert method is called:
 
-    header('Content-Type: application/pdf');
-    header('Content-Disposition: inline; filename="foo.pdf"');
+```php
+header('Content-Type: application/pdf');
+header('Content-Disposition: inline; filename="foo.pdf"');
+```
 
 You may also specify `attachment` for the Content-Disposition header
 instead of `inline`, so that the browser will prompt the user to save
@@ -275,7 +283,7 @@ the PDF file instead of displaying it.
 ------------------------------------------------------------------------
 
 <a name="addstylesheet"></a>
-```
+```php
 public function addStyleSheet($cssPath)
 ```
 
@@ -290,7 +298,7 @@ function.
 ------------------------------------------------------------------------
 
 <a name="clearstylesheets"></a>
-```
+```php
 public function clearStyleSheets()
 ```
 
@@ -300,7 +308,7 @@ Clear all of the CSS style sheets accumulated by calling
 ------------------------------------------------------------------------
 
 <a name="addscript"></a>
-```
+```php
 public function addScript($jsPath)
 ```
 
@@ -314,7 +322,7 @@ scripts. This function can be called before calling a convert function.
 ------------------------------------------------------------------------
 
 <a name="clearscripts"></a>
-```
+```php
 public function clearScripts()
 ```
 
@@ -323,7 +331,7 @@ Clear all of the scripts accumulated by calling `addScript`.
 ------------------------------------------------------------------------
 
 <a name="addfileattachment"></a>
-```
+```php
 public function addFileAttachment($filePath)
 ```
 
@@ -337,7 +345,7 @@ attachments.
 ------------------------------------------------------------------------
 
 <a name="clearfileattachments"></a>
-```
+```php
 public function clearFileAttachments()
 ```
 
@@ -347,7 +355,7 @@ Clear all of the file attachments accumulated by calling
 ------------------------------------------------------------------------
 
 <a name="setlicensefile"></a>
-```
+```php
 public function setLicenseFile($file)
 ```
 
@@ -359,7 +367,7 @@ Specify the license file.
 ------------------------------------------------------------------------
 
 <a name="setlicensekey"></a>
-```
+```php
 public function  setLicenseKey($key)
 ```
 
@@ -371,7 +379,7 @@ Specify the license key.
 ------------------------------------------------------------------------
 
 <a name="setinputtype"></a>
-```
+```php
 public function setInputType($inputType)
 ```
 
@@ -383,7 +391,7 @@ Specify the input type of the document.
 ------------------------------------------------------------------------
 
 <a name="sethtml"></a>
-```
+```php
 public function setHTML($html)
 ```
 
@@ -395,7 +403,7 @@ Specify whether documents should be parsed as HTML or XML/XHTML.
 ------------------------------------------------------------------------
 
 <a name="setjavascript"></a>
-```
+```php
 public function setJavaScript($js)
 ```
 
@@ -407,7 +415,7 @@ Specify whether JavaScript found in documents should be run.
 ------------------------------------------------------------------------
 
 <a name="setlog"></a>
-```
+```php
 public function setLog($logFile)
 ```
 
@@ -420,7 +428,7 @@ Specify a file that Prince should use to log error/warning messages.
 ------------------------------------------------------------------------
 
 <a name="setbaseurl"></a>
-```
+```php
 public function setBaseURL($baseURL)
 ```
 
@@ -432,7 +440,7 @@ Specify the base URL of the input document.
 ------------------------------------------------------------------------
 
 <a name="setxinclude"></a>
-```
+```php
 public function setXInclude($xinclude)
 ```
 
@@ -446,7 +454,7 @@ unless explicitly disabled.
 ------------------------------------------------------------------------
 
 <a name="sethttpuser"></a>
-```
+```php
 public function setHttpUser($user)
 ```
 
@@ -458,7 +466,7 @@ Specify a username to use when fetching remote resources over HTTP.
 ------------------------------------------------------------------------
 
 <a name="sethttppassword"></a>
-```
+```php
 public function setHttpPassword($password)
 ```
 
@@ -470,7 +478,7 @@ Specify a password to use when fetching remote resources over HTTP.
 ------------------------------------------------------------------------
 
 <a name="sethttpproxy"></a>
-```
+```php
 public function setHttpProxy($proxy)
 ```
 
@@ -482,7 +490,7 @@ Specify the URL for the HTTP proxy server, if needed.
 ------------------------------------------------------------------------
 
 <a name="sethttptimeout"></a>
-```
+```php
 public function setHttpTimeout($timeout)
 ```
 
@@ -494,7 +502,7 @@ Specify the timeout for HTTP requests.
 ------------------------------------------------------------------------
 
 <a name="setinsecure"></a>
-```
+```php
 public function setInsecure($insecure)
 ```
 
@@ -506,7 +514,7 @@ Specify whether to disable SSL verification.
 ------------------------------------------------------------------------
 
 <a name="setfileroot"></a>
-```
+```php
 public function setFileRoot($fileRoot)
 ```
 
@@ -521,7 +529,7 @@ resources. For example, /images/logo.jpg can be rewritten to
 ------------------------------------------------------------------------
 
 <a name="setembedfonts"></a>
-```
+```php
 public function setEmbedFonts($embedFonts)
 ```
 
@@ -534,7 +542,7 @@ will be embedded by default unless explicitly disabled.
 ------------------------------------------------------------------------
 
 <a name="setsubsetfonts"></a>
-```
+```php
 public function setSubsetFonts($subsetFonts)
 ```
 
@@ -547,7 +555,7 @@ Fonts will be subset by default unless explicitly disabled.
 ------------------------------------------------------------------------
 
 <a name="setnoartificialfonts"></a>
-```
+```php
 public function setNoArtificialFonts($noArtificialFonts)
 ```
 
@@ -560,7 +568,7 @@ necessary. Artificial fonts are enabled by default.
 ------------------------------------------------------------------------
 
 <a name="setauthmethod"></a>
-```
+```php
 public function setAuthMethod($authMethod)
 ```
 
@@ -572,7 +580,7 @@ Specify HTTP authentication methods. (basic, digest, ntlm, negotiate)
 ------------------------------------------------------------------------
 
 <a name="setauthuser"></a>
-```
+```php
 public function setAuthUser($authUser)
 ```
 
@@ -584,7 +592,7 @@ Specify username for HTTP authentication.
 ------------------------------------------------------------------------
 
 <a name="setauthpassword"></a>
-```
+```php
 public function setAuthPassword($authPassword)
 ```
 
@@ -596,7 +604,7 @@ Specify password for HTTP authentication.
 ------------------------------------------------------------------------
 
 <a name="setauthserver"></a>
-```
+```php
 public function setAuthServer($authServer)
 ```
 
@@ -608,7 +616,7 @@ Only send USER:PASS to this server.
 ------------------------------------------------------------------------
 
 <a name="setauthscheme"></a>
-```
+```php
 public function setAuthScheme($authScheme)
 ```
 
@@ -620,7 +628,7 @@ Only send USER:PASS for this scheme. (HTTP, HTTPS)
 ------------------------------------------------------------------------
 
 <a name="setnoauthpreemptive"></a>
-```
+```php
 public function setNoAuthPreemptive($noAuthPreemptive)
 ```
 
@@ -632,7 +640,7 @@ Do not authenticate with named servers until asked.
 ------------------------------------------------------------------------
 
 <a name="setpagesize"></a>
-```
+```php
 public function setPageSize($pageSize)
 ```
 
@@ -644,7 +652,7 @@ Specify the page size (eg. A4).
 ------------------------------------------------------------------------
 
 <a name="setpagemargin"></a>
-```
+```php
 public function setPageMargin($pageMargin)
 ```
 
@@ -656,7 +664,7 @@ Specify the page margin (eg. 20mm).
 ------------------------------------------------------------------------
 
 <a name="setcompress"></a>
-```
+```php
 public function setCompress($compress)
 ```
 
@@ -669,7 +677,7 @@ Compression will be applied by default unless explicitly disabled.
 ------------------------------------------------------------------------
 
 <a name="setpdftitle"></a>
-```
+```php
 public function setPDFTitle($pdfTitle)
 ```
 
@@ -678,7 +686,7 @@ Specify the document title for PDF metadata.
 ------------------------------------------------------------------------
 
 <a name="setpdfsubject"></a>
-```
+```php
 public function setPDFSubject($pdfSubject)
 ```
 
@@ -687,7 +695,7 @@ Specify the document subject for PDF metadata.
 ------------------------------------------------------------------------
 
 <a name="setpdfauthor"></a>
-```
+```php
 public function setPDFAuthor($pdfAuthor)
 ```
 
@@ -696,7 +704,7 @@ Specify the document author for PDF metadata.
 ------------------------------------------------------------------------
 
 <a name="setpdfkeywords"></a>
-```
+```php
 public function setPDFKeywords($pdfKeywords)
 ```
 
@@ -705,7 +713,7 @@ Specify the document keywords for PDF metadata.
 ------------------------------------------------------------------------
 
 <a name="setpdfcreator"></a>
-```
+```php
 public function setPDFCreator($pdfCreator)
 ```
 
@@ -714,7 +722,7 @@ Specify the document creator for PDF metadata.
 ------------------------------------------------------------------------
 
 <a name="setencrypt"></a>
-```
+```php
 public function setEncrypt($encrypt)
 ```
 
@@ -727,7 +735,7 @@ Encryption will not be applied by default unless explicitly enabled.
 ------------------------------------------------------------------------
 
 <a name="setencryptinfo"></a>
-```
+```php
 public function setEncryptInfo($keyBits, $userPassword, $ownerPassword,
         $disallowPrint = false, $disallowModify = false,
         $disallowCopy = false, $disallowAnnotate = false)
@@ -762,7 +770,7 @@ information to be applied.
 ------------------------------------------------------------------------
 
 <a name="setoptions"></a>
-```
+```php
 public function setOptions($options)
 ```
 
@@ -774,4 +782,3 @@ Set other options.
 ------------------------------------------------------------------------
 
 Copyright © 2005-2020 YesLogic Pty. Ltd.
-
