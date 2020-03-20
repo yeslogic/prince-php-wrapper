@@ -1,8 +1,9 @@
 <?php
-
 // Prince - PHP interface
 // Copyright 2005-2020 YesLogic Pty. Ltd.
 // https://www.princexml.com
+
+namespace Prince;
 
 class Prince
 {
@@ -148,34 +149,34 @@ class Prince
     {
         $this->scripts = '';
     }
-    
+
     // Add a file attachment that will be attached to the PDF file
     // filePath: The filename of the file attachment.
     public function addFileAttachment($filePath)
     {
         $this->fileAttachments .= '--attach=' . '"' . $filePath .  '" ';
     }
-    
+
     // Clear all of the file attachments.
     public function clearFileAttachments()
     {
         $this->fileAttachments = '';
     }
-    
+
     // Specify the license file.
     // file: The filename of the license file.
     public function setLicenseFile($file)
     {
         $this->licenseFile = $file;
     }
-    
+
     // Specify the license key.
     // key: The license key
     public function setLicenseKey($key)
     {
         $this->licenseKey = $key;
     }
-    
+
     // Specify the input type of the document.
     // inputType: Can take a value of : "xml", "html" or "auto".
     public function setInputType($inputType)
@@ -183,7 +184,7 @@ class Prince
         $this->inputType = $inputType;
     }
 
-    // Specify whether JavaScript found in documents should be run. 
+    // Specify whether JavaScript found in documents should be run.
     // js: True if document scripts should be run.
     public function setJavaScript($js)
     {
@@ -221,7 +222,7 @@ class Prince
     // Specify whether to log debug messages.
     public function setDebug($debug)
     {
-        $this->debug = $debug;  
+        $this->debug = $debug;
     }
 
     // Specify whether to warn about CSS.
@@ -255,7 +256,7 @@ class Prince
     // Specify whether to disable access to local files.
     public function setNoLocalFiles($noLocalFiles)
     {
-        $this->noLocalFiles = $noLocalFiles;    
+        $this->noLocalFiles = $noLocalFiles;
     }
 
     // Add a mapping of URL prefix to a local directory.
@@ -269,7 +270,7 @@ class Prince
     {
         $this->remaps = '';
     }
- 
+
     // Specify thether to disable network access.
     public function setNoNetwork($noNetwork)
     {
@@ -279,67 +280,67 @@ class Prince
     // Specify HTTP authentication methods. (basic, digest, ntlm, negotiate)
     public function setAuthMethod($authMethod)
     {
-    	  if(strcasecmp($authMethod, 'basic') == 0)
-    	  {
-   	  	$this->authMethod = 'basic';
-   	  }
-   	  else if(strcasecmp($authMethod, 'digest') == 0)
-   	  {
-   	  	$this->authMethod = 'digest';
-   	  }
-   	  else if(strcasecmp($authMethod, 'ntlm') == 0)
-   	  {
-   	  	$this->authMethod = 'ntlm';
-   	  } 
-   	  else if(strcasecmp($authMethod, 'negotiate') == 0)
-   	  {
-   	  	$this->authMethod = 'negotiate';
-   	  }
-   	  else
-   	  {
-   	  	$this->authMethod = '';
-   	  }
+          if(strcasecmp($authMethod, 'basic') == 0)
+          {
+        $this->authMethod = 'basic';
+      }
+      else if(strcasecmp($authMethod, 'digest') == 0)
+      {
+        $this->authMethod = 'digest';
+      }
+      else if(strcasecmp($authMethod, 'ntlm') == 0)
+      {
+        $this->authMethod = 'ntlm';
+      }
+      else if(strcasecmp($authMethod, 'negotiate') == 0)
+      {
+        $this->authMethod = 'negotiate';
+      }
+      else
+      {
+        $this->authMethod = '';
+      }
     }
-    
+
     // Specify username for HTTP authentication.
     public function setAuthUser($authUser)
     {
-    	 $this->authUser = $this->cmdlineArgEscape($authUser);
+         $this->authUser = $this->cmdlineArgEscape($authUser);
     }
-    
+
     // Specify password for HTTP authentication.
     public function setAuthPassword($authPassword)
     {
-    	 $this->authPassword = $this->cmdlineArgEscape($authPassword);
+         $this->authPassword = $this->cmdlineArgEscape($authPassword);
     }
-    
+
     // Only send USER:PASS to this server.
     public function setAuthServer($authServer)
     {
        $this->authServer = $authServer;
     }
-    
+
     // Only send USER:PASS for this scheme. (HTTP, HTTPS)
     public function setAuthScheme($authScheme)
     {
-    	  if(strcasecmp($authScheme, 'http') == 0)
-    	  {
-    	 	$this->authScheme = 'http';
-    	  }
-    	  else if(strcasecmp($authScheme, 'https') == 0)
-    	  {
-    	 	$this->authScheme = 'https';
-    	  }
-    	  else
-    	  {
-    	 	$this->authScheme = '';
-    	  }
+          if(strcasecmp($authScheme, 'http') == 0)
+          {
+            $this->authScheme = 'http';
+          }
+          else if(strcasecmp($authScheme, 'https') == 0)
+          {
+            $this->authScheme = 'https';
+          }
+          else
+          {
+            $this->authScheme = '';
+          }
     }
-    
+
     // Do not authenticate with named servers until asked.
     public function setNoAuthPreemptive($noAuthPreemptive)
     {
-    	 $this->noAuthPreemptive = $noAuthPreemptive;
+         $this->noAuthPreemptive = $noAuthPreemptive;
     }
 
     // Specify the URL for the HTTP proxy server, if needed.
@@ -348,11 +349,11 @@ class Prince
     {
         $this->httpProxy = $proxy;
     }
-    
+
     // Specify the HTTP timeout in seconds.
     public function setHttpTimeout($timeout)
     {
-        $this->httpTimeout = $timeout;    
+        $this->httpTimeout = $timeout;
     }
 
     // Specify a Set-Cookie header value.
@@ -391,12 +392,12 @@ class Prince
     {
         $this->insecure = $insecure;
     }
-    
+
     // Specify whether to disable disable parallel downloads.
     // noParallelDownloads: If set to true, parallel downloads are disabled.
     public function setNoParallelDownloads($noParallelDownloads)
     {
-        $this->noParallelDownloads = $noParallelDownloads;  
+        $this->noParallelDownloads = $noParallelDownloads;
     }
 
     // Specify the root directory for absolute filenames. This can be used
@@ -408,7 +409,7 @@ class Prince
     {
         $this->fileRoot = $fileRoot;
     }
-        
+
     // Specify whether fonts should be embedded in the output PDF file. Fonts
     // will be embedded by default unless explicitly disabled.
     // embedFonts: False to disable PDF font embedding.
@@ -452,8 +453,8 @@ class Prince
     // $pdfOutputIntent is the ICC profile to be used.
     public function setPDFOutputIntent($pdfOutputIntent, $convertColors = false)
     {
-        $this->pdfOutputIntent = $pdfOutputIntent;  
-        $this->convertColors = $convertColors;  
+        $this->pdfOutputIntent = $pdfOutputIntent;
+        $this->convertColors = $convertColors;
     }
 
     // Specify fallback ICC profile for uncalibrated CMYK.
@@ -497,7 +498,7 @@ class Prince
     {
         $this->pdfCreator = $pdfCreator;
     }
-   
+
     // Specify the media type (eg. print, screen).
     public function setMedia($media)
     {
@@ -507,13 +508,13 @@ class Prince
     // Specify the page size (eg. A4).
     public function setPageSize($pageSize)
     {
-    	 $this->pageSize = $pageSize;
+         $this->pageSize = $pageSize;
     }
-    
+
     // Specify the page margin (eg. 20mm).
     public function setPageMargin($pageMargin)
     {
-    	 $this->pageMargin = $pageMargin;
+         $this->pageMargin = $pageMargin;
     }
 
     // Specify whether to ignore author style sheets.
@@ -570,30 +571,30 @@ class Prince
         {
             $this->encryptInfo .= '--disallow-print ';
         }
-            
+
         if ($disallowModify)
         {
             $this->encryptInfo .= '--disallow-modify ';
         }
-            
+
         if ($disallowCopy)
         {
             $this->encryptInfo .= '--disallow-copy ';
         }
-            
+
         if ($disallowAnnotate)
         {
             $this->encryptInfo .= '--disallow-annotate ';
         }
     }
-    
-  
+
+
     // Set other options.
     public function setOptions($options)
     {
-    	  $this->options = $options;
+          $this->options = $options;
     }
-	
+
 
     // Convert an XML or HTML file to a PDF file.
     // The name of the output PDF file will be the same as the name of the
@@ -607,11 +608,11 @@ class Prince
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=normal ';
         $pathAndArgs .= '"' . $xmlPath . '"';
-   
+
         return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
 
     }
-    
+
     // Convert an XML or HTML file to a PDF file.
     // xmlPath: The filename of the input XML or HTML document.
     // pdfPath: The filename of the output PDF file.
@@ -623,10 +624,10 @@ class Prince
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=normal ';
         $pathAndArgs .= '"' . $xmlPath . '" -o "' . $pdfPath . '"';
-            
+
         return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
     }
-    
+
     // Convert multiple XML or HTML files to a PDF file.
     // xmlPaths: An array of the input XML or HTML documents.
     // msgs: An optional array in which to return error and warning messages.
@@ -636,16 +637,16 @@ class Prince
     {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=normal ';
-        
+
         foreach($xmlPaths as $xmlPath)
         {
                 $pathAndArgs .= '"' . $xmlPath . '" ';
         }
         $pathAndArgs .= '-o "' . $pdfPath . '"';
-  
+
          return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
     }
-    
+
     // Convert multiple XML or HTML files to a PDF file, which will be passed
     // through to the output buffer of the current PHP page.
     // xmlPaths: An array of the input XML or HTML documents.
@@ -656,16 +657,16 @@ class Prince
     {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=buffered ';
-        
+
         foreach($xmlPaths as $xmlPath)
         {
                 $pathAndArgs .= '"' . $xmlPath . '" ';
         }
         $pathAndArgs .= '-o -';
-        
+
          return $this->convert_internal_file_to_passthru($pathAndArgs, $msgs, $dats);
     }
-    
+
     // Convert an XML or HTML file to a PDF file, which will be passed
     // through to the output buffer of the current PHP page.
     // xmlPath: The filename of the input XML or HTML document.
@@ -676,10 +677,10 @@ class Prince
     {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=buffered "' . $xmlPath . '" -o -';
-            
+
         return $this->convert_internal_file_to_passthru($pathAndArgs, $msgs, $dats);
     }
-    
+
     // Convert an XML or HTML string to a PDF file, which will be passed
     // through to the output buffer of the current PHP page.
     // xmlString: A string containing an XML or HTML document.
@@ -690,10 +691,10 @@ class Prince
     {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=buffered -';
-            
+
         return $this->convert_internal_string_to_passthru($pathAndArgs, $xmlString, $msgs, $dats);
     }
-    
+
     // Convert an XML or HTML string to a PDF file.
     // xmlString: A string containing an XML or HTML document.
     // pdfPath: The filename of the output PDF file.
@@ -705,7 +706,7 @@ class Prince
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=normal ';
         $pathAndArgs .= ' - -o "' . $pdfPath . '"';
-            
+
         return $this->convert_internal_string_to_file($pathAndArgs, $xmlString, $msgs, $dats);
     }
 
@@ -749,7 +750,7 @@ class Prince
         {
             $cmdline .= '--no-local-files ';
         }
-        
+
         if ($this->noNetwork == true)
         {
             $cmdline .= '--no-network ';
@@ -764,10 +765,10 @@ class Prince
         {
             $cmdline .= '--http-timeout="' . $this->httpTimeout . '" ';
         }
-        
+
         if ($this->cookie != '')
         {
-            $cmdline .= '--cookie="' . $this->cookie . '" ';    
+            $cmdline .= '--cookie="' . $this->cookie . '" ';
         }
 
         if ($this->cookieJar != '')
@@ -824,17 +825,17 @@ class Prince
         {
                  $cmdline .= '--fileroot="' . $this->fileRoot . '" ';
         }
-        
+
         if ($this->licenseFile != '')
         {
                 $cmdline .= '--license-file="' . $this->licenseFile . '" ';
         }
-        
+
         if ($this->licenseKey != '')
         {
                 $cmdline .= '--license-key="' . $this->licenseKey . '" ';
         }
-        
+
         if ($this->embedFonts == false)
         {
             $cmdline .= '--no-embed-fonts ';
@@ -849,37 +850,37 @@ class Prince
         {
             $cmdline .= '--no-artificial-fonts ';
         }
-        
+
         if ($this->authMethod != '')
         {
-        	$cmdline .=  '--auth-method="' . $this->cmdlineArgEscape($this->authMethod) . '" ';
+            $cmdline .=  '--auth-method="' . $this->cmdlineArgEscape($this->authMethod) . '" ';
         }
-        
+
         if ($this->authUser != '')
         {
-        	$cmdline .= '--auth-user="' . $this->cmdlineArgEscape($this->authUser) . '" ';
+            $cmdline .= '--auth-user="' . $this->cmdlineArgEscape($this->authUser) . '" ';
         }
-        
+
         if ($this->authPassword != '')
         {
-        	$cmdline .= '--auth-password="' . $this->cmdlineArgEscape($this->authPassword) . '" ';
+            $cmdline .= '--auth-password="' . $this->cmdlineArgEscape($this->authPassword) . '" ';
         }
-        
+
         if ($this->authServer != '')
         {
-        	$cmdline .= '--auth-server="' . $this->cmdlineArgEscape($this->authServer) . '" ';
+            $cmdline .= '--auth-server="' . $this->cmdlineArgEscape($this->authServer) . '" ';
         }
-        
+
         if ($this->authScheme != '')
         {
-        	$cmdline .= '--auth-scheme="' . $this->cmdlineArgEscape($this->authScheme) . '" ';
+            $cmdline .= '--auth-scheme="' . $this->cmdlineArgEscape($this->authScheme) . '" ';
         }
-        
+
         if ($this->noAuthPreemptive)
         {
-        	$cmdline .= '--no-auth-preemptive ';
+            $cmdline .= '--no-auth-preemptive ';
         }
-        
+
         if ($this->media != '')
         {
             $cmdline .= '--media="' . $this->cmdlineArgEscape($this->media) . '" ';
@@ -887,12 +888,12 @@ class Prince
 
         if ($this->pageSize != '')
         {
-        	$cmdline .= '--page-size="' . $this->cmdlineArgEscape($this->pageSize) . '" ';
+            $cmdline .= '--page-size="' . $this->cmdlineArgEscape($this->pageSize) . '" ';
         }
-        
+
         if ($this->pageMargin != '')
         {
-        	$cmdline .= '--page-margin="' . $this->cmdlineArgEscape($this->pageMargin) . '" ';
+            $cmdline .= '--page-margin="' . $this->cmdlineArgEscape($this->pageMargin) . '" ';
         }
 
         if ($this->noAuthorStyle == true)
@@ -904,7 +905,7 @@ class Prince
         {
             $cmdline .= '--no-default-style ';
         }
-        
+
         if ($this->forceIdentityEncoding == true)
         {
             $cmdline .= '--force-identity-encoding ';
@@ -964,10 +965,10 @@ class Prince
         {
             $cmdline .= '--encrypt ' . $this->encryptInfo;
         }
-        
+
         if ($this->options != '')
         {
-        	$cmdline .= $this->cmdlineArgEscape($this->options) . ' ';
+            $cmdline .= $this->cmdlineArgEscape($this->options) . ' ';
         }
 
         return $cmdline;
@@ -980,9 +981,9 @@ class Prince
                                 1 => array("pipe", "w"),
                                 2 => array("pipe", "w")
                                 );
-        
+
         $process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
-        
+
         if (is_resource($process))
         {
             $result = $this->readMessages($pipes[2], $msgs, $dats);
@@ -990,7 +991,7 @@ class Prince
             fclose($pipes[0]);
             fclose($pipes[1]);
             fclose($pipes[2]);
-            
+
             proc_close($process);
 
             return ($result == 'success');
@@ -1008,9 +1009,9 @@ class Prince
                             1 => array("pipe", "w"),
                             2 => array("pipe", "w")
                             );
-        
+
         $process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
-        
+
         if (is_resource($process))
         {
             fwrite($pipes[0], $xmlString);
@@ -1018,9 +1019,9 @@ class Prince
             fclose($pipes[1]);
 
             $result = $this->readMessages($pipes[2], $msgs, $dats);
-            
+
             fclose($pipes[2]);
-        
+
             proc_close($process);
 
             return ($result == 'success');
@@ -1038,9 +1039,9 @@ class Prince
                             1 => array("pipe", "w"),
                             2 => array("pipe", "w")
                             );
-        
+
         $process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
-        
+
         if (is_resource($process))
         {
             fclose($pipes[0]);
@@ -1048,9 +1049,9 @@ class Prince
             fclose($pipes[1]);
 
             $result = $this->readMessages($pipes[2], $msgs, $dats);
-            
+
             fclose($pipes[2]);
-        
+
             proc_close($process);
 
             return ($result == 'success');
@@ -1068,9 +1069,9 @@ class Prince
                             1 => array("pipe", "w"),
                             2 => array("pipe", "w")
                             );
-        
+
         $process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
-        
+
         if (is_resource($process))
         {
             fwrite($pipes[0], $xmlString);
@@ -1079,9 +1080,9 @@ class Prince
             fclose($pipes[1]);
 
             $result = $this->readMessages($pipes[2], $msgs, $dats);
-            
+
             fclose($pipes[2]);
-        
+
             proc_close($process);
 
             return ($result == 'success');
@@ -1097,12 +1098,12 @@ class Prince
         while (!feof($pipe))
         {
             $line = fgets($pipe);
-            
+
             if ($line != false)
             {
                 $msgtag = substr($line, 0, 4);
                 $msgbody = rtrim(substr($line, 4));
-                
+
                 if ($msgtag == 'fin|')
                 {
                     return $msgbody;
@@ -1117,38 +1118,38 @@ class Prince
 
                     $msgs[] = $msg;
                 }
-		else if ($msgtag == 'dat|')
-		{
-		    $dat = explode('|', $msgbody, 2);
+        else if ($msgtag == 'dat|')
+        {
+            $dat = explode('|', $msgbody, 2);
 
-		    $dats[] = $dat;
-		}
+            $dats[] = $dat;
+        }
                 else
                 {
                     // ignore other messages
                 }
             }
         }
-        
+
         return '';
     }
-    
+
     private function cmdlineArgEscape($argStr)
     {
         return $this->cmdlineArgEscape2($this->cmdlineArgEscape1($argStr));
     }
-        
+
     // In the input string $argStr, a double quote with zero or more preceding backslash(es)
     // will be replaced with: n*backslash + doublequote => (2*n+1)*backslash + doublequote
     private function cmdlineArgEscape1($argStr)
     {
         // chr(34) is character double quote ( " ), chr(92) is character backslash ( \ ).
         $len = strlen($argStr);
-        
+
         $outputStr = '';
         $numSlashes = 0;
         $subStrStart = 0;
-        
+
         for($i = 0; $i < $len; $i++)
         {
             if($argStr[$i] == chr(34))
@@ -1167,29 +1168,29 @@ class Prince
                         break;
                     }
                 }
-                
+
                 $outputStr .= substr($argStr, $subStrStart, ($i - $numSlashes - $subStrStart));
-                
+
                 for($k = 0; $k < $numSlashes; $k++)
                 {
                     $outputStr .= chr(92) . chr(92);
                 }
                 $outputStr  .= chr(92) . chr(34);
-                
+
                 $subStrStart = $i + 1;
             }
         }
         $outputStr .= substr($argStr, $subStrStart, ($i - $subStrStart));
-        
+
         return $outputStr;
     }
-        
+
     // Double the number of trailing backslash(es): n*trailing backslash => (2*n)*trailing backslash.
     private function cmdlineArgEscape2($argStr)
     {
         // chr(92) is character backslash ( \ ).
         $len = strlen($argStr);
-        
+
         $numTrailingSlashes = 0;
         for($i = ($len - 1); $i  >= 0; $i--)
         {
@@ -1202,13 +1203,13 @@ class Prince
                 break;
             }
         }
-        
+
         while($numTrailingSlashes > 0)
         {
             $argStr .= chr(92);
             $numTrailingSlashes -= 1;
         }
-        
+
         return $argStr;
     }
 }
