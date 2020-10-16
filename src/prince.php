@@ -3,6 +3,8 @@
 // Copyright 2005-2020 YesLogic Pty. Ltd.
 // https://www.princexml.com
 
+namespace Prince;
+
 class Prince
 {
     private $exePath;
