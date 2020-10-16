@@ -1,0 +1,17 @@
+{
+    "name": "yeslogic/prince-php-wrapper",
+    "description": "PHP wrapper class for Prince HTML to PDF formatter",
+    "type": "library",
+    "license": "MIT License",
+    "authors": [
+        {
+            "name": "Michael Day",
+            "email": "mikeday@yeslogic.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {"Prince\\": "src/"}
+    },
+    "require": {}
+}
