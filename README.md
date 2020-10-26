@@ -4,8 +4,7 @@ Prince PHP wrapper
 The `prince.php` file defines a class called `Prince` that contains methods
 that can be called to convert HTML and XML documents into PDF.
 
-Note that the `Prince` class is written for PHP 5, and requires
-modification to work with PHP 4.
+Note that the `Prince` class requires PHP 5.3.0 or later.
 
 Constructor
 -----------
@@ -15,6 +14,8 @@ executable to the constructor as a string argument. For example, on
 Linux or MacOS X:
 
 ```php
+use Prince\Prince;
+
 $prince = new Prince('/usr/bin/prince');
 ```
 
