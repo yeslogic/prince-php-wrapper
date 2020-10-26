@@ -2,7 +2,7 @@
     "name": "yeslogic/prince-php-wrapper",
     "description": "PHP wrapper class for Prince HTML to PDF formatter",
     "type": "library",
-    "license": "MIT License",
+    "license": "MIT",
     "authors": [
         {
             "name": "Michael Day",
