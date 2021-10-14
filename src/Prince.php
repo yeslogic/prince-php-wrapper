@@ -164,454 +164,7 @@ class Prince
         $this->options = '';
     }
 
-    // Add a CSS style sheet that will be applied to each document.
-    // cssPath: The filename of the CSS style sheet.
-    public function addStyleSheet($cssPath)
-    {
-        $this->styleSheets .= '-s "' . $cssPath . '" ';
-    }
-
-    // Clear all of the CSS style sheets.
-    public function clearStyleSheets()
-    {
-        $this->styleSheets = '';
-    }
-
-    // Add a JavaScript script that will be run before conversion.
-    // jsPath: The filename of the script.
-    public function addScript($jsPath)
-    {
-        $this->scripts .= '--script "' . $jsPath . '" ';
-    }
-
-    // Clear all of the scripts.
-    public function clearScripts()
-    {
-        $this->scripts = '';
-    }
-
-    // Add a file attachment that will be attached to the PDF file
-    // filePath: The filename of the file attachment.
-    public function addFileAttachment($filePath)
-    {
-        $this->fileAttachments .= '--attach=' . '"' . $filePath .  '" ';
-    }
-
-    // Clear all of the file attachments.
-    public function clearFileAttachments()
-    {
-        $this->fileAttachments = '';
-    }
-
-    // Specify the license file.
-    // file: The filename of the license file.
-    public function setLicenseFile($file)
-    {
-        $this->licenseFile = $file;
-    }
-
-    // Specify the license key.
-    // key: The license key
-    public function setLicenseKey($key)
-    {
-        $this->licenseKey = $key;
-    }
-
-    // Specify the input type of the document.
-    // inputType: Can take a value of : "xml", "html" or "auto".
-    public function setInputType($inputType)
-    {
-        $this->inputType = $inputType;
-    }
-
-    // Specify whether JavaScript found in documents should be run.
-    // js: True if document scripts should be run.
-    public function setJavaScript($js)
-    {
-        $this->javascript = $js;
-    }
-
-    // Specify whether documents should be parsed as HTML or XML/XHTML.
-    // html: True if all documents should be treated as HTML.
-    public function setHTML($html)
-    {
-        if ($html) {
-            $this->inputType = "html";
-        } else {
-            $this->inputType = "xml";
-        }
-    }
-
-    // Specify a file that Prince should use to log error/warning messages.
-    // logFile: The filename that Prince should use to log error/warning
-    //          messages, or '' to disable logging.
-    public function setLog($logFile)
-    {
-        $this->logFile = $logFile;
-    }
-
-    // Specify whether to log informative messages.
-    public function setVerbose($verbose)
-    {
-        $this->verbose = $verbose;
-    }
-
-    // Specify whether to log debug messages.
-    public function setDebug($debug)
-    {
-        $this->debug = $debug;
-    }
-
-    // Specify whether to warn about CSS.
-    public function setNoWarnCss($noWarnCss)
-    {
-        $this->noWarnCss = $noWarnCss;
-    }
-
-    // Specify the base URL of the input document.
-    // baseURL: The base URL or path of the input document, or ''.
-    public function setBaseURL($baseURL)
-    {
-        $this->baseURL = $baseURL;
-    }
-
-    // Specify whether XML Inclusions (XInclude) processing should be applied
-    // to input documents. XInclude processing will be performed by default
-    // unless explicitly disabled.
-    // xinclude: False to disable XInclude processing.
-    public function setXInclude($xinclude)
-    {
-        $this->doXInclude = $xinclude;
-    }
-
-    // Specifies whether XML external entities should be allowed to be used.
-    public function setXmlExternalEntities($xmlExternalEntities)
-    {
-        $this->xmlExternalEntities = $xmlExternalEntities;
-    }
-
-    // Specify whether to disable access to local files.
-    public function setNoLocalFiles($noLocalFiles)
-    {
-        $this->noLocalFiles = $noLocalFiles;
-    }
-
-    // Add a mapping of URL prefix to a local directory.
-    public function addRemap($url, $dir)
-    {
-        $this->remaps .= '--remap="' . $url . '"="' . $dir . '" ';
-    }
-
-    // Clear all of the remaps.
-    public function clearRemaps()
-    {
-        $this->remaps = '';
-    }
-
-    // Specify thether to disable network access.
-    public function setNoNetwork($noNetwork)
-    {
-        $this->noNetwork = $noNetwork;
-    }
-
-    // Specify HTTP authentication methods. (basic, digest, ntlm, negotiate)
-    public function setAuthMethod($authMethod)
-    {
-        if (strcasecmp($authMethod, 'basic') == 0) {
-            $this->authMethod = 'basic';
-        } else if (strcasecmp($authMethod, 'digest') == 0) {
-            $this->authMethod = 'digest';
-        } else if (strcasecmp($authMethod, 'ntlm') == 0) {
-            $this->authMethod = 'ntlm';
-        } else if (strcasecmp($authMethod, 'negotiate') == 0) {
-            $this->authMethod = 'negotiate';
-        } else {
-            $this->authMethod = '';
-        }
-    }
-
-    // Specify username for HTTP authentication.
-    public function setAuthUser($authUser)
-    {
-        $this->authUser = $this->cmdlineArgEscape($authUser);
-    }
-
-    // Specify password for HTTP authentication.
-    public function setAuthPassword($authPassword)
-    {
-        $this->authPassword = $this->cmdlineArgEscape($authPassword);
-    }
-
-    // Only send USER:PASS to this server.
-    public function setAuthServer($authServer)
-    {
-        $this->authServer = $authServer;
-    }
-
-    // Only send USER:PASS for this scheme. (HTTP, HTTPS)
-    public function setAuthScheme($authScheme)
-    {
-        if (strcasecmp($authScheme, 'http') == 0) {
-            $this->authScheme = 'http';
-        } else if (strcasecmp($authScheme, 'https') == 0) {
-            $this->authScheme = 'https';
-        } else {
-            $this->authScheme = '';
-        }
-    }
-
-    // Do not authenticate with named servers until asked.
-    public function setNoAuthPreemptive($noAuthPreemptive)
-    {
-        $this->noAuthPreemptive = $noAuthPreemptive;
-    }
-
-    // Specify the URL for the HTTP proxy server, if needed.
-    // proxy: The URL for the HTTP proxy server.
-    public function setHttpProxy($proxy)
-    {
-        $this->httpProxy = $proxy;
-    }
-
-    // Specify the HTTP timeout in seconds.
-    public function setHttpTimeout($timeout)
-    {
-        $this->httpTimeout = $timeout;
-    }
-
-    // Specify a Set-Cookie header value.
-    public function setCookie($cookie)
-    {
-        $this->cookie = $cookie;
-    }
-
-    // Specify a file containing HTTP cookies.
-    public function setCookieJar($cookieJar)
-    {
-        $this->cookieJar = $cookieJar;
-    }
-
-    // Specify an SSL certificate file.
-    public function setSslCaCert($sslCaCert)
-    {
-        $this->sslCaCert = $sslCaCert;
-    }
-
-    // Specify an SSL certificate directory.
-    public function setSslCaPath($sslCaPath)
-    {
-        $this->sslCaPath = $sslCaPath;
-    }
-
-    // Specify an SSL/TLS version to use.
-    public function setSslVersion($sslVersion)
-    {
-        $this->sslVersion = $sslVersion;
-    }
-
-    // Specify whether to disable SSL verification.
-    // insecure: If set to true, SSL verification is disabled. (not recommended)
-    public function setInsecure($insecure)
-    {
-        $this->insecure = $insecure;
-    }
-
-    // Specify whether to disable disable parallel downloads.
-    // noParallelDownloads: If set to true, parallel downloads are disabled.
-    public function setNoParallelDownloads($noParallelDownloads)
-    {
-        $this->noParallelDownloads = $noParallelDownloads;
-    }
-
-    // Specify the root directory for absolute filenames. This can be used
-    // when converting a local file that uses absolute paths to refer to web
-    // resources. For example, /images/logo.jpg can be
-    // rewritten to /usr/share/images/logo.jpg by specifying "/usr/share" as the root.
-    // fileRoot: The path to prepend to absolute filenames.
-    public function setFileRoot($fileRoot)
-    {
-        $this->fileRoot = $fileRoot;
-    }
-
-    // Specify whether fonts should be embedded in the output PDF file. Fonts
-    // will be embedded by default unless explicitly disabled.
-    // embedFonts: False to disable PDF font embedding.
-    public function setEmbedFonts($embedFonts)
-    {
-        $this->embedFonts = $embedFonts;
-    }
-
-    // Specify whether embedded fonts should be subset.
-    // Fonts will be subset by default unless explicitly disabled.
-    // subsetFonts: False to disable PDF font subsetting.
-    public function setSubsetFonts($subsetFonts)
-    {
-        $this->subsetFonts = $subsetFonts;
-    }
-
-    // Specify whether artificial bold/italic fonts should be generated if
-    // necessary. Artificial fonts are enabled by default.
-    // artificialFonts: False to disable artificial bold/italic fonts.
-    public function setNoArtificialFonts($noArtificialFonts)
-    {
-        $this->noArtificialFonts = $noArtificialFonts;
-    }
-
-    // Specify whether to use force identity encoding.
-    public function setForceIdentityEncoding($forceIdentityEncoding)
-    {
-        $this->forceIdentityEncoding = $forceIdentityEncoding;
-    }
-
-    // Specify whether compression should be applied to the output PDF file.
-    // Compression will be applied by default unless explicitly disabled.
-    // compress: False to disable PDF compression.
-    public function setCompress($compress)
-    {
-        $this->compress = $compress;
-    }
-
-    // Specify the ICC profile to use.
-    // Also optionally specify whether to convert colors to output intent color space.
-    // $pdfOutputIntent is the ICC profile to be used.
-    public function setPDFOutputIntent($pdfOutputIntent, $convertColors = false)
-    {
-        $this->pdfOutputIntent = $pdfOutputIntent;
-        $this->convertColors = $convertColors;
-    }
-
-    // Specify fallback ICC profile for uncalibrated CMYK.
-    public function setFallbackCmykProfile($fallbackCmykProfile)
-    {
-        $this->fallbackCmykProfile = $fallbackCmykProfile;
-    }
-
-    // Specify the PDF profile to use.
-    public function setPDFProfile($pdfProfile)
-    {
-        $this->pdfProfile = $pdfProfile;
-    }
-
-    // Specify the document title for PDF metadata.
-    public function setPDFTitle($pdfTitle)
-    {
-        $this->pdfTitle = $pdfTitle;
-    }
-
-    // Specify the document subject for PDF metadata.
-    public function setPDFSubject($pdfSubject)
-    {
-        $this->pdfSubject = $pdfSubject;
-    }
-
-    // Specify the document author for PDF metadata.
-    public function setPDFAuthor($pdfAuthor)
-    {
-        $this->pdfAuthor = $pdfAuthor;
-    }
-
-    // Specify the document keywords for PDF metadata.
-    public function setPDFKeywords($pdfKeywords)
-    {
-        $this->pdfKeywords = $pdfKeywords;
-    }
-
-    // Specify the document creator for PDF metadata.
-    public function setPDFCreator($pdfCreator)
-    {
-        $this->pdfCreator = $pdfCreator;
-    }
-
-    // Specify the media type (eg. print, screen).
-    public function setMedia($media)
-    {
-        $this->media = $media;
-    }
-
-    // Specify the page size (eg. A4).
-    public function setPageSize($pageSize)
-    {
-        $this->pageSize = $pageSize;
-    }
-
-    // Specify the page margin (eg. 20mm).
-    public function setPageMargin($pageMargin)
-    {
-        $this->pageMargin = $pageMargin;
-    }
-
-    // Specify whether to ignore author style sheets.
-    public function setNoAuthorStyle($noAuthorStyle)
-    {
-        $this->noAuthorStyle = $noAuthorStyle;
-    }
-
-    // Specify whether to ignore default style sheets.
-    public function setNoDefaultStyle($noDefaultStyle)
-    {
-        $this->noDefaultStyle = $noDefaultStyle;
-    }
-
-    // Specify whether encryption should be applied to the output PDF file.
-    // Encryption will not be applied by default unless explicitly enabled.
-    // encrypt: True to enable PDF encryption.
-    public function setEncrypt($encrypt)
-    {
-        $this->encrypt = $encrypt;
-    }
-
-    // Set the parameters used for PDF encryption. Calling this method will
-    // also enable PDF encryption, equivalent to calling setEncrypt(true).
-    // keyBits: The size of the encryption key in bits (must be 40 or 128).
-    // userPassword: The user password for the PDF file.
-    // ownerPassword: The owner password for the PDF file.
-    // disallowPrint: True to disallow printing of the PDF file.
-    // disallowModify: True to disallow modification of the PDF file.
-    // disallowCopy: True to disallow copying from the PDF file.
-    // disallowAnnotate: True to disallow annotation of the PDF file.
-    public function setEncryptInfo(
-        $keyBits,
-        $userPassword,
-        $ownerPassword,
-        $disallowPrint = false,
-        $disallowModify = false,
-        $disallowCopy = false,
-        $disallowAnnotate = false
-    ) {
-        if ($keyBits != 40 && $keyBits != 128) {
-            throw new Exception("Invalid value for keyBits: $keyBits" .
-                " (must be 40 or 128)");
-        }
-
-        $this->encrypt = true;
-
-        $this->encryptInfo =
-            ' --key-bits ' . $keyBits .
-            ' --user-password="' . $this->cmdlineArgEscape($userPassword) .
-            '" --owner-password="' . $this->cmdlineArgEscape($ownerPassword) . '" ';
-
-        if ($disallowPrint) {
-            $this->encryptInfo .= '--disallow-print ';
-        }
-
-        if ($disallowModify) {
-            $this->encryptInfo .= '--disallow-modify ';
-        }
-
-        if ($disallowCopy) {
-            $this->encryptInfo .= '--disallow-copy ';
-        }
-
-        if ($disallowAnnotate) {
-            $this->encryptInfo .= '--disallow-annotate ';
-        }
-    }
-
-    // Set other options.
-    public function setOptions($options)
-    {
-        $this->options = $options;
-    }
+    /* PDF CONVERSION METHODS *************************************************/
 
     // Convert an XML or HTML file to a PDF file.
     // The name of the output PDF file will be the same as the name of the
@@ -725,6 +278,477 @@ class Prince
 
         return $this->convert_internal_string_to_file($pathAndArgs, $xmlString, $msgs, $dats);
     }
+
+    /* LOGGING OPTIONS ********************************************************/
+
+    // Specify whether to log informative messages.
+    public function setVerbose($verbose)
+    {
+        $this->verbose = $verbose;
+    }
+
+    // Specify whether to log debug messages.
+    public function setDebug($debug)
+    {
+        $this->debug = $debug;
+    }
+
+    // Specify a file that Prince should use to log error/warning messages.
+    // logFile: The filename that Prince should use to log error/warning
+    //          messages, or '' to disable logging.
+    public function setLog($logFile)
+    {
+        $this->logFile = $logFile;
+    }
+
+    // Specify whether to warn about CSS.
+    public function setNoWarnCss($noWarnCss)
+    {
+        $this->noWarnCss = $noWarnCss;
+    }
+
+    /* INPUT OPTIONS **********************************************************/
+
+    // Specify the input type of the document.
+    // inputType: Can take a value of : "xml", "html" or "auto".
+    public function setInputType($inputType)
+    {
+        $this->inputType = $inputType;
+    }
+
+    // Specify whether documents should be parsed as HTML or XML/XHTML.
+    // html: True if all documents should be treated as HTML.
+    public function setHTML($html)
+    {
+        if ($html) {
+            $this->inputType = "html";
+        } else {
+            $this->inputType = "xml";
+        }
+    }
+
+    // Specify the base URL of the input document.
+    // baseURL: The base URL or path of the input document, or ''.
+    public function setBaseURL($baseURL)
+    {
+        $this->baseURL = $baseURL;
+    }
+
+    // Add a mapping of URL prefix to a local directory.
+    public function addRemap($url, $dir)
+    {
+        $this->remaps .= '--remap="' . $url . '"="' . $dir . '" ';
+    }
+
+    // Clear all of the remaps.
+    public function clearRemaps()
+    {
+        $this->remaps = '';
+    }
+
+    // Specify the root directory for absolute filenames. This can be used
+    // when converting a local file that uses absolute paths to refer to web
+    // resources. For example, /images/logo.jpg can be
+    // rewritten to /usr/share/images/logo.jpg by specifying "/usr/share" as the root.
+    // fileRoot: The path to prepend to absolute filenames.
+    public function setFileRoot($fileRoot)
+    {
+        $this->fileRoot = $fileRoot;
+    }
+
+    // Specify whether XML Inclusions (XInclude) processing should be applied
+    // to input documents. XInclude processing will be performed by default
+    // unless explicitly disabled.
+    // xinclude: False to disable XInclude processing.
+    public function setXInclude($xinclude)
+    {
+        $this->doXInclude = $xinclude;
+    }
+
+    // Specifies whether XML external entities should be allowed to be used.
+    public function setXmlExternalEntities($xmlExternalEntities)
+    {
+        $this->xmlExternalEntities = $xmlExternalEntities;
+    }
+
+    // Specify whether to disable access to local files.
+    public function setNoLocalFiles($noLocalFiles)
+    {
+        $this->noLocalFiles = $noLocalFiles;
+    }
+
+    /* NETWORK OPTIONS ********************************************************/
+
+    // Specify thether to disable network access.
+    public function setNoNetwork($noNetwork)
+    {
+        $this->noNetwork = $noNetwork;
+    }
+
+    // Specify username for HTTP authentication.
+    public function setAuthUser($authUser)
+    {
+        $this->authUser = $this->cmdlineArgEscape($authUser);
+    }
+
+    // Specify password for HTTP authentication.
+    public function setAuthPassword($authPassword)
+    {
+        $this->authPassword = $this->cmdlineArgEscape($authPassword);
+    }
+
+    // Only send USER:PASS to this server.
+    public function setAuthServer($authServer)
+    {
+        $this->authServer = $authServer;
+    }
+
+    // Only send USER:PASS for this scheme. (HTTP, HTTPS)
+    public function setAuthScheme($authScheme)
+    {
+        if (strcasecmp($authScheme, 'http') == 0) {
+            $this->authScheme = 'http';
+        } else if (strcasecmp($authScheme, 'https') == 0) {
+            $this->authScheme = 'https';
+        } else {
+            $this->authScheme = '';
+        }
+    }
+
+    // Specify HTTP authentication methods. (basic, digest, ntlm, negotiate)
+    public function setAuthMethod($authMethod)
+    {
+        if (strcasecmp($authMethod, 'basic') == 0) {
+            $this->authMethod = 'basic';
+        } else if (strcasecmp($authMethod, 'digest') == 0) {
+            $this->authMethod = 'digest';
+        } else if (strcasecmp($authMethod, 'ntlm') == 0) {
+            $this->authMethod = 'ntlm';
+        } else if (strcasecmp($authMethod, 'negotiate') == 0) {
+            $this->authMethod = 'negotiate';
+        } else {
+            $this->authMethod = '';
+        }
+    }
+
+    // Do not authenticate with named servers until asked.
+    public function setNoAuthPreemptive($noAuthPreemptive)
+    {
+        $this->noAuthPreemptive = $noAuthPreemptive;
+    }
+
+    // Specify the URL for the HTTP proxy server, if needed.
+    // proxy: The URL for the HTTP proxy server.
+    public function setHttpProxy($proxy)
+    {
+        $this->httpProxy = $proxy;
+    }
+
+    // Specify the HTTP timeout in seconds.
+    public function setHttpTimeout($timeout)
+    {
+        $this->httpTimeout = $timeout;
+    }
+
+    // Specify a Set-Cookie header value.
+    public function setCookie($cookie)
+    {
+        $this->cookie = $cookie;
+    }
+
+    // Specify a file containing HTTP cookies.
+    public function setCookieJar($cookieJar)
+    {
+        $this->cookieJar = $cookieJar;
+    }
+
+    // Specify an SSL certificate file.
+    public function setSslCaCert($sslCaCert)
+    {
+        $this->sslCaCert = $sslCaCert;
+    }
+
+    // Specify an SSL certificate directory.
+    public function setSslCaPath($sslCaPath)
+    {
+        $this->sslCaPath = $sslCaPath;
+    }
+
+    // Specify an SSL/TLS version to use.
+    public function setSslVersion($sslVersion)
+    {
+        $this->sslVersion = $sslVersion;
+    }
+
+    // Specify whether to disable SSL verification.
+    // insecure: If set to true, SSL verification is disabled. (not recommended)
+    public function setInsecure($insecure)
+    {
+        $this->insecure = $insecure;
+    }
+
+    // Specify whether to disable disable parallel downloads.
+    // noParallelDownloads: If set to true, parallel downloads are disabled.
+    public function setNoParallelDownloads($noParallelDownloads)
+    {
+        $this->noParallelDownloads = $noParallelDownloads;
+    }
+
+    /* JAVASCRIPT OPTIONS *****************************************************/
+
+    // Specify whether JavaScript found in documents should be run.
+    // js: True if document scripts should be run.
+    public function setJavaScript($js)
+    {
+        $this->javascript = $js;
+    }
+
+    // Add a JavaScript script that will be run before conversion.
+    // jsPath: The filename of the script.
+    public function addScript($jsPath)
+    {
+        $this->scripts .= '--script "' . $jsPath . '" ';
+    }
+
+    // Clear all of the scripts.
+    public function clearScripts()
+    {
+        $this->scripts = '';
+    }
+
+    /* CSS OPTIONS ************************************************************/
+
+    // Add a CSS style sheet that will be applied to each document.
+    // cssPath: The filename of the CSS style sheet.
+    public function addStyleSheet($cssPath)
+    {
+        $this->styleSheets .= '-s "' . $cssPath . '" ';
+    }
+
+    // Clear all of the CSS style sheets.
+    public function clearStyleSheets()
+    {
+        $this->styleSheets = '';
+    }
+
+    // Specify the media type (eg. print, screen).
+    public function setMedia($media)
+    {
+        $this->media = $media;
+    }
+
+    // Specify the page size (eg. A4).
+    public function setPageSize($pageSize)
+    {
+        $this->pageSize = $pageSize;
+    }
+
+    // Specify the page margin (eg. 20mm).
+    public function setPageMargin($pageMargin)
+    {
+        $this->pageMargin = $pageMargin;
+    }
+
+    // Specify whether to ignore author style sheets.
+    public function setNoAuthorStyle($noAuthorStyle)
+    {
+        $this->noAuthorStyle = $noAuthorStyle;
+    }
+
+    // Specify whether to ignore default style sheets.
+    public function setNoDefaultStyle($noDefaultStyle)
+    {
+        $this->noDefaultStyle = $noDefaultStyle;
+    }
+
+    /* PDF OUTPUT OPTIONS *****************************************************/
+
+    // Specify the PDF profile to use.
+    public function setPDFProfile($pdfProfile)
+    {
+        $this->pdfProfile = $pdfProfile;
+    }
+
+    // Specify the ICC profile to use.
+    // Also optionally specify whether to convert colors to output intent color space.
+    // $pdfOutputIntent is the ICC profile to be used.
+    public function setPDFOutputIntent($pdfOutputIntent, $convertColors = false)
+    {
+        $this->pdfOutputIntent = $pdfOutputIntent;
+        $this->convertColors = $convertColors;
+    }
+
+    // Add a file attachment that will be attached to the PDF file
+    // filePath: The filename of the file attachment.
+    public function addFileAttachment($filePath)
+    {
+        $this->fileAttachments .= '--attach=' . '"' . $filePath .  '" ';
+    }
+
+    // Clear all of the file attachments.
+    public function clearFileAttachments()
+    {
+        $this->fileAttachments = '';
+    }
+
+    // Specify whether artificial bold/italic fonts should be generated if
+    // necessary. Artificial fonts are enabled by default.
+    // artificialFonts: False to disable artificial bold/italic fonts.
+    public function setNoArtificialFonts($noArtificialFonts)
+    {
+        $this->noArtificialFonts = $noArtificialFonts;
+    }
+
+    // Specify whether fonts should be embedded in the output PDF file. Fonts
+    // will be embedded by default unless explicitly disabled.
+    // embedFonts: False to disable PDF font embedding.
+    public function setEmbedFonts($embedFonts)
+    {
+        $this->embedFonts = $embedFonts;
+    }
+
+    // Specify whether embedded fonts should be subset.
+    // Fonts will be subset by default unless explicitly disabled.
+    // subsetFonts: False to disable PDF font subsetting.
+    public function setSubsetFonts($subsetFonts)
+    {
+        $this->subsetFonts = $subsetFonts;
+    }
+
+    // Specify whether to use force identity encoding.
+    public function setForceIdentityEncoding($forceIdentityEncoding)
+    {
+        $this->forceIdentityEncoding = $forceIdentityEncoding;
+    }
+
+    // Specify whether compression should be applied to the output PDF file.
+    // Compression will be applied by default unless explicitly disabled.
+    // compress: False to disable PDF compression.
+    public function setCompress($compress)
+    {
+        $this->compress = $compress;
+    }
+
+    // Specify fallback ICC profile for uncalibrated CMYK.
+    public function setFallbackCmykProfile($fallbackCmykProfile)
+    {
+        $this->fallbackCmykProfile = $fallbackCmykProfile;
+    }
+
+    /* PDF METADATA OPTIONS ***************************************************/
+
+    // Specify the document title for PDF metadata.
+    public function setPDFTitle($pdfTitle)
+    {
+        $this->pdfTitle = $pdfTitle;
+    }
+
+    // Specify the document subject for PDF metadata.
+    public function setPDFSubject($pdfSubject)
+    {
+        $this->pdfSubject = $pdfSubject;
+    }
+
+    // Specify the document author for PDF metadata.
+    public function setPDFAuthor($pdfAuthor)
+    {
+        $this->pdfAuthor = $pdfAuthor;
+    }
+
+    // Specify the document keywords for PDF metadata.
+    public function setPDFKeywords($pdfKeywords)
+    {
+        $this->pdfKeywords = $pdfKeywords;
+    }
+
+    // Specify the document creator for PDF metadata.
+    public function setPDFCreator($pdfCreator)
+    {
+        $this->pdfCreator = $pdfCreator;
+    }
+
+    /* PDF ENCRYPTION OPTIONS *************************************************/
+
+    // Specify whether encryption should be applied to the output PDF file.
+    // Encryption will not be applied by default unless explicitly enabled.
+    // encrypt: True to enable PDF encryption.
+    public function setEncrypt($encrypt)
+    {
+        $this->encrypt = $encrypt;
+    }
+
+    // Set the parameters used for PDF encryption. Calling this method will
+    // also enable PDF encryption, equivalent to calling setEncrypt(true).
+    // keyBits: The size of the encryption key in bits (must be 40 or 128).
+    // userPassword: The user password for the PDF file.
+    // ownerPassword: The owner password for the PDF file.
+    // disallowPrint: True to disallow printing of the PDF file.
+    // disallowModify: True to disallow modification of the PDF file.
+    // disallowCopy: True to disallow copying from the PDF file.
+    // disallowAnnotate: True to disallow annotation of the PDF file.
+    public function setEncryptInfo(
+        $keyBits,
+        $userPassword,
+        $ownerPassword,
+        $disallowPrint = false,
+        $disallowModify = false,
+        $disallowCopy = false,
+        $disallowAnnotate = false
+    ) {
+        if ($keyBits != 40 && $keyBits != 128) {
+            throw new Exception("Invalid value for keyBits: $keyBits" .
+                " (must be 40 or 128)");
+        }
+
+        $this->encrypt = true;
+
+        $this->encryptInfo =
+            ' --key-bits ' . $keyBits .
+            ' --user-password="' . $this->cmdlineArgEscape($userPassword) .
+            '" --owner-password="' . $this->cmdlineArgEscape($ownerPassword) . '" ';
+
+        if ($disallowPrint) {
+            $this->encryptInfo .= '--disallow-print ';
+        }
+
+        if ($disallowModify) {
+            $this->encryptInfo .= '--disallow-modify ';
+        }
+
+        if ($disallowCopy) {
+            $this->encryptInfo .= '--disallow-copy ';
+        }
+
+        if ($disallowAnnotate) {
+            $this->encryptInfo .= '--disallow-annotate ';
+        }
+    }
+
+    /* LICENSE OPTIONS ********************************************************/
+
+    // Specify the license file.
+    // file: The filename of the license file.
+    public function setLicenseFile($file)
+    {
+        $this->licenseFile = $file;
+    }
+
+    // Specify the license key.
+    // key: The license key
+    public function setLicenseKey($key)
+    {
+        $this->licenseKey = $key;
+    }
+
+    /* ADDITIONAL OPTIONS *****************************************************/
+
+    // Set other options.
+    public function setOptions($options)
+    {
+        $this->options = $options;
+    }
+
+    /* PRIVATE HELPER METHODS *************************************************/
 
     private function getCommandLine()
     {
