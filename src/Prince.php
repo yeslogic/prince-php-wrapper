@@ -195,12 +195,9 @@ class Prince
     // html: True if all documents should be treated as HTML.
     public function setHTML($html)
     {
-        if ($html)
-        {
+        if ($html) {
             $this->inputType = "html";
-        }
-        else
-        {
+        } else {
             $this->inputType = "xml";
         }
     }
@@ -250,7 +247,7 @@ class Prince
     // Specifies whether XML external entities should be allowed to be used.
     public function setXmlExternalEntities($xmlExternalEntities)
     {
-        $this->xmlExternalEntities = $xmlExternalEntities ;
+        $this->xmlExternalEntities = $xmlExternalEntities;
     }
 
     // Specify whether to disable access to local files.
@@ -280,24 +277,15 @@ class Prince
     // Specify HTTP authentication methods. (basic, digest, ntlm, negotiate)
     public function setAuthMethod($authMethod)
     {
-        if (strcasecmp($authMethod, 'basic') == 0)
-        {
+        if (strcasecmp($authMethod, 'basic') == 0) {
             $this->authMethod = 'basic';
-        }
-        else if (strcasecmp($authMethod, 'digest') == 0)
-        {
+        } else if (strcasecmp($authMethod, 'digest') == 0) {
             $this->authMethod = 'digest';
-        }
-        else if (strcasecmp($authMethod, 'ntlm') == 0)
-        {
+        } else if (strcasecmp($authMethod, 'ntlm') == 0) {
             $this->authMethod = 'ntlm';
-        }
-        else if (strcasecmp($authMethod, 'negotiate') == 0)
-        {
+        } else if (strcasecmp($authMethod, 'negotiate') == 0) {
             $this->authMethod = 'negotiate';
-        }
-        else
-        {
+        } else {
             $this->authMethod = '';
         }
     }
@@ -323,16 +311,11 @@ class Prince
     // Only send USER:PASS for this scheme. (HTTP, HTTPS)
     public function setAuthScheme($authScheme)
     {
-        if (strcasecmp($authScheme, 'http') == 0)
-        {
+        if (strcasecmp($authScheme, 'http') == 0) {
             $this->authScheme = 'http';
-        }
-        else if (strcasecmp($authScheme, 'https') == 0)
-        {
+        } else if (strcasecmp($authScheme, 'https') == 0) {
             $this->authScheme = 'https';
-        }
-        else
-        {
+        } else {
             $this->authScheme = '';
         }
     }
@@ -508,13 +491,13 @@ class Prince
     // Specify the page size (eg. A4).
     public function setPageSize($pageSize)
     {
-         $this->pageSize = $pageSize;
+        $this->pageSize = $pageSize;
     }
 
     // Specify the page margin (eg. 20mm).
     public function setPageMargin($pageMargin)
     {
-         $this->pageMargin = $pageMargin;
+        $this->pageMargin = $pageMargin;
     }
 
     // Specify whether to ignore author style sheets.
@@ -546,16 +529,16 @@ class Prince
     // disallowModify: True to disallow modification of the PDF file.
     // disallowCopy: True to disallow copying from the PDF file.
     // disallowAnnotate: True to disallow annotation of the PDF file.
-      public function setEncryptInfo($keyBits,
-                                   $userPassword,
-                                   $ownerPassword,
-                                   $disallowPrint = false,
-                                   $disallowModify = false,
-                                   $disallowCopy = false,
-                                   $disallowAnnotate = false)
-    {
-        if ($keyBits != 40 && $keyBits != 128)
-        {
+    public function setEncryptInfo(
+        $keyBits,
+        $userPassword,
+        $ownerPassword,
+        $disallowPrint = false,
+        $disallowModify = false,
+        $disallowCopy = false,
+        $disallowAnnotate = false
+    ) {
+        if ($keyBits != 40 && $keyBits != 128) {
             throw new Exception("Invalid value for keyBits: $keyBits" .
                 " (must be 40 or 128)");
         }
@@ -563,27 +546,23 @@ class Prince
         $this->encrypt = true;
 
         $this->encryptInfo =
-                ' --key-bits ' . $keyBits .
-                ' --user-password="' . $this->cmdlineArgEscape($userPassword) .
-                '" --owner-password="' . $this->cmdlineArgEscape($ownerPassword) . '" ';
+            ' --key-bits ' . $keyBits .
+            ' --user-password="' . $this->cmdlineArgEscape($userPassword) .
+            '" --owner-password="' . $this->cmdlineArgEscape($ownerPassword) . '" ';
 
-        if ($disallowPrint)
-        {
+        if ($disallowPrint) {
             $this->encryptInfo .= '--disallow-print ';
         }
 
-        if ($disallowModify)
-        {
+        if ($disallowModify) {
             $this->encryptInfo .= '--disallow-modify ';
         }
 
-        if ($disallowCopy)
-        {
+        if ($disallowCopy) {
             $this->encryptInfo .= '--disallow-copy ';
         }
 
-        if ($disallowAnnotate)
-        {
+        if ($disallowAnnotate) {
             $this->encryptInfo .= '--disallow-annotate ';
         }
     }
@@ -635,8 +614,7 @@ class Prince
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=normal ';
 
-        foreach ($xmlPaths as $xmlPath)
-        {
+        foreach ($xmlPaths as $xmlPath) {
             $pathAndArgs .= '"' . $xmlPath . '" ';
         }
 
@@ -656,8 +634,7 @@ class Prince
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=buffered ';
 
-        foreach ($xmlPaths as $xmlPath)
-        {
+        foreach ($xmlPaths as $xmlPath) {
             $pathAndArgs .= '"' . $xmlPath . '" ';
         }
 
@@ -713,260 +690,206 @@ class Prince
     {
         $cmdline = '"' . $this->exePath . '" ' . $this->styleSheets . $this->scripts . $this->fileAttachments . $this->remaps;
 
-        if (strcasecmp($this->inputType, 'auto') == 0)
-        {
-        }
-        else
-        {
+        if (strcasecmp($this->inputType, 'auto') == 0) {
+        } else {
             $cmdline .=  '-i "' . $this->inputType . '" ';
         }
 
-        if ($this->javascript)
-        {
+        if ($this->javascript) {
             $cmdline .= '--javascript ';
         }
 
-        if ($this->baseURL != '')
-        {
+        if ($this->baseURL != '') {
             $cmdline .= '--baseurl="' . $this->baseURL . '" ';
         }
 
-        if ($this->doXInclude == false)
-        {
+        if ($this->doXInclude == false) {
             $cmdline .= '--no-xinclude ';
-        }
-        else
-        {
+        } else {
             $cmdline .= '--xinclude ';
         }
 
-        if ($this->xmlExternalEntities == true)
-        {
+        if ($this->xmlExternalEntities == true) {
             $cmdline .= '--xml-external-entities ';
         }
 
-        if ($this->noLocalFiles == true)
-        {
+        if ($this->noLocalFiles == true) {
             $cmdline .= '--no-local-files ';
         }
 
-        if ($this->noNetwork == true)
-        {
+        if ($this->noNetwork == true) {
             $cmdline .= '--no-network ';
         }
 
-        if ($this->httpProxy != '')
-        {
+        if ($this->httpProxy != '') {
             $cmdline .= '--http-proxy="' . $this->httpProxy . '" ';
         }
 
-        if ($this->httpTimeout !='')
-        {
+        if ($this->httpTimeout != '') {
             $cmdline .= '--http-timeout="' . $this->httpTimeout . '" ';
         }
 
-        if ($this->cookie != '')
-        {
+        if ($this->cookie != '') {
             $cmdline .= '--cookie="' . $this->cookie . '" ';
         }
 
-        if ($this->cookieJar != '')
-        {
+        if ($this->cookieJar != '') {
             $cmdline .= '--cookiejar="' . $this->cookieJar . '" ';
         }
 
-        if ($this->sslCaCert != '')
-        {
+        if ($this->sslCaCert != '') {
             $cmdline .= '--ssl-cacert="' . $this->sslCaCert . '" ';
         }
 
-        if ($this->sslCaPath != '')
-        {
+        if ($this->sslCaPath != '') {
             $cmdline .= '--ssl-capath="' . $this->sslCaPath . '" ';
         }
 
-        if ($this->sslVersion != '')
-        {
+        if ($this->sslVersion != '') {
             $cmdline .= '--ssl-version="' . $this->sslVersion . '" ';
         }
 
-        if ($this->insecure)
-        {
+        if ($this->insecure) {
             $cmdline .= '--insecure ';
         }
 
-        if ($this->noParallelDownloads)
-        {
+        if ($this->noParallelDownloads) {
             $cmdline .= '--no-parallel-downloads ';
         }
 
-        if ($this->logFile != '')
-        {
+        if ($this->logFile != '') {
             $cmdline .= '--log="' . $this->logFile . '" ';
         }
 
-        if ($this->verbose)
-        {
+        if ($this->verbose) {
             $cmdline .= '--verbose ';
         }
 
-        if ($this->debug)
-        {
+        if ($this->debug) {
             $cmdline .= '--debug ';
         }
 
-        if ($this->noWarnCss)
-        {
+        if ($this->noWarnCss) {
             $cmdline .= '--no-warn-css ';
         }
 
-        if ($this->fileRoot != '')
-        {
+        if ($this->fileRoot != '') {
             $cmdline .= '--fileroot="' . $this->fileRoot . '" ';
         }
 
-        if ($this->licenseFile != '')
-        {
+        if ($this->licenseFile != '') {
             $cmdline .= '--license-file="' . $this->licenseFile . '" ';
         }
 
-        if ($this->licenseKey != '')
-        {
+        if ($this->licenseKey != '') {
             $cmdline .= '--license-key="' . $this->licenseKey . '" ';
         }
 
-        if ($this->embedFonts == false)
-        {
+        if ($this->embedFonts == false) {
             $cmdline .= '--no-embed-fonts ';
         }
 
-        if ($this->subsetFonts == false)
-        {
+        if ($this->subsetFonts == false) {
             $cmdline .= '--no-subset-fonts ';
         }
 
-        if ($this->noArtificialFonts == true)
-        {
+        if ($this->noArtificialFonts == true) {
             $cmdline .= '--no-artificial-fonts ';
         }
 
-        if ($this->authMethod != '')
-        {
+        if ($this->authMethod != '') {
             $cmdline .=  '--auth-method="' . $this->cmdlineArgEscape($this->authMethod) . '" ';
         }
 
-        if ($this->authUser != '')
-        {
+        if ($this->authUser != '') {
             $cmdline .= '--auth-user="' . $this->cmdlineArgEscape($this->authUser) . '" ';
         }
 
-        if ($this->authPassword != '')
-        {
+        if ($this->authPassword != '') {
             $cmdline .= '--auth-password="' . $this->cmdlineArgEscape($this->authPassword) . '" ';
         }
 
-        if ($this->authServer != '')
-        {
+        if ($this->authServer != '') {
             $cmdline .= '--auth-server="' . $this->cmdlineArgEscape($this->authServer) . '" ';
         }
 
-        if ($this->authScheme != '')
-        {
+        if ($this->authScheme != '') {
             $cmdline .= '--auth-scheme="' . $this->cmdlineArgEscape($this->authScheme) . '" ';
         }
 
-        if ($this->noAuthPreemptive)
-        {
+        if ($this->noAuthPreemptive) {
             $cmdline .= '--no-auth-preemptive ';
         }
 
-        if ($this->media != '')
-        {
+        if ($this->media != '') {
             $cmdline .= '--media="' . $this->cmdlineArgEscape($this->media) . '" ';
         }
 
-        if ($this->pageSize != '')
-        {
+        if ($this->pageSize != '') {
             $cmdline .= '--page-size="' . $this->cmdlineArgEscape($this->pageSize) . '" ';
         }
 
-        if ($this->pageMargin != '')
-        {
+        if ($this->pageMargin != '') {
             $cmdline .= '--page-margin="' . $this->cmdlineArgEscape($this->pageMargin) . '" ';
         }
 
-        if ($this->noAuthorStyle == true)
-        {
+        if ($this->noAuthorStyle == true) {
             $cmdline .= '--no-author-style ';
         }
 
-        if ($this->noDefaultStyle == true)
-        {
+        if ($this->noDefaultStyle == true) {
             $cmdline .= '--no-default-style ';
         }
 
-        if ($this->forceIdentityEncoding == true)
-        {
+        if ($this->forceIdentityEncoding == true) {
             $cmdline .= '--force-identity-encoding ';
         }
 
-        if ($this->compress == false)
-        {
+        if ($this->compress == false) {
             $cmdline .= '--no-compress ';
         }
 
-        if ($this->pdfOutputIntent != '')
-        {
+        if ($this->pdfOutputIntent != '') {
             $cmdline .= '--pdf-output-intent="' . $this->cmdlineArgEscape($this->pdfOutputIntent) . '" ';
 
-            if ($this->convertColors == true)
-            {
+            if ($this->convertColors == true) {
                 $cmdline .= '--convert-colors ';
             }
         }
 
-        if ($this->fallbackCmykProfile != '')
-        {
-            $cmdline .= '--fallback-cmyk-profile="'. $this->cmdlineArgEscape($this->fallbackCmykProfile) . '" ';
+        if ($this->fallbackCmykProfile != '') {
+            $cmdline .= '--fallback-cmyk-profile="' . $this->cmdlineArgEscape($this->fallbackCmykProfile) . '" ';
         }
 
-        if ($this->pdfProfile != '')
-        {
+        if ($this->pdfProfile != '') {
             $cmdline .= '--pdf-profile="' . $this->cmdlineArgEscape($this->pdfProfile) . '" ';
         }
 
-        if ($this->pdfTitle != '')
-        {
+        if ($this->pdfTitle != '') {
             $cmdline .= '--pdf-title="' . $this->cmdlineArgEscape($this->pdfTitle) . '" ';
         }
 
-        if ($this->pdfSubject != '')
-        {
+        if ($this->pdfSubject != '') {
             $cmdline .= '--pdf-subject="' . $this->cmdlineArgEscape($this->pdfSubject) . '" ';
         }
 
-        if ($this->pdfAuthor != '')
-        {
+        if ($this->pdfAuthor != '') {
             $cmdline .= '--pdf-author="' . $this->cmdlineArgEscape($this->pdfAuthor) . '" ';
         }
 
-        if ($this->pdfKeywords != '')
-        {
+        if ($this->pdfKeywords != '') {
             $cmdline .= '--pdf-keywords="' . $this->cmdlineArgEscape($this->pdfKeywords) . '" ';
         }
 
-        if ($this->pdfCreator != '')
-        {
+        if ($this->pdfCreator != '') {
             $cmdline .= '--pdf-creator="' . $this->cmdlineArgEscape($this->pdfCreator) . '" ';
         }
 
-        if ($this->encrypt)
-        {
+        if ($this->encrypt) {
             $cmdline .= '--encrypt ' . $this->encryptInfo;
         }
 
-        if ($this->options != '')
-        {
+        if ($this->options != '') {
             $cmdline .= $this->cmdlineArgEscape($this->options) . ' ';
         }
 
@@ -976,15 +899,14 @@ class Prince
     private function convert_internal_file_to_file($pathAndArgs, &$msgs, &$dats)
     {
         $descriptorspec = array(
-                                0 => array("pipe", "r"),
-                                1 => array("pipe", "w"),
-                                2 => array("pipe", "w")
-                                );
+            0 => array("pipe", "r"),
+            1 => array("pipe", "w"),
+            2 => array("pipe", "w")
+        );
 
         $process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
 
-        if (is_resource($process))
-        {
+        if (is_resource($process)) {
             $result = $this->readMessages($pipes[2], $msgs, $dats);
 
             fclose($pipes[0]);
@@ -994,9 +916,7 @@ class Prince
             proc_close($process);
 
             return ($result == 'success');
-        }
-        else
-        {
+        } else {
             throw new Exception("Failed to execute $pathAndArgs");
         }
     }
@@ -1004,15 +924,14 @@ class Prince
     private function convert_internal_string_to_file($pathAndArgs, $xmlString, &$msgs, &$dats)
     {
         $descriptorspec = array(
-                            0 => array("pipe", "r"),
-                            1 => array("pipe", "w"),
-                            2 => array("pipe", "w")
-                            );
+            0 => array("pipe", "r"),
+            1 => array("pipe", "w"),
+            2 => array("pipe", "w")
+        );
 
         $process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
 
-        if (is_resource($process))
-        {
+        if (is_resource($process)) {
             fwrite($pipes[0], $xmlString);
             fclose($pipes[0]);
             fclose($pipes[1]);
@@ -1024,9 +943,7 @@ class Prince
             proc_close($process);
 
             return ($result == 'success');
-        }
-        else
-        {
+        } else {
             throw new Exception("Failed to execute $pathAndArgs");
         }
     }
@@ -1034,15 +951,14 @@ class Prince
     private function convert_internal_file_to_passthru($pathAndArgs, &$msgs, &$dats)
     {
         $descriptorspec = array(
-                            0 => array("pipe", "r"),
-                            1 => array("pipe", "w"),
-                            2 => array("pipe", "w")
-                            );
+            0 => array("pipe", "r"),
+            1 => array("pipe", "w"),
+            2 => array("pipe", "w")
+        );
 
         $process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
 
-        if (is_resource($process))
-        {
+        if (is_resource($process)) {
             fclose($pipes[0]);
             fpassthru($pipes[1]);
             fclose($pipes[1]);
@@ -1054,9 +970,7 @@ class Prince
             proc_close($process);
 
             return ($result == 'success');
-        }
-        else
-        {
+        } else {
             throw new Exception("Failed to execute $pathAndArgs");
         }
     }
@@ -1064,15 +978,14 @@ class Prince
     private function convert_internal_string_to_passthru($pathAndArgs, $xmlString, &$msgs, &$dats)
     {
         $descriptorspec = array(
-                            0 => array("pipe", "r"),
-                            1 => array("pipe", "w"),
-                            2 => array("pipe", "w")
-                            );
+            0 => array("pipe", "r"),
+            1 => array("pipe", "w"),
+            2 => array("pipe", "w")
+        );
 
         $process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
 
-        if (is_resource($process))
-        {
+        if (is_resource($process)) {
             fwrite($pipes[0], $xmlString);
             fclose($pipes[0]);
             fpassthru($pipes[1]);
@@ -1085,30 +998,23 @@ class Prince
             proc_close($process);
 
             return ($result == 'success');
-        }
-        else
-        {
+        } else {
             throw new Exception("Failed to execute $pathAndArgs");
         }
     }
 
     private function readMessages($pipe, &$msgs, &$dats)
     {
-        while (!feof($pipe))
-        {
+        while (!feof($pipe)) {
             $line = fgets($pipe);
 
-            if ($line != false)
-            {
+            if ($line != false) {
                 $msgtag = substr($line, 0, 4);
                 $msgbody = rtrim(substr($line, 4));
 
-                if ($msgtag == 'fin|')
-                {
+                if ($msgtag == 'fin|') {
                     return $msgbody;
-                }
-                else if ($msgtag == 'msg|')
-                {
+                } else if ($msgtag == 'msg|') {
                     $msg = explode('|', $msgbody, 4);
 
                     // $msg[0] = 'err' | 'wrn' | 'inf'
@@ -1116,15 +1022,11 @@ class Prince
                     // $msg[2] = message text, trailing newline stripped
 
                     $msgs[] = $msg;
-                }
-                else if ($msgtag == 'dat|')
-                {
+                } else if ($msgtag == 'dat|') {
                     $dat = explode('|', $msgbody, 2);
 
                     $dats[] = $dat;
-                }
-                else
-                {
+                } else {
                     // ignore other messages
                 }
             }
@@ -1149,29 +1051,22 @@ class Prince
         $numSlashes = 0;
         $subStrStart = 0;
 
-        for ($i = 0; $i < $len; $i++)
-        {
-            if ($argStr[$i] == chr(34))
-            {
+        for ($i = 0; $i < $len; $i++) {
+            if ($argStr[$i] == chr(34)) {
                 $numSlashes = 0;
                 $j = $i - 1;
-                while ($j >= 0)
-                {
-                    if ($argStr[$j] == chr(92))
-                    {
+                while ($j >= 0) {
+                    if ($argStr[$j] == chr(92)) {
                         $numSlashes += 1;
                         $j -= 1;
-                    }
-                    else
-                    {
+                    } else {
                         break;
                     }
                 }
 
                 $outputStr .= substr($argStr, $subStrStart, ($i - $numSlashes - $subStrStart));
 
-                for ($k = 0; $k < $numSlashes; $k++)
-                {
+                for ($k = 0; $k < $numSlashes; $k++) {
                     $outputStr .= chr(92) . chr(92);
                 }
                 $outputStr .= chr(92) . chr(34);
@@ -1191,20 +1086,15 @@ class Prince
         $len = strlen($argStr);
 
         $numTrailingSlashes = 0;
-        for ($i = ($len - 1); $i  >= 0; $i--)
-        {
-            if ($argStr[$i] == chr(92))
-            {
+        for ($i = ($len - 1); $i >= 0; $i--) {
+            if ($argStr[$i] == chr(92)) {
                 $numTrailingSlashes += 1;
-            }
-            else
-            {
+            } else {
                 break;
             }
         }
 
-        while ($numTrailingSlashes > 0)
-        {
+        while ($numTrailingSlashes > 0) {
             $argStr .= chr(92);
             $numTrailingSlashes -= 1;
         }
@@ -1212,4 +1102,3 @@ class Prince
         return $argStr;
     }
 }
-?>
