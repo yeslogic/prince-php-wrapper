@@ -1,7 +1,15 @@
 <?php
-// Prince - PHP interface
-// Copyright 2005-2020 YesLogic Pty. Ltd.
-// https://www.princexml.com
+
+/**
+ * PHP wrapper class for Prince HTML to PDF formatter.
+ *
+ * @package   Prince
+ * @author    Michael Day <mikeday@yeslogic.com>
+ * @copyright 2005-2021 YesLogic Pty. Ltd.
+ * @license   MIT
+ * @version   1.1.0
+ * @link      https://www.princexml.com
+ */
 
 namespace Prince;
 
