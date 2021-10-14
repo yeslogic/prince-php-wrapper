@@ -8,18 +8,23 @@ namespace Prince;
 class Prince
 {
     private $exePath;
-    private $styleSheets;
-    private $scripts;
-    private $fileAttachments;
-    private $licenseFile;
-    private $licenseKey;
+
+    // Logging options.
+    private $verbose;
+    private $debug;
+    private $logFile;
+    private $noWarnCss;
+
+    // Input options.
     private $inputType;
-    private $javascript;
     private $baseURL;
+    private $remaps;
+    private $fileRoot;
     private $doXInclude;
     private $xmlExternalEntities;
     private $noLocalFiles;
-    private $remaps;
+
+    // Network options.
     private $noNetwork;
     private $authUser;
     private $authPassword;
@@ -36,49 +41,69 @@ class Prince
     private $sslVersion;
     private $insecure;
     private $noParallelDownloads;
-    private $logFile;
-    private $verbose;
-    private $debug;
-    private $noWarnCss;
-    private $fileRoot;
-    private $embedFonts;
-    private $subsetFonts;
-    private $noArtificialFonts;
-    private $forceIdentityEncoding;
-    private $compress;
-    private $pdfOutputIntent;
-    private $convertColors;
-    private $fallbackCmykProfile;
-    private $pdfProfile;
-    private $pdfTitle;
-    private $pdfSubject;
-    private $pdfAuthor;
-    private $pdfKeywords;
-    private $pdfCreator;
+
+    // JavaScript options.
+    private $javascript;
+    private $scripts;
+
+    // CSS options.
+    private $styleSheets;
     private $media;
     private $pageSize;
     private $pageMargin;
     private $noAuthorStyle;
     private $noDefaultStyle;
+
+    // PDF output options.
+    private $pdfProfile;
+    private $pdfOutputIntent;
+    private $fileAttachments;
+    private $noArtificialFonts;
+    private $embedFonts;
+    private $subsetFonts;
+    private $forceIdentityEncoding;
+    private $compress;
+    private $convertColors;
+    private $fallbackCmykProfile;
+
+    // PDF metadata options.
+    private $pdfTitle;
+    private $pdfSubject;
+    private $pdfAuthor;
+    private $pdfKeywords;
+    private $pdfCreator;
+
+    // PDF encryption options.
     private $encrypt;
     private $encryptInfo;
+
+    // License options.
+    private $licenseFile;
+    private $licenseKey;
+
+    // Additional options.
     private $options;
 
     public function __construct($exePath)
     {
         $this->exePath = $exePath;
-        $this->styleSheets = '';
-        $this->scripts = '';
-        $this->fileAttachments = '';
-        $this->licenseFile = '';
-        $this->licenseKey = '';
+
+        // Logging options.
+        $this->verbose = false;
+        $this->debug = false;
+        $this->logFile = '';
+        $this->noWarnCss = false;
+
+        // Input options.
         $this->inputType = 'auto';
-        $this->javascript = false;
         $this->baseURL = '';
+        $this->remaps = '';
+        $this->fileRoot = '';
         $this->doXInclude = false;
         $this->xmlExternalEntities = false;
         $this->noLocalFiles = false;
-        $this->remaps = '';
+
+        // Network options.
         $this->noNetwork = false;
         $this->authUser = '';
         $this->authPassword = '';
@@ -95,32 +120,47 @@ class Prince
         $this->sslVersion = '';
         $this->insecure = false;
         $this->noParallelDownloads = false;
-        $this->logFile = '';
-        $this->verbose = false;
-        $this->debug = false;
-        $this->noWarnCss = false;
-        $this->fileRoot = '';
-        $this->embedFonts = true;
-        $this->subsetFonts = true;
-        $this->noArtificialFonts = false;
-        $this->forceIdentityEncoding = false;
-        $this->compress = true;
-        $this->pdfOutputIntent = '';
-        $this->convertColors = false;
-        $this->fallbackCmykProfile = '';
-        $this->pdfProfile = '';
-        $this->pdfTitle = '';
-        $this->pdfSubject = '';
-        $this->pdfAuthor = '';
-        $this->pdfKeywords = '';
-        $this->pdfCreator = '';
+
+        // JavaScript options.
+        $this->javascript = false;
+        $this->scripts = '';
+
+        // CSS options.
+        $this->styleSheets = '';
         $this->media = '';
         $this->pageSize = '';
         $this->pageMargin = '';
         $this->noAuthorStyle = false;
         $this->noDefaultStyle = false;
+
+        // PDF output options.
+        $this->pdfProfile = '';
+        $this->pdfOutputIntent = '';
+        $this->fileAttachments = '';
+        $this->noArtificialFonts = false;
+        $this->embedFonts = true;
+        $this->subsetFonts = true;
+        $this->forceIdentityEncoding = false;
+        $this->compress = true;
+        $this->convertColors = false;
+        $this->fallbackCmykProfile = '';
+
+        // PDF metadata options.
+        $this->pdfTitle = '';
+        $this->pdfSubject = '';
+        $this->pdfAuthor = '';
+        $this->pdfKeywords = '';
+        $this->pdfCreator = '';
+
+        // PDF encryption options.
         $this->encrypt = false;
         $this->encryptInfo = '';
+
+        // License options.
+        $this->licenseFile = '';
+        $this->licenseKey = '';
+
+        // Additional options.
         $this->options = '';
     }
 
