@@ -212,8 +212,12 @@ class Prince
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_file_to_file($xmlPath, $pdfPath, &$msgs = array(), &$dats = array())
-    {
+    public function convert_file_to_file(
+        $xmlPath,
+        $pdfPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=normal ';
         $pathAndArgs .= '"' . $xmlPath . '" -o "' . $pdfPath . '"';
@@ -231,8 +235,12 @@ class Prince
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_multiple_files($xmlPaths, $pdfPath, &$msgs = array(), &$dats = array())
-    {
+    public function convert_multiple_files(
+        $xmlPaths,
+        $pdfPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=normal ';
 
@@ -255,8 +263,11 @@ class Prince
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_multiple_files_to_passthru($xmlPaths, &$msgs = array(), &$dats = array())
-    {
+    public function convert_multiple_files_to_passthru(
+        $xmlPaths,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=buffered ';
 
@@ -279,8 +290,11 @@ class Prince
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_file_to_passthru($xmlPath, &$msgs = array(), &$dats = array())
-    {
+    public function convert_file_to_passthru(
+        $xmlPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=buffered "' . $xmlPath . '" -o -';
 
@@ -297,12 +311,20 @@ class Prince
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_string_to_passthru($xmlString, &$msgs = array(), &$dats = array())
-    {
+    public function convert_string_to_passthru(
+        $xmlString,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=buffered -';
 
-        return $this->convert_internal_string_to_passthru($pathAndArgs, $xmlString, $msgs, $dats);
+        return $this->convert_internal_string_to_passthru(
+            $pathAndArgs,
+            $xmlString,
+            $msgs,
+            $dats
+        );
     }
 
     /**
@@ -315,13 +337,22 @@ class Prince
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_string_to_file($xmlString, $pdfPath, &$msgs = array(), &$dats = array())
-    {
+    public function convert_string_to_file(
+        $xmlString,
+        $pdfPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=normal ';
         $pathAndArgs .= ' - -o "' . $pdfPath . '"';
 
-        return $this->convert_internal_string_to_file($pathAndArgs, $xmlString, $msgs, $dats);
+        return $this->convert_internal_string_to_file(
+            $pathAndArgs,
+            $xmlString,
+            $msgs,
+            $dats
+        );
     }
 
     /* LOGGING OPTIONS ********************************************************/
@@ -1049,7 +1080,8 @@ class Prince
         $this->encryptInfo =
             ' --key-bits ' . $keyBits .
             ' --user-password="' . $this->cmdlineArgEscape($userPassword) .
-            '" --owner-password="' . $this->cmdlineArgEscape($ownerPassword) . '" ';
+            '" --owner-password="' . $this->cmdlineArgEscape($ownerPassword) .
+            '" ';
 
         if ($disallowPrint) {
             $this->encryptInfo .= '--disallow-print ';
@@ -1110,7 +1142,8 @@ class Prince
 
     private function getCommandLine()
     {
-        $cmdline = '"' . $this->exePath . '" ' . $this->styleSheets . $this->scripts . $this->fileAttachments . $this->remaps;
+        $cmdline = '"' . $this->exePath . '" ' . $this->styleSheets .
+            $this->scripts . $this->fileAttachments . $this->remaps;
 
         if (strcasecmp($this->inputType, 'auto') == 0) {
         } else {
@@ -1220,23 +1253,28 @@ class Prince
         }
 
         if ($this->authMethod != '') {
-            $cmdline .=  '--auth-method="' . $this->cmdlineArgEscape($this->authMethod) . '" ';
+            $cmdline .=  '--auth-method="' .
+                $this->cmdlineArgEscape($this->authMethod) . '" ';
         }
 
         if ($this->authUser != '') {
-            $cmdline .= '--auth-user="' . $this->cmdlineArgEscape($this->authUser) . '" ';
+            $cmdline .= '--auth-user="' .
+                $this->cmdlineArgEscape($this->authUser) . '" ';
         }
 
         if ($this->authPassword != '') {
-            $cmdline .= '--auth-password="' . $this->cmdlineArgEscape($this->authPassword) . '" ';
+            $cmdline .= '--auth-password="' .
+                $this->cmdlineArgEscape($this->authPassword) . '" ';
         }
 
         if ($this->authServer != '') {
-            $cmdline .= '--auth-server="' . $this->cmdlineArgEscape($this->authServer) . '" ';
+            $cmdline .= '--auth-server="' .
+                $this->cmdlineArgEscape($this->authServer) . '" ';
         }
 
         if ($this->authScheme != '') {
-            $cmdline .= '--auth-scheme="' . $this->cmdlineArgEscape($this->authScheme) . '" ';
+            $cmdline .= '--auth-scheme="' .
+                $this->cmdlineArgEscape($this->authScheme) . '" ';
         }
 
         if ($this->noAuthPreemptive) {
@@ -1244,15 +1282,18 @@ class Prince
         }
 
         if ($this->media != '') {
-            $cmdline .= '--media="' . $this->cmdlineArgEscape($this->media) . '" ';
+            $cmdline .= '--media="' .
+                $this->cmdlineArgEscape($this->media) . '" ';
         }
 
         if ($this->pageSize != '') {
-            $cmdline .= '--page-size="' . $this->cmdlineArgEscape($this->pageSize) . '" ';
+            $cmdline .= '--page-size="' .
+                $this->cmdlineArgEscape($this->pageSize) . '" ';
         }
 
         if ($this->pageMargin != '') {
-            $cmdline .= '--page-margin="' . $this->cmdlineArgEscape($this->pageMargin) . '" ';
+            $cmdline .= '--page-margin="' .
+                $this->cmdlineArgEscape($this->pageMargin) . '" ';
         }
 
         if ($this->noAuthorStyle == true) {
@@ -1272,7 +1313,8 @@ class Prince
         }
 
         if ($this->pdfOutputIntent != '') {
-            $cmdline .= '--pdf-output-intent="' . $this->cmdlineArgEscape($this->pdfOutputIntent) . '" ';
+            $cmdline .= '--pdf-output-intent="' .
+                $this->cmdlineArgEscape($this->pdfOutputIntent) . '" ';
 
             if ($this->convertColors == true) {
                 $cmdline .= '--convert-colors ';
@@ -1280,31 +1322,38 @@ class Prince
         }
 
         if ($this->fallbackCmykProfile != '') {
-            $cmdline .= '--fallback-cmyk-profile="' . $this->cmdlineArgEscape($this->fallbackCmykProfile) . '" ';
+            $cmdline .= '--fallback-cmyk-profile="' .
+                $this->cmdlineArgEscape($this->fallbackCmykProfile) . '" ';
         }
 
         if ($this->pdfProfile != '') {
-            $cmdline .= '--pdf-profile="' . $this->cmdlineArgEscape($this->pdfProfile) . '" ';
+            $cmdline .= '--pdf-profile="' .
+                $this->cmdlineArgEscape($this->pdfProfile) . '" ';
         }
 
         if ($this->pdfTitle != '') {
-            $cmdline .= '--pdf-title="' . $this->cmdlineArgEscape($this->pdfTitle) . '" ';
+            $cmdline .= '--pdf-title="' .
+                $this->cmdlineArgEscape($this->pdfTitle) . '" ';
         }
 
         if ($this->pdfSubject != '') {
-            $cmdline .= '--pdf-subject="' . $this->cmdlineArgEscape($this->pdfSubject) . '" ';
+            $cmdline .= '--pdf-subject="' .
+                $this->cmdlineArgEscape($this->pdfSubject) . '" ';
         }
 
         if ($this->pdfAuthor != '') {
-            $cmdline .= '--pdf-author="' . $this->cmdlineArgEscape($this->pdfAuthor) . '" ';
+            $cmdline .= '--pdf-author="' .
+                $this->cmdlineArgEscape($this->pdfAuthor) . '" ';
         }
 
         if ($this->pdfKeywords != '') {
-            $cmdline .= '--pdf-keywords="' . $this->cmdlineArgEscape($this->pdfKeywords) . '" ';
+            $cmdline .= '--pdf-keywords="' .
+                $this->cmdlineArgEscape($this->pdfKeywords) . '" ';
         }
 
         if ($this->pdfCreator != '') {
-            $cmdline .= '--pdf-creator="' . $this->cmdlineArgEscape($this->pdfCreator) . '" ';
+            $cmdline .= '--pdf-creator="' .
+                $this->cmdlineArgEscape($this->pdfCreator) . '" ';
         }
 
         if ($this->encrypt) {
@@ -1326,7 +1375,14 @@ class Prince
             2 => array("pipe", "w")
         );
 
-        $process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
+        $process = proc_open(
+            $pathAndArgs,
+            $descriptorspec,
+            $pipes,
+            NULL,
+            NULL,
+            array('bypass_shell' => TRUE)
+        );
 
         if (is_resource($process)) {
             $result = $this->readMessages($pipes[2], $msgs, $dats);
@@ -1343,15 +1399,26 @@ class Prince
         }
     }
 
-    private function convert_internal_string_to_file($pathAndArgs, $xmlString, &$msgs, &$dats)
-    {
+    private function convert_internal_string_to_file(
+        $pathAndArgs,
+        $xmlString,
+        &$msgs,
+        &$dats
+    ) {
         $descriptorspec = array(
             0 => array("pipe", "r"),
             1 => array("pipe", "w"),
             2 => array("pipe", "w")
         );
 
-        $process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
+        $process = proc_open(
+            $pathAndArgs,
+            $descriptorspec,
+            $pipes,
+            NULL,
+            NULL,
+            array('bypass_shell' => TRUE)
+        );
 
         if (is_resource($process)) {
             fwrite($pipes[0], $xmlString);
@@ -1370,15 +1437,25 @@ class Prince
         }
     }
 
-    private function convert_internal_file_to_passthru($pathAndArgs, &$msgs, &$dats)
-    {
+    private function convert_internal_file_to_passthru(
+        $pathAndArgs,
+        &$msgs,
+        &$dats
+    ) {
         $descriptorspec = array(
             0 => array("pipe", "r"),
             1 => array("pipe", "w"),
             2 => array("pipe", "w")
         );
 
-        $process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
+        $process = proc_open(
+            $pathAndArgs,
+            $descriptorspec,
+            $pipes,
+            NULL,
+            NULL,
+            array('bypass_shell' => TRUE)
+        );
 
         if (is_resource($process)) {
             fclose($pipes[0]);
@@ -1397,15 +1474,26 @@ class Prince
         }
     }
 
-    private function convert_internal_string_to_passthru($pathAndArgs, $xmlString, &$msgs, &$dats)
-    {
+    private function convert_internal_string_to_passthru(
+        $pathAndArgs,
+        $xmlString,
+        &$msgs,
+        &$dats
+    ) {
         $descriptorspec = array(
             0 => array("pipe", "r"),
             1 => array("pipe", "w"),
             2 => array("pipe", "w")
         );
 
-        $process = proc_open($pathAndArgs, $descriptorspec, $pipes, NULL, NULL, array('bypass_shell' => TRUE));
+        $process = proc_open(
+            $pathAndArgs,
+            $descriptorspec,
+            $pipes,
+            NULL,
+            NULL,
+            array('bypass_shell' => TRUE)
+        );
 
         if (is_resource($process)) {
             fwrite($pipes[0], $xmlString);
@@ -1462,11 +1550,13 @@ class Prince
         return $this->cmdlineArgEscape2($this->cmdlineArgEscape1($argStr));
     }
 
-    // In the input string $argStr, a double quote with zero or more preceding backslash(es)
-    // will be replaced with: n*backslash + doublequote => (2*n+1)*backslash + doublequote
+    // In the input string $argStr, a double quote with zero or more preceding
+    // backslash(es) will be replaced with:
+    // n*backslash + doublequote => (2*n+1)*backslash + doublequote
     private function cmdlineArgEscape1($argStr)
     {
-        // chr(34) is character double quote ( " ), chr(92) is character backslash ( \ ).
+        // chr(34) is character double quote ( " ),
+        // chr(92) is character backslash ( \ ).
         $len = strlen($argStr);
 
         $outputStr = '';
@@ -1486,7 +1576,11 @@ class Prince
                     }
                 }
 
-                $outputStr .= substr($argStr, $subStrStart, ($i - $numSlashes - $subStrStart));
+                $outputStr .= substr(
+                    $argStr,
+                    $subStrStart,
+                    ($i - $numSlashes - $subStrStart)
+                );
 
                 for ($k = 0; $k < $numSlashes; $k++) {
                     $outputStr .= chr(92) . chr(92);
@@ -1501,7 +1595,8 @@ class Prince
         return $outputStr;
     }
 
-    // Double the number of trailing backslash(es): n*trailing backslash => (2*n)*trailing backslash.
+    // Double the number of trailing backslash(es):
+    // n*trailing backslash => (2*n)*trailing backslash.
     private function cmdlineArgEscape2($argStr)
     {
         // chr(92) is character backslash ( \ ).
