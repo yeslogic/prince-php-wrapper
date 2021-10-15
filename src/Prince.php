@@ -13,6 +13,23 @@
 
 namespace Prince;
 
+/**
+ * A class that provides an interface to Prince, where each document conversion
+ * invokes a new Prince process.
+ *
+ * When instantiating the `Prince` class, pass in the full path of the Prince
+ * executable to the constructor as a string argument. For example, on Linux or
+ * macOS:
+ *
+ * ```
+ * use Prince\Prince;
+ *
+ * $prince = new Prince('/usr/bin/prince');
+ * ```
+ *
+ * On Windows, be sure to specify the path to the `prince.exe` file located
+ * within the `engine\bin` subfolder of the Prince installation.
+ */
 class Prince
 {
     private $exePath;
