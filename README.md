@@ -1,7 +1,7 @@
 Prince PHP wrapper
 ==================
 
-The `prince.php` file defines a class called `Prince` that contains methods
+The `Prince.php` file defines a class called `Prince` that contains methods
 that can be called to convert HTML and XML documents into PDF.
 
 Note that the `Prince` class requires PHP 5.3.0 or later.
@@ -11,7 +11,7 @@ Constructor
 
 When instantiating the `Prince` class, pass in the full path of the Prince
 executable to the constructor as a string argument. For example, on
-Linux or MacOS X:
+Linux or macOS:
 
 ```php
 use Prince\Prince;
@@ -20,7 +20,7 @@ $prince = new Prince('/usr/bin/prince');
 ```
 
 On Windows, be sure to specify the path to the `prince.exe` file located
-within the `Engine\bin` subfolder of the Prince installation.
+within the `engine\bin` subfolder of the Prince installation.
 
 Conversion methods
 ------------------
@@ -782,4 +782,4 @@ Set other options.
 
 ------------------------------------------------------------------------
 
-Copyright © 2005-2020 YesLogic Pty. Ltd.
+Copyright © 2005-2021 YesLogic Pty. Ltd.
