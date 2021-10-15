@@ -92,6 +92,14 @@ class Prince
     // Additional options.
     private $options;
 
+    /**
+     * Constructor for Prince.
+     *
+     * @param string $exePath The path of the Prince executable. For example, this
+     *                        may be `C:\Program Files\Prince\engine\bin\prince.exe`
+     *                        on Windows or `/usr/bin/prince` on Linux.
+     * @return self
+     */
     public function __construct($exePath)
     {
         $this->exePath = $exePath;
@@ -174,13 +182,17 @@ class Prince
 
     /* PDF CONVERSION METHODS *************************************************/
 
-    // Convert an XML or HTML file to a PDF file.
-    // The name of the output PDF file will be the same as the name of the
-    // input file but with an extension of ".pdf".
-    // xmlPath: The filename of the input XML or HTML document.
-    // msgs: An optional array in which to return error and warning messages.
-    // dats: An optional array in which to return data messages.
-    // Returns true if a PDF file was generated successfully.
+    /**
+     * Convert an XML or HTML file to a PDF file. The name of the output PDF
+     * file will be the same as the name of the input file but with an extension
+     * of ".pdf".
+     *
+     * @param string $xmlPath The filename of the input XML or HTML document.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
     public function convert_file($xmlPath, &$msgs = array(), &$dats = array())
     {
         $pathAndArgs = $this->getCommandLine();
@@ -190,12 +202,16 @@ class Prince
         return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
     }
 
-    // Convert an XML or HTML file to a PDF file.
-    // xmlPath: The filename of the input XML or HTML document.
-    // pdfPath: The filename of the output PDF file.
-    // msgs: An optional array in which to return error and warning messages.
-    // dats: An optional array in which to return data messages.
-    // Returns true if a PDF file was generated successfully.
+    /**
+     * Convert an XML or HTML file to a PDF file.
+     *
+     * @param string $xmlPath The filename of the input XML or HTML document.
+     * @param string $pdfPath The filename of the output PDF file.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
     public function convert_file_to_file($xmlPath, $pdfPath, &$msgs = array(), &$dats = array())
     {
         $pathAndArgs = $this->getCommandLine();
@@ -205,11 +221,16 @@ class Prince
         return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
     }
 
-    // Convert multiple XML or HTML files to a PDF file.
-    // xmlPaths: An array of the input XML or HTML documents.
-    // msgs: An optional array in which to return error and warning messages.
-    // dats: An optional array in which to return data messages.
-    // Returns true if a PDF file was generated successfully.
+    /**
+     * Convert multiple XML or HTML files to a PDF file.
+     *
+     * @param array $xmlPaths An array of the input XML or HTML documents.
+     * @param string $pdfPath The filename of the output PDF file.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
     public function convert_multiple_files($xmlPaths, $pdfPath, &$msgs = array(), &$dats = array())
     {
         $pathAndArgs = $this->getCommandLine();
@@ -224,12 +245,16 @@ class Prince
         return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
     }
 
-    // Convert multiple XML or HTML files to a PDF file, which will be passed
-    // through to the output buffer of the current PHP page.
-    // xmlPaths: An array of the input XML or HTML documents.
-    // msgs: An optional array in which to return error and warning messages.
-    // dats: An optional array in which to return data messages.
-    // Returns true if a PDF file was generated successfully.
+    /**
+     * Convert multiple XML or HTML files to a PDF file, which will be passed
+     * through to the output buffer of the current PHP page.
+     *
+     * @param array $xmlPaths An array of the input XML or HTML documents.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
     public function convert_multiple_files_to_passthru($xmlPaths, &$msgs = array(), &$dats = array())
     {
         $pathAndArgs = $this->getCommandLine();
@@ -244,12 +269,16 @@ class Prince
         return $this->convert_internal_file_to_passthru($pathAndArgs, $msgs, $dats);
     }
 
-    // Convert an XML or HTML file to a PDF file, which will be passed
-    // through to the output buffer of the current PHP page.
-    // xmlPath: The filename of the input XML or HTML document.
-    // msgs: An optional array in which to return error and warning messages.
-    // dats: An optional array in which to return data messages.
-    // Returns true if a PDF file was generated successfully.
+    /**
+     * Convert an XML or HTML file to a PDF file, which will be passed through
+     * to the output buffer of the current PHP page.
+     *
+     * @param string $xmlPath The filename of the input XML or HTML document.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
     public function convert_file_to_passthru($xmlPath, &$msgs = array(), &$dats = array())
     {
         $pathAndArgs = $this->getCommandLine();
@@ -258,12 +287,16 @@ class Prince
         return $this->convert_internal_file_to_passthru($pathAndArgs, $msgs, $dats);
     }
 
-    // Convert an XML or HTML string to a PDF file, which will be passed
-    // through to the output buffer of the current PHP page.
-    // xmlString: A string containing an XML or HTML document.
-    // msgs: An optional array in which to return error and warning messages.
-    // dats: An optional array in which to return data messages.
-    // Returns true if a PDF file was generated successfully.
+    /**
+     * Convert an XML or HTML string to a PDF file, which will be passed through
+     * to the output buffer of the current PHP page.
+     *
+     * @param string $xmlString A string containing an XML or HTML document.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
     public function convert_string_to_passthru($xmlString, &$msgs = array(), &$dats = array())
     {
         $pathAndArgs = $this->getCommandLine();
@@ -272,12 +305,16 @@ class Prince
         return $this->convert_internal_string_to_passthru($pathAndArgs, $xmlString, $msgs, $dats);
     }
 
-    // Convert an XML or HTML string to a PDF file.
-    // xmlString: A string containing an XML or HTML document.
-    // pdfPath: The filename of the output PDF file.
-    // msgs: An optional array in which to return error and warning messages.
-    // dats: An optional array in which to return data messages.
-    // Returns true if a PDF file was generated successfully.
+    /**
+     * Convert an XML or HTML string to a PDF file.
+     *
+     * @param string $xmlString A string containing an XML or HTML document.
+     * @param string $pdfPath The filename of the output PDF file.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
     public function convert_string_to_file($xmlString, $pdfPath, &$msgs = array(), &$dats = array())
     {
         $pathAndArgs = $this->getCommandLine();
@@ -289,27 +326,47 @@ class Prince
 
     /* LOGGING OPTIONS ********************************************************/
 
-    // Specify whether to log informative messages.
+    /**
+     * Specify whether to log informative messages.
+     *
+     * @param bool $verbose `true` to enable verbose logging. Default value is
+     *                      `false`.
+     * @return void
+     */
     public function setVerbose($verbose)
     {
         $this->verbose = $verbose;
     }
 
-    // Specify whether to log debug messages.
+    /**
+     * Specify whether to log debug messages.
+     *
+     * @param bool $debug `true` to enable debug logging. Default value is `false`.
+     * @return void
+     */
     public function setDebug($debug)
     {
         $this->debug = $debug;
     }
 
-    // Specify a file that Prince should use to log error/warning messages.
-    // logFile: The filename that Prince should use to log error/warning
-    //          messages, or '' to disable logging.
+    /**
+     * Specify a file that Prince should use to log error/warning messages.
+     *
+     * @param string $logFile The filename that Prince should use to log
+     *                        error/warning messages, or `''` to disable logging.
+     * @return void
+     */
     public function setLog($logFile)
     {
         $this->logFile = $logFile;
     }
 
-    // Specify whether to warn about CSS.
+    /**
+     * Specify whether to warn about CSS.
+     *
+     * @param bool $noWarnCss `true` to disable warnings. Default value is `false`.
+     * @return void
+     */
     public function setNoWarnCss($noWarnCss)
     {
         $this->noWarnCss = $noWarnCss;
@@ -317,15 +374,23 @@ class Prince
 
     /* INPUT OPTIONS **********************************************************/
 
-    // Specify the input type of the document.
-    // inputType: Can take a value of : "xml", "html" or "auto".
+    /**
+     * Specify the input type of the document.
+     *
+     * @param string $inputType Can take a value of: `"xml"`, `"html"`, `"auto"`.
+     * @return void
+     */
     public function setInputType($inputType)
     {
         $this->inputType = $inputType;
     }
 
-    // Specify whether documents should be parsed as HTML or XML/XHTML.
-    // html: True if all documents should be treated as HTML.
+    /**
+     * Specify whether documents should be parsed as HTML or XML/XHTML.
+     *
+     * @param bool $html `true` if all documents should be treated as HTML.
+     * @return void
+     */
     public function setHTML($html)
     {
         if ($html) {
@@ -335,51 +400,84 @@ class Prince
         }
     }
 
-    // Specify the base URL of the input document.
-    // baseURL: The base URL or path of the input document, or ''.
+    /**
+     * Specify the base URL of the input document.
+     *
+     * @param string $baseURL The base URL or path of the input document, or `''`.
+     * @return void
+     */
     public function setBaseURL($baseURL)
     {
         $this->baseURL = $baseURL;
     }
 
-    // Add a mapping of URL prefix to a local directory.
+    /**
+     * Add a mapping of a URL prefix to a local directory.
+     *
+     * @param string $url The URL prefix to map.
+     * @param string $dir The directory that the URL prefix is mapped to.
+     * @return void
+     */
     public function addRemap($url, $dir)
     {
         $this->remaps .= '--remap="' . $url . '"="' . $dir . '" ';
     }
 
-    // Clear all of the remaps.
+    /**
+     * Clear all of the remaps.
+     *
+     * @return void
+     */
     public function clearRemaps()
     {
         $this->remaps = '';
     }
 
-    // Specify the root directory for absolute filenames. This can be used
-    // when converting a local file that uses absolute paths to refer to web
-    // resources. For example, /images/logo.jpg can be
-    // rewritten to /usr/share/images/logo.jpg by specifying "/usr/share" as the root.
-    // fileRoot: The path to prepend to absolute filenames.
+    /**
+     * Specify the root directory for absolute filenames. This can be used when
+     * converting a local file that uses absolute paths to refer to web resources.
+     * For example, /images/logo.jpg can be rewritten to /usr/share/images/logo.jpg
+     * by specifying "/usr/share" as the root.
+     *
+     * @param string $fileRoot The path to prepend to absolute filenames.
+     * @return void
+     */
     public function setFileRoot($fileRoot)
     {
         $this->fileRoot = $fileRoot;
     }
 
-    // Specify whether XML Inclusions (XInclude) processing should be applied
-    // to input documents. XInclude processing will be performed by default
-    // unless explicitly disabled.
-    // xinclude: False to disable XInclude processing.
+    /**
+     * Specify whether XML Inclusions (XInclude) processing should be applied to
+     * input documents.
+     *
+     * @param [type] $xinclude `true` to enable XInclude processing. Default
+     *                         value is `false`.
+     * @return void
+     */
     public function setXInclude($xinclude)
     {
         $this->doXInclude = $xinclude;
     }
 
-    // Specifies whether XML external entities should be allowed to be used.
+    /**
+     * Specifies whether XML external entities (XXE) should be allowed.
+     *
+     * @param bool $xmlExternalEntities `true` to enable XXE. Default value is
+     *                                  `false`.
+     * @return void
+     */
     public function setXmlExternalEntities($xmlExternalEntities)
     {
         $this->xmlExternalEntities = $xmlExternalEntities;
     }
 
-    // Specify whether to disable access to local files.
+    /**
+     * Specify whether to disable access to local files.
+     *
+     * @param bool $noLocalFiles `true` to disable access. Default value is `false`.
+     * @return void
+     */
     public function setNoLocalFiles($noLocalFiles)
     {
         $this->noLocalFiles = $noLocalFiles;
@@ -387,31 +485,58 @@ class Prince
 
     /* NETWORK OPTIONS ********************************************************/
 
-    // Specify thether to disable network access.
+    /**
+     * Specify whether to disable network access.
+     *
+     * @param bool $noNetwork `true` to disable network access. Default value is
+     *                        `false`.
+     * @return void
+     */
     public function setNoNetwork($noNetwork)
     {
         $this->noNetwork = $noNetwork;
     }
 
-    // Specify username for HTTP authentication.
+    /**
+     * Specify username for HTTP authentication.
+     *
+     * @param string $authUser The username for HTTP authentication.
+     * @return void
+     */
     public function setAuthUser($authUser)
     {
         $this->authUser = $this->cmdlineArgEscape($authUser);
     }
 
-    // Specify password for HTTP authentication.
+    /**
+     * Specify password for HTTP authentication.
+     *
+     * @param string $authPassword The password for HTTP authentication.
+     * @return void
+     */
     public function setAuthPassword($authPassword)
     {
         $this->authPassword = $this->cmdlineArgEscape($authPassword);
     }
 
-    // Only send USER:PASS to this server.
+    /**
+     * Only send USER:PASS to this server.
+     *
+     * @param string $authServer The server to send credentials to
+     *                           (e.g.`"localhost:8001"`).
+     * @return void
+     */
     public function setAuthServer($authServer)
     {
         $this->authServer = $authServer;
     }
 
-    // Only send USER:PASS for this scheme. (HTTP, HTTPS)
+    /**
+     * Only send USER:PASS for this scheme.
+     *
+     * @param string $authScheme Can take a value of: `"http"`, `"https"`.
+     * @return void
+     */
     public function setAuthScheme($authScheme)
     {
         if (strcasecmp($authScheme, 'http') == 0) {
@@ -423,7 +548,13 @@ class Prince
         }
     }
 
-    // Specify HTTP authentication methods. (basic, digest, ntlm, negotiate)
+    /**
+     * Specify HTTP authentication methods.
+     *
+     * @param string $authMethod Can take a value of: `"basic"`, `"digest"`,
+     *                           `"ntlm"`, `"negotiate"`.
+     * @return void
+     */
     public function setAuthMethod($authMethod)
     {
         if (strcasecmp($authMethod, 'basic') == 0) {
@@ -439,64 +570,121 @@ class Prince
         }
     }
 
-    // Do not authenticate with named servers until asked.
+    /**
+     * Do not authenticate with named servers until asked.
+     *
+     * @param bool $noAuthPreemptive `true` to disable authentication preemptive.
+     *                               Default value is `false`.
+     * @return void
+     */
     public function setNoAuthPreemptive($noAuthPreemptive)
     {
         $this->noAuthPreemptive = $noAuthPreemptive;
     }
 
-    // Specify the URL for the HTTP proxy server, if needed.
-    // proxy: The URL for the HTTP proxy server.
+    /**
+     * Specify the URL for the HTTP proxy server, if needed.
+     *
+     * @param string $proxy The URL for the HTTP proxy server.
+     * @return void
+     */
     public function setHttpProxy($proxy)
     {
         $this->httpProxy = $proxy;
     }
 
-    // Specify the HTTP timeout in seconds.
+    /**
+     * Specify the HTTP timeout in seconds.
+     *
+     * @param int $timeout The HTTP timeout in seconds. Value must be greater
+     *                     than 0.
+     * @return void
+     */
     public function setHttpTimeout($timeout)
     {
         $this->httpTimeout = $timeout;
     }
 
-    // Specify a Set-Cookie header value.
+    /**
+     * Specify a Set-Cookie header value.
+     *
+     * @param string $cookie The Set-Cookie header value.
+     * @return void
+     */
     public function setCookie($cookie)
     {
         $this->cookie = $cookie;
     }
 
-    // Specify a file containing HTTP cookies.
+    /**
+     * Specify a file containing HTTP cookies.
+     *
+     * @param string $cookieJar The filename of the file containing HTTP cookies.
+     * @return void
+     */
     public function setCookieJar($cookieJar)
     {
         $this->cookieJar = $cookieJar;
     }
 
-    // Specify an SSL certificate file.
+    /**
+     * Specify an SSL certificate file.
+     *
+     * @param string $sslCaCert The filename of the SSL certificate file.
+     * @return void
+     */
     public function setSslCaCert($sslCaCert)
     {
         $this->sslCaCert = $sslCaCert;
     }
 
-    // Specify an SSL certificate directory.
+    /**
+     * Specify an SSL certificate directory.
+     *
+     * @param string $sslCaPath The SSL certificate directory.
+     * @return void
+     */
     public function setSslCaPath($sslCaPath)
     {
         $this->sslCaPath = $sslCaPath;
     }
 
-    // Specify an SSL/TLS version to use.
+    /**
+     * Specify an SSL/TLS version to use.
+     *
+     * @param string $sslVersion Can take a value of:
+     *                           `"default"`,
+     *                           `"tlsv1"`,
+     *                           `"tlsv1.0"`,
+     *                           `"tlsv1.1"`,
+     *                           `"tlsv1.2"`,
+     *                           `"tlsv1.3"`.
+     * @return void
+     */
     public function setSslVersion($sslVersion)
     {
         $this->sslVersion = $sslVersion;
     }
 
-    // Specify whether to disable SSL verification.
-    // insecure: If set to true, SSL verification is disabled. (not recommended)
+    /**
+     * Specify whether to disable SSL verification.
+     *
+     * @param bool $insecure `true` to disable SSL verification (not recommended).
+     *                       Default value is `false`.
+     * @return void
+     */
     public function setInsecure($insecure)
     {
         $this->insecure = $insecure;
     }
 
-    // Specify whether to disable disable parallel downloads.
-    // noParallelDownloads: If set to true, parallel downloads are disabled.
+    /**
+     * Specify whether to disable parallel downloads.
+     *
+     * @param bool $noParallelDownloads `true` to disable parallel downloads.
+     *                                  Default value is `false`.
+     * @return void
+     */
     public function setNoParallelDownloads($noParallelDownloads)
     {
         $this->noParallelDownloads = $noParallelDownloads;
@@ -504,21 +692,33 @@ class Prince
 
     /* JAVASCRIPT OPTIONS *****************************************************/
 
-    // Specify whether JavaScript found in documents should be run.
-    // js: True if document scripts should be run.
+    /**
+     * Specify whether JavaScript found in documents should be run.
+     *
+     * @param bool $js `true` if JavaScript should be run. Default value is `false`.
+     * @return void
+     */
     public function setJavaScript($js)
     {
         $this->javascript = $js;
     }
 
-    // Add a JavaScript script that will be run before conversion.
-    // jsPath: The filename of the script.
+    /**
+     * Add a JavaScript script that will be run before conversion.
+     *
+     * @param string $jsPath The filename of the script.
+     * @return void
+     */
     public function addScript($jsPath)
     {
         $this->scripts .= '--script "' . $jsPath . '" ';
     }
 
-    // Clear all of the scripts.
+    /**
+     * Clear all of the scripts.
+     *
+     * @return void
+     */
     public function clearScripts()
     {
         $this->scripts = '';
@@ -526,44 +726,79 @@ class Prince
 
     /* CSS OPTIONS ************************************************************/
 
-    // Add a CSS style sheet that will be applied to each document.
-    // cssPath: The filename of the CSS style sheet.
+    /**
+     * Add a CSS style sheet that will be applied to each document.
+     *
+     * @param string $cssPath The filename of the CSS style sheet.
+     * @return void
+     */
     public function addStyleSheet($cssPath)
     {
         $this->styleSheets .= '-s "' . $cssPath . '" ';
     }
 
-    // Clear all of the CSS style sheets.
+    /**
+     * Clear all of the CSS style sheets.
+     *
+     * @return void
+     */
     public function clearStyleSheets()
     {
         $this->styleSheets = '';
     }
 
-    // Specify the media type (eg. print, screen).
+    /**
+     * Specify the media type.
+     *
+     * @param string $media The media type (e.g. `"print"`, `"screen"`).
+     * @return void
+     */
     public function setMedia($media)
     {
         $this->media = $media;
     }
 
-    // Specify the page size (eg. A4).
+    /**
+     * Specify the page size.
+     *
+     * @param string $pageSize The page size to use (e.g. `"A4"`).
+     * @return void
+     */
     public function setPageSize($pageSize)
     {
         $this->pageSize = $pageSize;
     }
 
-    // Specify the page margin (eg. 20mm).
+    /**
+     * Specify the page margin.
+     *
+     * @param string $pageMargin The page margin to use (e.g. `"20mm"`).
+     * @return void
+     */
     public function setPageMargin($pageMargin)
     {
         $this->pageMargin = $pageMargin;
     }
 
-    // Specify whether to ignore author style sheets.
+    /**
+     * Specify whether to ignore author style sheets.
+     *
+     * @param bool $noAuthorStyle `true` to ignore author style sheets. Default
+     *                            value is `false`.
+     * @return void
+     */
     public function setNoAuthorStyle($noAuthorStyle)
     {
         $this->noAuthorStyle = $noAuthorStyle;
     }
 
-    // Specify whether to ignore default style sheets.
+    /**
+     * Specify whether to ignore default style sheets.
+     *
+     * @param bool $noDefaultStyle `true` to ignore default style sheets.
+     *                             Default value is `false`.
+     * @return void
+     */
     public function setNoDefaultStyle($noDefaultStyle)
     {
         $this->noDefaultStyle = $noDefaultStyle;
@@ -571,73 +806,135 @@ class Prince
 
     /* PDF OUTPUT OPTIONS *****************************************************/
 
-    // Specify the PDF profile to use.
+    /**
+     * Specify the PDF profile to use.
+     *
+     * @param string $pdfProfile Can take a value of:
+     *                           `"PDF/A-1a"`,
+     *                           `"PDF/A-1a+PDF/UA-1"`,
+     *                           `"PDF/A-1b"`,
+     *                           `"PDF/A-2a"`,
+     *                           `"PDF/A-2a+PDF/UA-1"`,
+     *                           `"PDF/A-2b"`,
+     *                           `"PDF/A-3a"`,
+     *                           `"PDF/A-3a+PDF/UA-1"`,
+     *                           `"PDF/A-3b"`,
+     *                           `"PDF/UA-1"`,
+     *                           `"PDF/X-1a:2001"`,
+     *                           `"PDF/X-1a:2003"`,
+     *                           `"PDF/X-3:2002"`,
+     *                           `"PDF/X-3:2003"`,
+     *                           `"PDF/X-4"`.
+     * @return void
+     */
     public function setPDFProfile($pdfProfile)
     {
         $this->pdfProfile = $pdfProfile;
     }
 
-    // Specify the ICC profile to use.
-    // Also optionally specify whether to convert colors to output intent color space.
-    // $pdfOutputIntent is the ICC profile to be used.
+    /**
+     * Specify the ICC profile to use. Also, optionally specify whether to
+     * convert colors to output intent color space.
+     *
+     * @param string $pdfOutputIntent The ICC profile.
+     * @param bool $convertColors `true` to convert colors to output intent
+     *                            color space. Default value is `false`.
+     * @return void
+     */
     public function setPDFOutputIntent($pdfOutputIntent, $convertColors = false)
     {
         $this->pdfOutputIntent = $pdfOutputIntent;
         $this->convertColors = $convertColors;
     }
 
-    // Add a file attachment that will be attached to the PDF file
-    // filePath: The filename of the file attachment.
+    /**
+     * Add a file attachment that will be attached to the PDF file.
+     *
+     * @param string $filePath The filename of the file attachment.
+     * @return void
+     */
     public function addFileAttachment($filePath)
     {
         $this->fileAttachments .= '--attach=' . '"' . $filePath .  '" ';
     }
 
-    // Clear all of the file attachments.
+    /**
+     * Clear all of the file attachments.
+     *
+     * @return void
+     */
     public function clearFileAttachments()
     {
         $this->fileAttachments = '';
     }
 
-    // Specify whether artificial bold/italic fonts should be generated if
-    // necessary. Artificial fonts are enabled by default.
-    // artificialFonts: False to disable artificial bold/italic fonts.
+    /**
+     * Specify whether artificial bold/italic fonts should be generated if
+     * necessary.
+     *
+     * @param bool $noArtificialFonts `true` to disable artificial bold/italic
+     *                                fonts. Default value is `false`.
+     * @return void
+     */
     public function setNoArtificialFonts($noArtificialFonts)
     {
         $this->noArtificialFonts = $noArtificialFonts;
     }
 
-    // Specify whether fonts should be embedded in the output PDF file. Fonts
-    // will be embedded by default unless explicitly disabled.
-    // embedFonts: False to disable PDF font embedding.
+    /**
+     * Specify whether fonts should be embedded in the output PDF file.
+     *
+     * @param bool $embedFonts `false` to disable PDF font embedding. Default
+     *                         value is `true`.
+     * @return void
+     */
     public function setEmbedFonts($embedFonts)
     {
         $this->embedFonts = $embedFonts;
     }
 
-    // Specify whether embedded fonts should be subset.
-    // Fonts will be subset by default unless explicitly disabled.
-    // subsetFonts: False to disable PDF font subsetting.
+    /**
+     * Specify whether embedded fonts should be subset.
+     *
+     * @param bool $subsetFonts `false` to disable PDF font subsetting. Default
+     *                          value is `true`.
+     * @return void
+     */
     public function setSubsetFonts($subsetFonts)
     {
         $this->subsetFonts = $subsetFonts;
     }
 
-    // Specify whether to use force identity encoding.
+    /**
+     * Specify whether to use force identity encoding.
+     *
+     * @param bool $forceIdentityEncoding `true` to force identity encoding.
+     *                                    Default value is `false`.
+     * @return void
+     */
     public function setForceIdentityEncoding($forceIdentityEncoding)
     {
         $this->forceIdentityEncoding = $forceIdentityEncoding;
     }
 
-    // Specify whether compression should be applied to the output PDF file.
-    // Compression will be applied by default unless explicitly disabled.
-    // compress: False to disable PDF compression.
+    /**
+     * Specify whether compression should be applied to the output PDF file.
+     *
+     * @param bool $compress `false` to disable PDF compression. Default value
+     *                       is `true`.
+     * @return void
+     */
     public function setCompress($compress)
     {
         $this->compress = $compress;
     }
 
-    // Specify fallback ICC profile for uncalibrated CMYK.
+    /**
+     * Specify fallback ICC profile for uncalibrated CMYK.
+     *
+     * @param string $fallbackCmykProfile The fallback ICC profile.
+     * @return void
+     */
     public function setFallbackCmykProfile($fallbackCmykProfile)
     {
         $this->fallbackCmykProfile = $fallbackCmykProfile;
@@ -645,31 +942,57 @@ class Prince
 
     /* PDF METADATA OPTIONS ***************************************************/
 
-    // Specify the document title for PDF metadata.
+    /**
+     * Specify the document title for PDF metadata.
+     *
+     * @param string $pdfTitle The document title.
+     * @return void
+     */
     public function setPDFTitle($pdfTitle)
     {
         $this->pdfTitle = $pdfTitle;
     }
 
-    // Specify the document subject for PDF metadata.
+    /**
+     * Specify the document subject for PDF metadata.
+
+     *
+     * @param string $pdfSubject The document subject.
+     * @return void
+     */
     public function setPDFSubject($pdfSubject)
     {
         $this->pdfSubject = $pdfSubject;
     }
 
-    // Specify the document author for PDF metadata.
+    /**
+     * Specify the document author for PDF metadata.
+     *
+     * @param string $pdfAuthor The document author.
+     * @return void
+     */
     public function setPDFAuthor($pdfAuthor)
     {
         $this->pdfAuthor = $pdfAuthor;
     }
 
-    // Specify the document keywords for PDF metadata.
+    /**
+     * Specify the document keywords for PDF metadata.
+     *
+     * @param string $pdfKeywords The document keywords.
+     * @return void
+     */
     public function setPDFKeywords($pdfKeywords)
     {
         $this->pdfKeywords = $pdfKeywords;
     }
 
-    // Specify the document creator for PDF metadata.
+    /**
+     * Specify the document creator for PDF metadata.
+     *
+     * @param string $pdfCreator The document creator.
+     * @return void
+     */
     public function setPDFCreator($pdfCreator)
     {
         $this->pdfCreator = $pdfCreator;
@@ -677,23 +1000,36 @@ class Prince
 
     /* PDF ENCRYPTION OPTIONS *************************************************/
 
-    // Specify whether encryption should be applied to the output PDF file.
-    // Encryption will not be applied by default unless explicitly enabled.
-    // encrypt: True to enable PDF encryption.
+    /**
+     * Specify whether encryption should be applied to the output PDF file.
+     *
+     * @param bool $encrypt `true` to enable PDF encryption. Default value is
+     *                      `false`.
+     * @return void
+     */
     public function setEncrypt($encrypt)
     {
         $this->encrypt = $encrypt;
     }
 
-    // Set the parameters used for PDF encryption. Calling this method will
-    // also enable PDF encryption, equivalent to calling setEncrypt(true).
-    // keyBits: The size of the encryption key in bits (must be 40 or 128).
-    // userPassword: The user password for the PDF file.
-    // ownerPassword: The owner password for the PDF file.
-    // disallowPrint: True to disallow printing of the PDF file.
-    // disallowModify: True to disallow modification of the PDF file.
-    // disallowCopy: True to disallow copying from the PDF file.
-    // disallowAnnotate: True to disallow annotation of the PDF file.
+    /**
+     * Set the parameters used for PDF encryption. Calling this method will also
+     * enable PDF encryption, equivalent to calling setEncrypt(true).
+     *
+     * @param int $keyBits The size of the encryption key in bits
+     *                     (must be 40 or 128).
+     * @param string $userPassword The user password for the PDF file.
+     * @param string $ownerPassword The owner password for the PDF file.
+     * @param bool $disallowPrint `true` to disallow printing of the PDF file.
+     *                            Default value is `false`.
+     * @param bool $disallowModify `true` to disallow modification of the PDF file.
+     *                             Default value is `false`.
+     * @param bool $disallowCopy `true` to disallow copying from the PDF file.
+     *                           Default value is `false`.
+     * @param bool $disallowAnnotate `true` to disallow annotation of the PDF file.
+     *                               Default value is `false`.
+     * @return void
+     */
     public function setEncryptInfo(
         $keyBits,
         $userPassword,
@@ -734,15 +1070,24 @@ class Prince
 
     /* LICENSE OPTIONS ********************************************************/
 
-    // Specify the license file.
-    // file: The filename of the license file.
+    /**
+     * Specify the license file.
+     *
+     * @param string $file The filename of the license file.
+     * @return void
+     */
     public function setLicenseFile($file)
     {
         $this->licenseFile = $file;
     }
 
-    // Specify the license key.
-    // key: The license key
+    /**
+     * Specify the license key.
+     *
+     * @param string $key The license key. This is the `<signature>` field in
+     *                    the license file.
+     * @return void
+     */
     public function setLicenseKey($key)
     {
         $this->licenseKey = $key;
@@ -750,7 +1095,12 @@ class Prince
 
     /* ADDITIONAL OPTIONS *****************************************************/
 
-    // Set other options.
+    /**
+     * Specify additional Prince command-line options.
+     *
+     * @param string $options Additional Prince command-line options.
+     * @return void
+     */
     public function setOptions($options)
     {
         $this->options = $options;
