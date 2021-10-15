@@ -1,0 +1,37 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - '[1-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up PHP with tools
+        uses: shivammathur/setup-php@v2
+        with:
+          # phpDocumentor appears to require PHP version >=7.2.5 || ^8.0
+          php-version: '8.0'
+          tools: phpdoc
+      - name: Build documentation
+        run: phpdoc -d src -t docs --visibility=public
+      - name: Set release version
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Deploy documentation to versioned folder
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          branch: docs
+          folder: docs
+          target-folder: ${{ env.RELEASE_VERSION }}
+      - name: Deploy documentation to latest folder
+        uses: JamesIves/github-pages-deploy-action@4.1.5
+        with:
+          branch: docs
+          folder: docs
+          clean: true
+          target-folder: 'current'
