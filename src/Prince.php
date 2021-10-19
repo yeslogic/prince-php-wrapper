@@ -61,7 +61,7 @@ class Prince
     private $noAuthPreemptive;
     private $httpProxy;
     private $httpTimeout;
-    private $cookie;
+    private $cookie; // Deprecated.
     private $cookies;
     private $cookieJar;
     private $sslCaCert;
@@ -156,7 +156,7 @@ class Prince
         $this->noAuthPreemptive = false;
         $this->httpProxy = '';
         $this->httpTimeout = 0;
-        $this->cookie = '';
+        $this->cookie = ''; // Deprecated.
         $this->cookies = '';
         $this->cookieJar = '';
         $this->sslCaCert = '';
@@ -759,7 +759,10 @@ class Prince
     }
 
     /**
+     * [DEPRECATED]
      * Specify a Set-Cookie header value.
+     *
+     * @deprecated 1.2.0 Prefer `addCookie` instead.
      *
      * @param string $cookie The Set-Cookie header value.
      * @return void
