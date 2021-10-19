@@ -1184,8 +1184,7 @@ class Prince
         $cmdline = '"' . $this->exePath . '" ' . $this->styleSheets .
             $this->scripts . $this->fileAttachments . $this->remaps;
 
-        if (strcasecmp($this->inputType, 'auto') == 0) {
-        } else {
+        if ($this->inputType != 'auto') {
             $cmdline .=  '-i "' . $this->inputType . '" ';
         }
 
