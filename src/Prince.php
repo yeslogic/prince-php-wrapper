@@ -1196,9 +1196,7 @@ class Prince
             $cmdline .= '--baseurl="' . $this->baseURL . '" ';
         }
 
-        if ($this->doXInclude == false) {
-            $cmdline .= '--no-xinclude ';
-        } else {
+        if ($this->doXInclude == true) {
             $cmdline .= '--xinclude ';
         }
 
