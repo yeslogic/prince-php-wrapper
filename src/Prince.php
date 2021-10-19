@@ -57,7 +57,7 @@ class Prince
     private $authPassword;
     private $authServer;
     private $authScheme;
-    private $authMethod;
+    private $authMethods;
     private $noAuthPreemptive;
     private $httpProxy;
     private $httpTimeout;
@@ -151,7 +151,7 @@ class Prince
         $this->authPassword = '';
         $this->authServer = '';
         $this->authScheme = '';
-        $this->authMethod = '';
+        $this->authMethods = '';
         $this->noAuthPreemptive = false;
         $this->httpProxy = '';
         $this->httpTimeout = 0;
@@ -648,6 +648,37 @@ class Prince
     }
 
     /**
+     * Specify an HTTP authentication method to enable. This method can be called
+     * more than once to add multiple authentication methods.
+     *
+     * @param string $authMethod Can take a value of: `"basic"`, `"digest"`,
+     *                           `"ntlm"`, `"negotiate"`.
+     * @return void
+     */
+    public function addAuthMethod($authMethod)
+    {
+        $valid = array('basic', 'digest', 'ntlm', 'negotiate');
+        $lower = strtolower($authMethod);
+
+        if (in_array($lower, $valid)) {
+            if ($this->authMethods != '') {
+                $this->authMethods .= ',';
+            }
+            $this->authMethods .= $lower;
+        }
+    }
+
+    /**
+     * Clear all of the enabled authentication methods.
+     *
+     * @return void
+     */
+    public function clearAuthMethods()
+    {
+        $this->authMethods = '';
+    }
+
+    /**
      * Specify HTTP authentication methods.
      *
      * @param string $authMethod Can take a value of: `"basic"`, `"digest"`,
@@ -659,7 +690,7 @@ class Prince
         $valid = array('basic', 'digest', 'ntlm', 'negotiate');
         $lower = strtolower($authMethod);
 
-        $this->authMethod = in_array($lower, $valid) ? $lower : '';
+        $this->authMethods = in_array($lower, $valid) ? $lower : '';
     }
 
     /**
@@ -1355,8 +1386,8 @@ class Prince
         if ($this->authScheme != '') {
             $cmdline .= '--auth-scheme="' . $this->cmdlineArgEscape($this->authScheme) . '" ';
         }
-        if ($this->authMethod != '') {
-            $cmdline .=  '--auth-method="' . $this->cmdlineArgEscape($this->authMethod) . '" ';
+        if ($this->authMethods != '') {
+            $cmdline .=  '--auth-method="' . $this->cmdlineArgEscape($this->authMethods) . '" ';
         }
         if ($this->noAuthPreemptive) {
             $cmdline .= '--no-auth-preemptive ';
