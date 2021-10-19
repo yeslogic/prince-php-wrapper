@@ -1181,93 +1181,171 @@ class Prince
 
     private function getCommandLine()
     {
-        $cmdline = '"' . $this->exePath . '" ' . $this->styleSheets .
-            $this->scripts . $this->fileAttachments . $this->remaps;
+        $cmdline = '"' . $this->exePath . '" ';
 
-        if ($this->inputType != 'auto') {
-            $cmdline .=  '-i "' . $this->inputType . '" ';
-        }
-
-        if ($this->javascript) {
-            $cmdline .= '--javascript ';
-        }
-
-        if ($this->baseURL != '') {
-            $cmdline .= '--baseurl="' . $this->baseURL . '" ';
-        }
-
-        if ($this->doXInclude == true) {
-            $cmdline .= '--xinclude ';
-        }
-
-        if ($this->xmlExternalEntities == true) {
-            $cmdline .= '--xml-external-entities ';
-        }
-
-        if ($this->noLocalFiles == true) {
-            $cmdline .= '--no-local-files ';
-        }
-
-        if ($this->noNetwork == true) {
-            $cmdline .= '--no-network ';
-        }
-
-        if ($this->httpProxy != '') {
-            $cmdline .= '--http-proxy="' . $this->httpProxy . '" ';
-        }
-
-        if ($this->httpTimeout != '') {
-            $cmdline .= '--http-timeout="' . $this->httpTimeout . '" ';
-        }
-
-        if ($this->cookie != '') {
-            $cmdline .= '--cookie="' . $this->cookie . '" ';
-        }
-
-        if ($this->cookieJar != '') {
-            $cmdline .= '--cookiejar="' . $this->cookieJar . '" ';
-        }
-
-        if ($this->sslCaCert != '') {
-            $cmdline .= '--ssl-cacert="' . $this->sslCaCert . '" ';
-        }
-
-        if ($this->sslCaPath != '') {
-            $cmdline .= '--ssl-capath="' . $this->sslCaPath . '" ';
-        }
-
-        if ($this->sslVersion != '') {
-            $cmdline .= '--ssl-version="' . $this->sslVersion . '" ';
-        }
-
-        if ($this->insecure) {
-            $cmdline .= '--insecure ';
-        }
-
-        if ($this->noParallelDownloads) {
-            $cmdline .= '--no-parallel-downloads ';
-        }
-
-        if ($this->logFile != '') {
-            $cmdline .= '--log="' . $this->logFile . '" ';
-        }
-
+        // Logging options.
         if ($this->verbose) {
             $cmdline .= '--verbose ';
         }
-
         if ($this->debug) {
             $cmdline .= '--debug ';
         }
-
+        if ($this->logFile != '') {
+            $cmdline .= '--log="' . $this->logFile . '" ';
+        }
         if ($this->noWarnCss) {
             $cmdline .= '--no-warn-css ';
         }
 
+        // Input options.
+        if ($this->inputType != 'auto') {
+            $cmdline .=  '-i "' . $this->inputType . '" ';
+        }
+        if ($this->baseURL != '') {
+            $cmdline .= '--baseurl="' . $this->baseURL . '" ';
+        }
+        $cmdline .= $this->remaps;
         if ($this->fileRoot != '') {
             $cmdline .= '--fileroot="' . $this->fileRoot . '" ';
         }
+        if ($this->doXInclude) {
+            $cmdline .= '--xinclude ';
+        }
+        if ($this->xmlExternalEntities) {
+            $cmdline .= '--xml-external-entities ';
+        }
+        if ($this->noLocalFiles) {
+            $cmdline .= '--no-local-files ';
+        }
 
+        // Network options.
+        if ($this->noNetwork) {
+            $cmdline .= '--no-network ';
+        }
+        if ($this->authUser != '') {
+            $cmdline .= '--auth-user="' . $this->cmdlineArgEscape($this->authUser) . '" ';
+        }
+        if ($this->authPassword != '') {
+            $cmdline .= '--auth-password="' . $this->cmdlineArgEscape($this->authPassword) . '" ';
+        }
+        if ($this->authServer != '') {
+            $cmdline .= '--auth-server="' . $this->cmdlineArgEscape($this->authServer) . '" ';
+        }
+        if ($this->authScheme != '') {
+            $cmdline .= '--auth-scheme="' . $this->cmdlineArgEscape($this->authScheme) . '" ';
+        }
+        if ($this->authMethod != '') {
+            $cmdline .=  '--auth-method="' . $this->cmdlineArgEscape($this->authMethod) . '" ';
+        }
+        if ($this->noAuthPreemptive) {
+            $cmdline .= '--no-auth-preemptive ';
+        }
+        if ($this->httpProxy != '') {
+            $cmdline .= '--http-proxy="' . $this->httpProxy . '" ';
+        }
+        if ($this->httpTimeout != '') {
+            $cmdline .= '--http-timeout="' . $this->httpTimeout . '" ';
+        }
+        if ($this->cookie != '') {
+            $cmdline .= '--cookie="' . $this->cookie . '" ';
+        }
+        if ($this->cookieJar != '') {
+            $cmdline .= '--cookiejar="' . $this->cookieJar . '" ';
+        }
+        if ($this->sslCaCert != '') {
+            $cmdline .= '--ssl-cacert="' . $this->sslCaCert . '" ';
+        }
+        if ($this->sslCaPath != '') {
+            $cmdline .= '--ssl-capath="' . $this->sslCaPath . '" ';
+        }
+        if ($this->sslVersion != '') {
+            $cmdline .= '--ssl-version="' . $this->sslVersion . '" ';
+        }
+        if ($this->insecure) {
+            $cmdline .= '--insecure ';
+        }
+        if ($this->noParallelDownloads) {
+            $cmdline .= '--no-parallel-downloads ';
+        }
+
+        // JavaScript options.
+        if ($this->javascript) {
+            $cmdline .= '--javascript ';
+        }
+        $cmdline .= $this->scripts;
+
+        // CSS options.
+        $cmdline .= $this->styleSheets;
+        if ($this->media != '') {
+            $cmdline .= '--media="' . $this->cmdlineArgEscape($this->media) . '" ';
+        }
+        if ($this->pageSize != '') {
+            $cmdline .= '--page-size="' . $this->cmdlineArgEscape($this->pageSize) . '" ';
+        }
+        if ($this->pageMargin != '') {
+            $cmdline .= '--page-margin="' . $this->cmdlineArgEscape($this->pageMargin) . '" ';
+        }
+        if ($this->noAuthorStyle) {
+            $cmdline .= '--no-author-style ';
+        }
+        if ($this->noDefaultStyle) {
+            $cmdline .= '--no-default-style ';
+        }
+
+        // PDF output options.
+        if ($this->pdfProfile != '') {
+            $cmdline .= '--pdf-profile="' . $this->cmdlineArgEscape($this->pdfProfile) . '" ';
+        }
+        if ($this->pdfOutputIntent != '') {
+            $cmdline .= '--pdf-output-intent="' . $this->cmdlineArgEscape($this->pdfOutputIntent) . '" ';
+
+            if ($this->convertColors) {
+                $cmdline .= '--convert-colors ';
+            }
+        }
+        $cmdline .= $this->fileAttachments;
+        if ($this->noArtificialFonts) {
+            $cmdline .= '--no-artificial-fonts ';
+        }
+        if (!$this->embedFonts) {
+            $cmdline .= '--no-embed-fonts ';
+        }
+        if (!$this->subsetFonts) {
+            $cmdline .= '--no-subset-fonts ';
+        }
+        if ($this->forceIdentityEncoding) {
+            $cmdline .= '--force-identity-encoding ';
+        }
+        if (!$this->compress) {
+            $cmdline .= '--no-compress ';
+        }
+        if ($this->fallbackCmykProfile != '') {
+            $cmdline .= '--fallback-cmyk-profile="' . $this->cmdlineArgEscape($this->fallbackCmykProfile) . '" ';
+        }
+
+        // PDF metadata options.
+        if ($this->pdfTitle != '') {
+            $cmdline .= '--pdf-title="' . $this->cmdlineArgEscape($this->pdfTitle) . '" ';
+        }
+        if ($this->pdfSubject != '') {
+            $cmdline .= '--pdf-subject="' . $this->cmdlineArgEscape($this->pdfSubject) . '" ';
+        }
+        if ($this->pdfAuthor != '') {
+            $cmdline .= '--pdf-author="' . $this->cmdlineArgEscape($this->pdfAuthor) . '" ';
+        }
+        if ($this->pdfKeywords != '') {
+            $cmdline .= '--pdf-keywords="' . $this->cmdlineArgEscape($this->pdfKeywords) . '" ';
+        }
+        if ($this->pdfCreator != '') {
+            $cmdline .= '--pdf-creator="' . $this->cmdlineArgEscape($this->pdfCreator) . '" ';
+        }
+
+        // PDF encryption options.
+        if ($this->encrypt) {
+            $cmdline .= '--encrypt ' . $this->encryptInfo;
+        }
+
+        // License options.
         if ($this->licenseFile != '') {
             $cmdline .= '--license-file="' . $this->licenseFile . '" ';
         }
@@ -1276,126 +1354,7 @@ class Prince
             $cmdline .= '--license-key="' . $this->licenseKey . '" ';
         }
 
-        if ($this->embedFonts == false) {
-            $cmdline .= '--no-embed-fonts ';
-        }
-
-        if ($this->subsetFonts == false) {
-            $cmdline .= '--no-subset-fonts ';
-        }
-
-        if ($this->noArtificialFonts == true) {
-            $cmdline .= '--no-artificial-fonts ';
-        }
-
-        if ($this->authMethod != '') {
-            $cmdline .=  '--auth-method="' .
-                $this->cmdlineArgEscape($this->authMethod) . '" ';
-        }
-
-        if ($this->authUser != '') {
-            $cmdline .= '--auth-user="' .
-                $this->cmdlineArgEscape($this->authUser) . '" ';
-        }
-
-        if ($this->authPassword != '') {
-            $cmdline .= '--auth-password="' .
-                $this->cmdlineArgEscape($this->authPassword) . '" ';
-        }
-
-        if ($this->authServer != '') {
-            $cmdline .= '--auth-server="' .
-                $this->cmdlineArgEscape($this->authServer) . '" ';
-        }
-
-        if ($this->authScheme != '') {
-            $cmdline .= '--auth-scheme="' .
-                $this->cmdlineArgEscape($this->authScheme) . '" ';
-        }
-
-        if ($this->noAuthPreemptive) {
-            $cmdline .= '--no-auth-preemptive ';
-        }
-
-        if ($this->media != '') {
-            $cmdline .= '--media="' .
-                $this->cmdlineArgEscape($this->media) . '" ';
-        }
-
-        if ($this->pageSize != '') {
-            $cmdline .= '--page-size="' .
-                $this->cmdlineArgEscape($this->pageSize) . '" ';
-        }
-
-        if ($this->pageMargin != '') {
-            $cmdline .= '--page-margin="' .
-                $this->cmdlineArgEscape($this->pageMargin) . '" ';
-        }
-
-        if ($this->noAuthorStyle == true) {
-            $cmdline .= '--no-author-style ';
-        }
-
-        if ($this->noDefaultStyle == true) {
-            $cmdline .= '--no-default-style ';
-        }
-
-        if ($this->forceIdentityEncoding == true) {
-            $cmdline .= '--force-identity-encoding ';
-        }
-
-        if ($this->compress == false) {
-            $cmdline .= '--no-compress ';
-        }
-
-        if ($this->pdfOutputIntent != '') {
-            $cmdline .= '--pdf-output-intent="' .
-                $this->cmdlineArgEscape($this->pdfOutputIntent) . '" ';
-
-            if ($this->convertColors == true) {
-                $cmdline .= '--convert-colors ';
-            }
-        }
-
-        if ($this->fallbackCmykProfile != '') {
-            $cmdline .= '--fallback-cmyk-profile="' .
-                $this->cmdlineArgEscape($this->fallbackCmykProfile) . '" ';
-        }
-
-        if ($this->pdfProfile != '') {
-            $cmdline .= '--pdf-profile="' .
-                $this->cmdlineArgEscape($this->pdfProfile) . '" ';
-        }
-
-        if ($this->pdfTitle != '') {
-            $cmdline .= '--pdf-title="' .
-                $this->cmdlineArgEscape($this->pdfTitle) . '" ';
-        }
-
-        if ($this->pdfSubject != '') {
-            $cmdline .= '--pdf-subject="' .
-                $this->cmdlineArgEscape($this->pdfSubject) . '" ';
-        }
-
-        if ($this->pdfAuthor != '') {
-            $cmdline .= '--pdf-author="' .
-                $this->cmdlineArgEscape($this->pdfAuthor) . '" ';
-        }
-
-        if ($this->pdfKeywords != '') {
-            $cmdline .= '--pdf-keywords="' .
-                $this->cmdlineArgEscape($this->pdfKeywords) . '" ';
-        }
-
-        if ($this->pdfCreator != '') {
-            $cmdline .= '--pdf-creator="' .
-                $this->cmdlineArgEscape($this->pdfCreator) . '" ';
-        }
-
-        if ($this->encrypt) {
-            $cmdline .= '--encrypt ' . $this->encryptInfo;
-        }
-
+        // Additional options.
         if ($this->options != '') {
             $cmdline .= $this->cmdlineArgEscape($this->options) . ' ';
         }
