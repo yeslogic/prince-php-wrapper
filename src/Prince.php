@@ -78,6 +78,7 @@ class Prince
     // JavaScript options.
     private $javascript;
     private $scripts;
+    private $maxPasses;
 
     // CSS options.
     private $styleSheets;
@@ -173,6 +174,7 @@ class Prince
         // JavaScript options.
         $this->javascript = false;
         $this->scripts = '';
+        $this->maxPasses = 0;
 
         // CSS options.
         $this->styleSheets = '';
@@ -951,6 +953,21 @@ class Prince
         $this->scripts = '';
     }
 
+    /**
+     * Specify the maximum number of consequent layout passes.
+     *
+     * @param int $maxPasses The maximum number of passes. Value must be greater
+     *                       than 0. Default value is unlimited passes.
+     * @return void
+     */
+    public function setMaxPasses($maxPasses)
+    {
+        if ($maxPasses < 1) {
+            throw new Exception('invalid maxPasses value (must be > 0)');
+        }
+        $this->maxPasses = $maxPasses;
+    }
+
     /* CSS OPTIONS ************************************************************/
 
     /**
@@ -1471,6 +1488,9 @@ class Prince
             $cmdline .= '--javascript ';
         }
         $cmdline .= $this->scripts;
+        if ($this->maxPasses > 0) {
+            $cmdline .= '--max-passes="' . $this->maxPasses . '" ';
+        }
 
         // CSS options.
         $cmdline .= $this->styleSheets;
