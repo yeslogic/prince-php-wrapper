@@ -587,13 +587,10 @@ class Prince
      */
     public function setAuthScheme($authScheme)
     {
-        if (strcasecmp($authScheme, 'http') == 0) {
-            $this->authScheme = 'http';
-        } else if (strcasecmp($authScheme, 'https') == 0) {
-            $this->authScheme = 'https';
-        } else {
-            $this->authScheme = '';
-        }
+        $valid = array('http', 'https');
+        $lower = strtolower($authScheme);
+
+        $this->authScheme = in_array($lower, $valid) ? $lower : '';
     }
 
     /**
@@ -605,17 +602,10 @@ class Prince
      */
     public function setAuthMethod($authMethod)
     {
-        if (strcasecmp($authMethod, 'basic') == 0) {
-            $this->authMethod = 'basic';
-        } else if (strcasecmp($authMethod, 'digest') == 0) {
-            $this->authMethod = 'digest';
-        } else if (strcasecmp($authMethod, 'ntlm') == 0) {
-            $this->authMethod = 'ntlm';
-        } else if (strcasecmp($authMethod, 'negotiate') == 0) {
-            $this->authMethod = 'negotiate';
-        } else {
-            $this->authMethod = '';
-        }
+        $valid = array('basic', 'digest', 'ntlm', 'negotiate');
+        $lower = strtolower($authMethod);
+
+        $this->authMethod = in_array($lower, $valid) ? $lower : '';
     }
 
     /**
