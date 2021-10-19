@@ -412,6 +412,30 @@ class Prince
     }
 
     /**
+     * Specify whether to warn about unknown CSS features.
+     *
+     * @param bool $noWarnCssUnknown `true` to disable warnings. Default value
+     *                               is `false`.
+     * @return void
+     */
+    public function setNoWarnCssUnknown($noWarnCssUnknown)
+    {
+        $this->noWarnCssUnknown = $noWarnCssUnknown;
+    }
+
+    /**
+     * Specify whether to warn about unsupported CSS features.
+     *
+     * @param bool $noWarnCssUnsupported `true` to disable warnings. Default
+     *                                   value is `false`.
+     * @return void
+     */
+    public function setNoWarnCssUnsupported($noWarnCssUnsupported)
+    {
+        $this->noWarnCssUnsupported = $noWarnCssUnsupported;
+    }
+
+    /**
      * Specify whether to warn about unknown and unsupported CSS features.
      *
      * @param bool $noWarnCss `true` to disable warnings. Default value is `false`.
