@@ -679,7 +679,10 @@ class Prince
     }
 
     /**
+     * [DEPRECATED]
      * Specify HTTP authentication methods.
+     *
+     * @deprecated 1.2.0 Prefer `addAuthMethod` instead.
      *
      * @param string $authMethod Can take a value of: `"basic"`, `"digest"`,
      *                           `"ntlm"`, `"negotiate"`.
