@@ -502,7 +502,7 @@ class Prince
      * Specify whether XML Inclusions (XInclude) processing should be applied to
      * input documents.
      *
-     * @param [type] $xinclude `true` to enable XInclude processing. Default
+     * @param bool $xinclude `true` to enable XInclude processing. Default
      *                         value is `false`.
      * @return void
      */
