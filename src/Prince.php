@@ -430,7 +430,10 @@ class Prince
      */
     public function setInputType($inputType)
     {
-        $this->inputType = $inputType;
+        $valid = array('xml', 'html', 'auto');
+        $lower = strtolower($inputType);
+
+        $this->inputType = in_array($lower, $valid) ? $lower : 'auto';
     }
 
     /**
@@ -701,7 +704,17 @@ class Prince
      */
     public function setSslVersion($sslVersion)
     {
-        $this->sslVersion = $sslVersion;
+        $valid = array(
+            'default',
+            'tlsv1',
+            'tlsv1.0',
+            'tlsv1.1',
+            'tlsv1.2',
+            'tlsv1.3'
+        );
+        $lower = strtolower($sslVersion);
+
+        $this->sslVersion = in_array($lower, $valid) ? $lower : '';
     }
 
     /**
@@ -867,7 +880,26 @@ class Prince
      */
     public function setPDFProfile($pdfProfile)
     {
-        $this->pdfProfile = $pdfProfile;
+        $valid = array(
+            'pdf/a-1a',
+            'pdf/a-1a+pdf/ua-1',
+            'pdf/a-1b',
+            'pdf/a-2a',
+            'pdf/a-2a+pdf/ua-1',
+            'pdf/a-2b',
+            'pdf/a-3a',
+            'pdf/a-3a+pdf/ua-1',
+            'pdf/a-3b',
+            'pdf/ua-1',
+            'pdf/x-1a:2001',
+            'pdf/x-1a:2003',
+            'pdf/x-3:2002',
+            'pdf/x-3:2003',
+            'pdf/x-4'
+        );
+        $lower = strtolower($pdfProfile);
+
+        $this->pdfProfile = in_array($lower, $valid) ? $lower : '';
     }
 
     /**
