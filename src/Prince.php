@@ -52,6 +52,7 @@ class Prince
 
     // Network options.
     private $noNetwork;
+    private $noRedirects;
     private $authUser;
     private $authPassword;
     private $authServer;
@@ -64,6 +65,11 @@ class Prince
     private $cookieJar;
     private $sslCaCert;
     private $sslCaPath;
+    private $sslCert;
+    private $sslCertType;
+    private $sslKey;
+    private $sslKeyType;
+    private $sslKeyPassword;
     private $sslVersion;
     private $insecure;
     private $noParallelDownloads;
@@ -140,6 +146,7 @@ class Prince
 
         // Network options.
         $this->noNetwork = false;
+        $this->noRedirects = false;
         $this->authUser = '';
         $this->authPassword = '';
         $this->authServer = '';
@@ -147,11 +154,16 @@ class Prince
         $this->authMethod = '';
         $this->noAuthPreemptive = false;
         $this->httpProxy = '';
-        $this->httpTimeout = '';
+        $this->httpTimeout = 0;
         $this->cookie = '';
         $this->cookieJar = '';
         $this->sslCaCert = '';
         $this->sslCaPath = '';
+        $this->sslCert = '';
+        $this->sslCertType = '';
+        $this->sslKey = '';
+        $this->sslKeyType = '';
+        $this->sslKeyPassword = '';
         $this->sslVersion = '';
         $this->insecure = false;
         $this->noParallelDownloads = false;
@@ -576,6 +588,18 @@ class Prince
     }
 
     /**
+     * Specify whether to disable all HTTP and HTTPS redirects.
+     *
+     * @param bool $noRedirects `true` to disable redirects. Default value is
+     *                          `false`.
+     * @return void
+     */
+    public function setNoRedirects($noRedirects)
+    {
+        $this->noRedirects = $noRedirects;
+    }
+
+    /**
      * Specify username for HTTP authentication.
      *
      * @param string $authUser The username for HTTP authentication.
@@ -665,12 +689,15 @@ class Prince
      * Specify the HTTP timeout in seconds.
      *
      * @param int $timeout The HTTP timeout in seconds. Value must be greater
-     *                     than 0.
+     *                     than 0. Default value is 60 seconds.
      * @return void
      */
-    public function setHttpTimeout($timeout)
+    public function setHttpTimeout($httpTimeout)
     {
-        $this->httpTimeout = $timeout;
+        if ($httpTimeout < 1) {
+            throw new Exception('invalid httpTimeout value (must be > 0)');
+        }
+        $this->httpTimeout = $httpTimeout;
     }
 
     /**
@@ -715,6 +742,67 @@ class Prince
     public function setSslCaPath($sslCaPath)
     {
         $this->sslCaPath = $sslCaPath;
+    }
+
+    /**
+     * Specify an SSL client certificate file.
+     *
+     * @param string $sslCert The filename of the SSL client certificate file.
+     * @return void
+     */
+    public function setSslCert($sslCert)
+    {
+        $this->sslCert = $sslCert;
+    }
+
+    /**
+     * Specify the SSL client certificate file type.
+     *
+     * @param string $sslCertType Can take a value of: "PEM", "DER".
+     * @return void
+     */
+    public function setSslCertType($sslCertType)
+    {
+        $valid = array('pem', 'der');
+        $lower = strtolower($sslCertType);
+
+        $this->sslCertType = in_array($lower, $valid) ? $lower : '';
+    }
+
+    /**
+     * Specify an SSL private key file.
+     *
+     * @param string $sslKey The filename of the SSL private key file.
+     * @return void
+     */
+    public function setSslKey($sslKey)
+    {
+        $this->sslKey = $sslKey;
+    }
+
+    /**
+     * Specify the SSL private key file type.
+     *
+     * @param string $sslKeyType Can take a value of: "PEM", "DER".
+     * @return void
+     */
+    public function setSslKeyType($sslKeyType)
+    {
+        $valid = array('pem', 'der');
+        $lower = strtolower($sslKeyType);
+
+        $this->sslKeyType = in_array($lower, $valid) ? $lower : '';
+    }
+
+    /**
+     * Specify a password for the SSL private key.
+     *
+     * @param string $sslKeyPassword The password for the SSL private key.
+     * @return void
+     */
+    public function setSslKeyPassword($sslKeyPassword)
+    {
+        $this->sslKeyPassword = $sslKeyPassword;
     }
 
     /**
@@ -1252,6 +1340,9 @@ class Prince
         if ($this->noNetwork) {
             $cmdline .= '--no-network ';
         }
+        if ($this->noRedirects) {
+            $cmdline .= '--no-redirects ';
+        }
         if ($this->authUser != '') {
             $cmdline .= '--auth-user="' . $this->cmdlineArgEscape($this->authUser) . '" ';
         }
@@ -1273,7 +1364,7 @@ class Prince
         if ($this->httpProxy != '') {
             $cmdline .= '--http-proxy="' . $this->httpProxy . '" ';
         }
-        if ($this->httpTimeout != '') {
+        if ($this->httpTimeout > 0) {
             $cmdline .= '--http-timeout="' . $this->httpTimeout . '" ';
         }
         if ($this->cookie != '') {
@@ -1287,6 +1378,21 @@ class Prince
         }
         if ($this->sslCaPath != '') {
             $cmdline .= '--ssl-capath="' . $this->sslCaPath . '" ';
+        }
+        if ($this->sslCert != '') {
+            $cmdline .= '--ssl-cert="' . $this->sslCert . '" ';
+        }
+        if ($this->sslCertType != '') {
+            $cmdline .= '--ssl-cert-type="' . $this->sslCertType . '" ';
+        }
+        if ($this->sslKey != '') {
+            $cmdline .= '--ssl-key="' . $this->sslKey . '" ';
+        }
+        if ($this->sslKeyType != '') {
+            $cmdline .= '--ssl-key-type="' . $this->sslKeyType . '" ';
+        }
+        if ($this->sslKeyPassword != '') {
+            $cmdline .= '--ssl-key-password="' . $this->cmdlineArgEscape($this->sslKeyPassword) . '" ';
         }
         if ($this->sslVersion != '') {
             $cmdline .= '--ssl-version="' . $this->sslVersion . '" ';
