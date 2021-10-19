@@ -62,6 +62,7 @@ class Prince
     private $httpProxy;
     private $httpTimeout;
     private $cookie;
+    private $cookies;
     private $cookieJar;
     private $sslCaCert;
     private $sslCaPath;
@@ -156,6 +157,7 @@ class Prince
         $this->httpProxy = '';
         $this->httpTimeout = 0;
         $this->cookie = '';
+        $this->cookies = '';
         $this->cookieJar = '';
         $this->sslCaCert = '';
         $this->sslCaPath = '';
@@ -732,6 +734,28 @@ class Prince
             throw new Exception('invalid httpTimeout value (must be > 0)');
         }
         $this->httpTimeout = $httpTimeout;
+    }
+
+    /**
+     * Specify a Set-Cookie header value. This method can be called more than
+     * once to add multiple header values.
+     *
+     * @param string $cookie The Set-Cookie header value.
+     * @return void
+     */
+    public function addCookie($cookie)
+    {
+        $this->cookies .= '--cookie="' . $cookie . '" ';
+    }
+
+    /**
+     * Clear all cookies.
+     *
+     * @return void
+     */
+    public function clearCookies()
+    {
+        $this->cookies = '';
     }
 
     /**
@@ -1404,6 +1428,7 @@ class Prince
         if ($this->cookie != '') {
             $cmdline .= '--cookie="' . $this->cookie . '" ';
         }
+        $cmdline .= $this->cookies;
         if ($this->cookieJar != '') {
             $cmdline .= '--cookiejar="' . $this->cookieJar . '" ';
         }
