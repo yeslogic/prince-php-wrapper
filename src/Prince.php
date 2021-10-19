@@ -38,7 +38,8 @@ class Prince
     private $verbose;
     private $debug;
     private $logFile;
-    private $noWarnCss;
+    private $noWarnCssUnknown;
+    private $noWarnCssUnsupported;
 
     // Input options.
     private $inputType;
@@ -125,7 +126,8 @@ class Prince
         $this->verbose = false;
         $this->debug = false;
         $this->logFile = '';
-        $this->noWarnCss = false;
+        $this->noWarnCssUnknown = false;
+        $this->noWarnCssUnsupported = false;
 
         // Input options.
         $this->inputType = 'auto';
@@ -410,14 +412,15 @@ class Prince
     }
 
     /**
-     * Specify whether to warn about CSS.
+     * Specify whether to warn about unknown and unsupported CSS features.
      *
      * @param bool $noWarnCss `true` to disable warnings. Default value is `false`.
      * @return void
      */
     public function setNoWarnCss($noWarnCss)
     {
-        $this->noWarnCss = $noWarnCss;
+        $this->noWarnCssUnknown = $noWarnCss;
+        $this->noWarnCssUnsupported = $noWarnCss;
     }
 
     /* INPUT OPTIONS **********************************************************/
@@ -1193,8 +1196,11 @@ class Prince
         if ($this->logFile != '') {
             $cmdline .= '--log="' . $this->logFile . '" ';
         }
-        if ($this->noWarnCss) {
-            $cmdline .= '--no-warn-css ';
+        if ($this->noWarnCssUnknown) {
+            $cmdline .= '--no-warn-css-unknown ';
+        }
+        if ($this->noWarnCssUnsupported) {
+            $cmdline .= '--no-warn-css-unsupported ';
         }
 
         // Input options.
