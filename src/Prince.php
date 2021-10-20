@@ -89,16 +89,22 @@ class Prince
     private $noDefaultStyle;
 
     // PDF output options.
+    private $pdfId;
+    private $pdfLang;
     private $pdfProfile;
     private $pdfOutputIntent;
     private $fileAttachments;
     private $noArtificialFonts;
     private $embedFonts;
     private $subsetFonts;
+    private $systemFonts;
     private $forceIdentityEncoding;
     private $compress;
+    private $noObjectStreams;
     private $convertColors;
     private $fallbackCmykProfile;
+    private $taggedPdf;
+    private $cssDpi;
 
     // PDF metadata options.
     private $pdfTitle;
@@ -185,16 +191,22 @@ class Prince
         $this->noDefaultStyle = false;
 
         // PDF output options.
+        $this->pdfId = '';
+        $this->pdfLang = '';
         $this->pdfProfile = '';
         $this->pdfOutputIntent = '';
         $this->fileAttachments = '';
         $this->noArtificialFonts = false;
         $this->embedFonts = true;
         $this->subsetFonts = true;
+        $this->systemFonts = true;
         $this->forceIdentityEncoding = false;
         $this->compress = true;
+        $this->noObjectStreams = false;
         $this->convertColors = false;
         $this->fallbackCmykProfile = '';
+        $this->taggedPdf = false;
+        $this->cssDpi = 0;
 
         // PDF metadata options.
         $this->pdfTitle = '';
@@ -1051,6 +1063,28 @@ class Prince
     /* PDF OUTPUT OPTIONS *****************************************************/
 
     /**
+     * Specify the PDF ID to use.
+     *
+     * @param string $pdfId The PDF ID to use.
+     * @return void
+     */
+    public function setPdfId($pdfId)
+    {
+        $this->pdfId = $pdfId;
+    }
+
+    /**
+     * Specify the PDF document's Lang entry in the document catalog.
+     *
+     * @param string $pdfLang The PDF document's lang entry.
+     * @return void
+     */
+    public function setPdfLang($pdfLang)
+    {
+        $this->pdfLang = $pdfLang;
+    }
+
+    /**
      * Specify the PDF profile to use.
      *
      * @param string $pdfProfile Can take a value of:
@@ -1169,6 +1203,18 @@ class Prince
     }
 
     /**
+     * Specify whether system fonts should be enabled.
+     *
+     * @param bool $systemFonts `false` to disable system fonts. Default value
+     *                          is `true`.
+     * @return void
+     */
+    public function setSystemFonts($systemFonts)
+    {
+        $this->systemFonts = $systemFonts;
+    }
+
+    /**
      * Specify whether to use force identity encoding.
      *
      * @param bool $forceIdentityEncoding `true` to force identity encoding.
@@ -1193,6 +1239,18 @@ class Prince
     }
 
     /**
+     * Specify whether object streams should be disabled.
+     *
+     * @param bool $noObjectStreams `true` to disable object streams. Default
+     *                              value is `false`.
+     * @return void
+     */
+    public function setNoObjectStreams($noObjectStreams)
+    {
+        $this->noObjectStreams = $noObjectStreams;
+    }
+
+    /**
      * Specify fallback ICC profile for uncalibrated CMYK.
      *
      * @param string $fallbackCmykProfile The fallback ICC profile.
@@ -1201,6 +1259,32 @@ class Prince
     public function setFallbackCmykProfile($fallbackCmykProfile)
     {
         $this->fallbackCmykProfile = $fallbackCmykProfile;
+    }
+
+    /**
+     * Specify whether to enable tagged PDF.
+     *
+     * @param bool $taggedPdf `true` to enable tagged PDF. Default value is `false`.
+     * @return void
+     */
+    public function setTaggedPdf($taggedPdf)
+    {
+        $this->taggedPdf = $taggedPdf;
+    }
+
+    /**
+     * Specify the DPI of the "px" units in CSS.
+     *
+     * @param int $cssDpi The DPI of the "px" units. Value must be greater than
+     *                    0. Default value is 96.
+     * @return void
+     */
+    public function setCssDpi($cssDpi)
+    {
+        if ($cssDpi < 1) {
+            throw new Exception('invalid cssDpi value (must be > 0)');
+        }
+        $this->cssDpi = $cssDpi;
     }
 
     /* PDF METADATA OPTIONS ***************************************************/
@@ -1511,6 +1595,12 @@ class Prince
         }
 
         // PDF output options.
+        if ($this->pdfId != '') {
+            $cmdline .= '--pdf-id="' . $this->cmdlineArgEscape($this->pdfId) . '" ';
+        }
+        if ($this->pdfLang != '') {
+            $cmdline .= '--pdf-lang="' . $this->cmdlineArgEscape($this->pdfLang) . '" ';
+        }
         if ($this->pdfProfile != '') {
             $cmdline .= '--pdf-profile="' . $this->cmdlineArgEscape($this->pdfProfile) . '" ';
         }
@@ -1531,14 +1621,26 @@ class Prince
         if (!$this->subsetFonts) {
             $cmdline .= '--no-subset-fonts ';
         }
+        if (!$this->systemFonts) {
+            $cmdline .= '--no-system-fonts ';
+        }
         if ($this->forceIdentityEncoding) {
             $cmdline .= '--force-identity-encoding ';
         }
         if (!$this->compress) {
             $cmdline .= '--no-compress ';
         }
+        if ($this->noObjectStreams) {
+            $cmdline .= '--no-object-streams ';
+        }
         if ($this->fallbackCmykProfile != '') {
             $cmdline .= '--fallback-cmyk-profile="' . $this->cmdlineArgEscape($this->fallbackCmykProfile) . '" ';
+        }
+        if ($this->taggedPdf) {
+            $cmdline .= '--tagged-pdf ';
+        }
+        if ($this->cssDpi > 0) {
+            $cmdline .= '--css-dpi="' . $this->cssDpi . '" ';
         }
 
         // PDF metadata options.
