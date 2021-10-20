@@ -118,6 +118,14 @@ class Prince
     private $encrypt;
     private $encryptInfo;
 
+    // Raster output options.
+    private $rasterFormat;
+    private $rasterJpegQuality;
+    private $rasterPage;
+    private $rasterDpi;
+    private $rasterThreads;
+    private $rasterBackground;
+
     // License options.
     private $licenseFile;
     private $licenseKey;
@@ -220,6 +228,14 @@ class Prince
         // PDF encryption options.
         $this->encrypt = false;
         $this->encryptInfo = '';
+
+        // Raster output options.
+        $this->rasterFormat = 'auto';
+        $this->rasterJpegQuality = -1;
+        $this->rasterPage = 0;
+        $this->rasterDpi = 0;
+        $this->rasterThreads = -1;
+        $this->rasterBackground = '';
 
         // License options.
         $this->licenseFile = '';
@@ -1446,6 +1462,97 @@ class Prince
         }
     }
 
+    /* RASTER OUTPUT OPTIONS **************************************************/
+
+    /**
+     * Specify the format for the raster output.
+     *
+     * @param string $rasterFormat Can take a value of: `"auto"`, `"png"`, `"jpeg"`.
+     * @return void
+     */
+    public function setRasterFormat($rasterFormat)
+    {
+        $valid = array('auto', 'png', 'jpeg');
+        $lower = strtolower($rasterFormat);
+
+        $this->rasterFormat = in_array($lower, $valid) ? $lower : 'auto';
+    }
+
+    /**
+     * Specify the level of JPEG compression when generating raster output in
+     * JPEG format.
+     *
+     * @param int $rasterJpegQuality The level of JPEG compression. Valid range
+     *                               is between 0 and 100 inclusive. Default
+     *                               value is 92 percent.
+     * @return void
+     */
+    public function setRasterJpegQuality($rasterJpegQuality)
+    {
+        if ($rasterJpegQuality < 0 || $rasterJpegQuality > 100) {
+            throw new Exception('invalid rasterJpegQuality value (must be [0, 100])');
+        }
+        $this->rasterJpegQuality = $rasterJpegQuality;
+    }
+
+    /**
+     * Specify the page number to be rasterized.
+     *
+     * @param int $rasterPage The page number to be rasterized. Value must be
+     *                        greater than 0. Defaults to rasterizing all pages.
+     * @return void
+     */
+    public function setRasterPage($rasterPage)
+    {
+        if ($rasterPage < 1) {
+            throw new Exception('invalid rasterPage value (must be > 0)');
+        }
+        $this->rasterPage = $rasterPage;
+    }
+
+    /**
+     * Specify the resolution of the raster output.
+     *
+     * @param int $rasterDpi The resolution of the raster output. Value must be
+     *                       greater than 0. Default value is 96 dpi.
+     * @return void
+     */
+    public function setRasterDpi($rasterDpi)
+    {
+        if ($rasterDpi < 1) {
+            throw new Exception('invalid rasterDpi value (must be > 0)');
+        }
+        $this->rasterDpi = $rasterDpi;
+    }
+
+    /**
+     * Specify the number of threads to use for multi-threaded rasterization.
+     *
+     * @param int $rasterThreads The number of threads to use. Default value is
+     *                           the number of cores and hyperthreads the system
+     *                           provides.
+     * @return void
+     */
+    public function setRasterThreads($rasterThreads)
+    {
+        $this->rasterThreads = $rasterThreads;
+    }
+
+    /**
+     * Specify the background. Can be used when rasterizing to an image format
+     * that supports transparency.
+     *
+     * @param string $rasterBackground Can take a value of: `"white"`, `"transparent"`.
+     * @return void
+     */
+    public function setRasterBackground($rasterBackground)
+    {
+        $valid = array('white', 'transparent');
+        $lower = strtolower($rasterBackground);
+
+        $this->rasterBackground = in_array($lower, $valid) ? $lower : '';
+    }
+
     /* LICENSE OPTIONS ********************************************************/
 
     /**
@@ -1696,6 +1803,26 @@ class Prince
         // PDF encryption options.
         if ($this->encrypt) {
             $cmdline .= '--encrypt ' . $this->encryptInfo;
+        }
+
+        // Raster output options.
+        if ($this->rasterFormat != 'auto') {
+            $cmdline .= '--raster-format="' . $this->rasterFormat . '" ';
+        }
+        if ($this->rasterJpegQuality > -1) {
+            $cmdline .= '--raster-jpeg-quality="' . $this->rasterJpegQuality . '" ';
+        }
+        if ($this->rasterPage > 0) {
+            $cmdline .= '--raster-pages="' . $this->rasterPage . '" ';
+        }
+        if ($this->rasterDpi > 0) {
+            $cmdline .= '--raster-dpi="' . $this->rasterDpi . '" ';
+        }
+        if ($this->rasterThreads > -1) {
+            $cmdline .= '--raster-threads="' . $this->rasterThreads . '" ';
+        }
+        if ($this->rasterBackground != '') {
+            $cmdline .= '--raster-background="' . $this->rasterBackground . '" ';
         }
 
         // License options.
