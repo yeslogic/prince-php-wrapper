@@ -1389,6 +1389,12 @@ class Prince
      *                           Default value is `false`.
      * @param bool $disallowAnnotate `true` to disallow annotation of the PDF file.
      *                               Default value is `false`.
+     * @param bool $allowCopyForAccessibility `true` to allow copying content for
+     *                                        accessibility purposes. Default
+     *                                        value is `false`.
+     * @param bool $allowAssembly `true` to allow the document to be inserted into
+     *                            another document or other pages to be added.
+     *                            Default value is `false`.
      * @return void
      */
     public function setEncryptInfo(
@@ -1398,7 +1404,9 @@ class Prince
         $disallowPrint = false,
         $disallowModify = false,
         $disallowCopy = false,
-        $disallowAnnotate = false
+        $disallowAnnotate = false,
+        $allowCopyForAccessibility = false,
+        $allowAssembly = false
     ) {
         if ($keyBits != 40 && $keyBits != 128) {
             throw new Exception("Invalid value for keyBits: $keyBits" .
@@ -1427,6 +1435,14 @@ class Prince
 
         if ($disallowAnnotate) {
             $this->encryptInfo .= '--disallow-annotate ';
+        }
+
+        if ($allowCopyForAccessibility) {
+            $this->encryptInfo .= '--allow-copy-for-accessibility ';
+        }
+
+        if ($allowAssembly) {
+            $this->encryptInfo .= '--allow-assembly ';
         }
     }
 
