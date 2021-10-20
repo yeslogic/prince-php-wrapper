@@ -112,6 +112,7 @@ class Prince
     private $pdfAuthor;
     private $pdfKeywords;
     private $pdfCreator;
+    private $pdfXmp;
 
     // PDF encryption options.
     private $encrypt;
@@ -214,6 +215,7 @@ class Prince
         $this->pdfAuthor = '';
         $this->pdfKeywords = '';
         $this->pdfCreator = '';
+        $this->pdfXmp = '';
 
         // PDF encryption options.
         $this->encrypt = false;
@@ -1345,6 +1347,18 @@ class Prince
         $this->pdfCreator = $pdfCreator;
     }
 
+    /**
+     * Specify an XMP file that contains XMP metadata to be included in the
+     * output PDF file.
+     *
+     * @param string $pdfXmp The filename of the XMP file.
+     * @return void
+     */
+    public function setPDFXmp($pdfXmp)
+    {
+        $this->pdfXmp = $pdfXmp;
+    }
+
     /* PDF ENCRYPTION OPTIONS *************************************************/
 
     /**
@@ -1658,6 +1672,9 @@ class Prince
         }
         if ($this->pdfCreator != '') {
             $cmdline .= '--pdf-creator="' . $this->cmdlineArgEscape($this->pdfCreator) . '" ';
+        }
+        if ($this->pdfXmp != '') {
+            $cmdline .= '--pdf-xmp="' . $this->pdfXmp . '" ';
         }
 
         // PDF encryption options.
