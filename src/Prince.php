@@ -683,9 +683,9 @@ class Prince
     public function setHTML($html)
     {
         if ($html) {
-            $this->inputType = "html";
+            $this->inputType = 'html';
         } else {
-            $this->inputType = "xml";
+            $this->inputType = 'xml';
         }
     }
 
@@ -1591,7 +1591,7 @@ class Prince
     ) {
         if ($keyBits != 40 && $keyBits != 128) {
             throw new Exception("Invalid value for keyBits: $keyBits" .
-                " (must be 40 or 128)");
+                ' (must be 40 or 128)');
         }
 
         $this->encrypt = true;
