@@ -264,7 +264,7 @@ class Prince
         $pathAndArgs .= '--structured-log=normal ';
         $pathAndArgs .= '"' . $inputPath . '"';
 
-        return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
+        return $this->fileToFile($pathAndArgs, $msgs, $dats);
     }
 
     /**
@@ -287,7 +287,7 @@ class Prince
         $pathAndArgs .= '--structured-log=normal ';
         $pathAndArgs .= '"' . $inputPath . '" -o "' . $pdfPath . '"';
 
-        return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
+        return $this->fileToFile($pathAndArgs, $msgs, $dats);
     }
 
     /**
@@ -315,7 +315,7 @@ class Prince
 
         $pathAndArgs .= '-o "' . $pdfPath . '"';
 
-        return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
+        return $this->fileToFile($pathAndArgs, $msgs, $dats);
     }
 
     /**
@@ -342,7 +342,7 @@ class Prince
 
         $pathAndArgs .= '-o -';
 
-        return $this->convert_internal_file_to_passthru($pathAndArgs, $msgs, $dats);
+        return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
     }
 
     /**
@@ -363,7 +363,7 @@ class Prince
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=buffered "' . $inputPath . '" -o -';
 
-        return $this->convert_internal_file_to_passthru($pathAndArgs, $msgs, $dats);
+        return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
     }
 
     /**
@@ -384,12 +384,7 @@ class Prince
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=buffered -';
 
-        return $this->convert_internal_string_to_passthru(
-            $pathAndArgs,
-            $inputString,
-            $msgs,
-            $dats
-        );
+        return $this->stringToPassthru($pathAndArgs, $inputString, $msgs, $dats);
     }
 
     /**
@@ -412,12 +407,7 @@ class Prince
         $pathAndArgs .= '--structured-log=normal ';
         $pathAndArgs .= ' - -o "' . $pdfPath . '"';
 
-        return $this->convert_internal_string_to_file(
-            $pathAndArgs,
-            $inputString,
-            $msgs,
-            $dats
-        );
+        return $this->stringToFile($pathAndArgs, $inputString, $msgs, $dats);
     }
 
     /* LOGGING OPTIONS ********************************************************/
@@ -1842,7 +1832,7 @@ class Prince
         return $cmdline;
     }
 
-    private function convert_internal_file_to_file($pathAndArgs, &$msgs, &$dats)
+    private function fileToFile($pathAndArgs, &$msgs, &$dats)
     {
         $descriptorspec = array(
             0 => array("pipe", "r"),
@@ -1874,12 +1864,8 @@ class Prince
         }
     }
 
-    private function convert_internal_string_to_file(
-        $pathAndArgs,
-        $inputString,
-        &$msgs,
-        &$dats
-    ) {
+    private function stringToFile($pathAndArgs, $inputString, &$msgs, &$dats)
+    {
         $descriptorspec = array(
             0 => array("pipe", "r"),
             1 => array("pipe", "w"),
@@ -1912,11 +1898,8 @@ class Prince
         }
     }
 
-    private function convert_internal_file_to_passthru(
-        $pathAndArgs,
-        &$msgs,
-        &$dats
-    ) {
+    private function fileToPassthru($pathAndArgs, &$msgs, &$dats)
+    {
         $descriptorspec = array(
             0 => array("pipe", "r"),
             1 => array("pipe", "w"),
@@ -1949,12 +1932,8 @@ class Prince
         }
     }
 
-    private function convert_internal_string_to_passthru(
-        $pathAndArgs,
-        $inputString,
-        &$msgs,
-        &$dats
-    ) {
+    private function stringToPassthru($pathAndArgs, $inputString, &$msgs, &$dats)
+    {
         $descriptorspec = array(
             0 => array("pipe", "r"),
             1 => array("pipe", "w"),
