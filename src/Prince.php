@@ -13,6 +13,8 @@
 
 namespace Prince;
 
+use Exception;
+
 /**
  * A class that provides an interface to Prince, where each document conversion
  * invokes a new Prince process.
@@ -406,6 +408,179 @@ class Prince
         $pathAndArgs = $this->getCommandLine();
         $pathAndArgs .= '--structured-log=normal ';
         $pathAndArgs .= ' - -o "' . $pdfPath . '"';
+
+        return $this->stringToFile($pathAndArgs, $inputString, $msgs, $dats);
+    }
+
+    /* RASTERIZATION METHODS **************************************************/
+
+    /**
+     * Rasterize an XML or HTML file.
+     *
+     * @param string $inputPath The filename of the input XML or HTML document.
+     * @param string $rasterPath A template string from which the raster files
+     *                           will be named (e.g. "page_%02d.png" will cause
+     *                           Prince to generate page_01.png, page_02.png,
+     *                           ..., page_10.png etc.).
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if the input was successfully rasterized.
+     */
+    public function rasterizeFile(
+        $inputPath,
+        $rasterPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        return $this->rasterizeMultipleFiles(
+            array($inputPath),
+            $rasterPath,
+            $msgs,
+            $dats
+        );
+    }
+
+    /**
+     * Rasterize multiple XML or HTML files.
+     *
+     * @param array $inputPaths An array of the input XML or HTML documents.
+     * @param string $rasterPath A template string from which the raster files
+     *                           will be named (e.g. "page_%02d.png" will cause
+     *                           Prince to generate page_01.png, page_02.png,
+     *                           ..., page_10.png etc.).
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if the input was successfully rasterized.
+     */
+    public function rasterizeMultipleFiles(
+        $inputPaths,
+        $rasterPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=normal ';
+
+        foreach ($inputPaths as $inputPath) {
+            $pathAndArgs .= '"' . $inputPath . '" ';
+        }
+
+        $pathAndArgs .= '--raster-output="' . $rasterPath . '"';
+
+        return $this->fileToFile($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * Rasterize an XML or HTML file, which will be passed through to the output
+     * buffer of the current PHP page.
+     *
+     * @param string $inputPath The filename of the input XML or HTML document.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if the input was successfully rasterized.
+     */
+    public function rasterizeFileToPassthru(
+        $inputPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        return $this->rasterizeMultipleFilesToPassthru(
+            array($inputPath),
+            $msgs,
+            $dats
+        );
+    }
+
+    /**
+     * Rasterize multiple XML or HTML files, which will be passed through to the
+     * output buffer of the current PHP page.
+     *
+     * @param array $inputPaths An array of the input XML or HTML documents.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if the input was successfully rasterized.
+     */
+    public function rasterizeMultipleFilesToPassthru(
+        $inputPaths,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        if ($this->rasterPage < 1) {
+            throw new Exception('rasterPage has to be set to a value of > 0');
+        }
+        if ($this->rasterFormat == 'auto') {
+            throw new Exception('rasterFormat has to be set to "jpeg" or "png"');
+        }
+
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=buffered ';
+
+        foreach ($inputPaths as $inputPath) {
+            $pathAndArgs .= '"' . $inputPath . '" ';
+        }
+
+        $pathAndArgs .= '--raster-output=-';
+
+        return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * Rasterize an XML or HTML string, which will be passed through to the
+     * output buffer of the current PHP page.
+     *
+     * @param string $inputString A string containing an XML or HTML document.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if the input was successfully rasterized.
+     */
+    public function rasterizeStringToPassthru(
+        $inputString,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        if ($this->rasterPage < 1) {
+            throw new Exception('rasterPage has to be set to a value of > 0');
+        }
+        if ($this->rasterFormat == 'auto') {
+            throw new Exception('rasterFormat has to be set to "jpeg" or "png"');
+        }
+
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=buffered ';
+
+        $pathAndArgs .= '- --raster-output=-';
+
+        return $this->stringToPassthru($pathAndArgs, $inputString, $msgs, $dats);
+    }
+
+    /**
+     * Rasterize an XML or HTML string.
+     *
+     * @param string $inputString A string containing an XML or HTML document.
+     * @param string $rasterPath A template string from which the raster files
+     *                           will be named (e.g. "page_%02d.png" will cause
+     *                           Prince to generate page_01.png, page_02.png,
+     *                           ..., page_10.png etc.).
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if the input was successfully rasterized.
+     */
+    public function rasterizeStringToFile(
+        $inputString,
+        $rasterPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=normal ';
+
+        $pathAndArgs .= '- --raster-output="' . $rasterPath . '"';
 
         return $this->stringToFile($pathAndArgs, $inputString, $msgs, $dats);
     }
