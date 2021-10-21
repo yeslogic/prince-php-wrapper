@@ -2007,17 +2007,17 @@ class Prince
         return $cmdline;
     }
 
-    private function fileToFile($pathAndArgs, &$msgs, &$dats)
+    private function startPrince($pathAndArgs, &$pipes)
     {
-        $descriptorspec = array(
-            0 => array("pipe", "r"),
-            1 => array("pipe", "w"),
-            2 => array("pipe", "w")
+        $descriptorSpec = array(
+            0 => array('pipe', 'r'),
+            1 => array('pipe', 'w'),
+            2 => array('pipe', 'w')
         );
 
         $process = proc_open(
             $pathAndArgs,
-            $descriptorspec,
+            $descriptorSpec,
             $pipes,
             NULL,
             NULL,
@@ -2025,121 +2025,77 @@ class Prince
         );
 
         if (is_resource($process)) {
-            $result = $this->readMessages($pipes[2], $msgs, $dats);
-
-            fclose($pipes[0]);
-            fclose($pipes[1]);
-            fclose($pipes[2]);
-
-            proc_close($process);
-
-            return ($result == 'success');
+            return $process;
         } else {
             throw new Exception("Failed to execute $pathAndArgs");
         }
+    }
+
+    private function fileToFile($pathAndArgs, &$msgs, &$dats)
+    {
+        $process = $this->startPrince($pathAndArgs, $pipes);
+
+        $result = $this->readMessages($pipes[2], $msgs, $dats);
+
+        fclose($pipes[0]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+
+        proc_close($process);
+
+        return ($result == 'success');
     }
 
     private function stringToFile($pathAndArgs, $inputString, &$msgs, &$dats)
     {
-        $descriptorspec = array(
-            0 => array("pipe", "r"),
-            1 => array("pipe", "w"),
-            2 => array("pipe", "w")
-        );
+        $process = $this->startPrince($pathAndArgs, $pipes);
 
-        $process = proc_open(
-            $pathAndArgs,
-            $descriptorspec,
-            $pipes,
-            NULL,
-            NULL,
-            array('bypass_shell' => TRUE)
-        );
+        fwrite($pipes[0], $inputString);
+        fclose($pipes[0]);
+        fclose($pipes[1]);
 
-        if (is_resource($process)) {
-            fwrite($pipes[0], $inputString);
-            fclose($pipes[0]);
-            fclose($pipes[1]);
+        $result = $this->readMessages($pipes[2], $msgs, $dats);
 
-            $result = $this->readMessages($pipes[2], $msgs, $dats);
+        fclose($pipes[2]);
 
-            fclose($pipes[2]);
+        proc_close($process);
 
-            proc_close($process);
-
-            return ($result == 'success');
-        } else {
-            throw new Exception("Failed to execute $pathAndArgs");
-        }
+        return ($result == 'success');
     }
 
     private function fileToPassthru($pathAndArgs, &$msgs, &$dats)
     {
-        $descriptorspec = array(
-            0 => array("pipe", "r"),
-            1 => array("pipe", "w"),
-            2 => array("pipe", "w")
-        );
+        $process = $this->startPrince($pathAndArgs, $pipes);
 
-        $process = proc_open(
-            $pathAndArgs,
-            $descriptorspec,
-            $pipes,
-            NULL,
-            NULL,
-            array('bypass_shell' => TRUE)
-        );
+        fclose($pipes[0]);
+        fpassthru($pipes[1]);
+        fclose($pipes[1]);
 
-        if (is_resource($process)) {
-            fclose($pipes[0]);
-            fpassthru($pipes[1]);
-            fclose($pipes[1]);
+        $result = $this->readMessages($pipes[2], $msgs, $dats);
 
-            $result = $this->readMessages($pipes[2], $msgs, $dats);
+        fclose($pipes[2]);
 
-            fclose($pipes[2]);
+        proc_close($process);
 
-            proc_close($process);
-
-            return ($result == 'success');
-        } else {
-            throw new Exception("Failed to execute $pathAndArgs");
-        }
+        return ($result == 'success');
     }
 
     private function stringToPassthru($pathAndArgs, $inputString, &$msgs, &$dats)
     {
-        $descriptorspec = array(
-            0 => array("pipe", "r"),
-            1 => array("pipe", "w"),
-            2 => array("pipe", "w")
-        );
+        $process = $this->startPrince($pathAndArgs, $pipes);
 
-        $process = proc_open(
-            $pathAndArgs,
-            $descriptorspec,
-            $pipes,
-            NULL,
-            NULL,
-            array('bypass_shell' => TRUE)
-        );
+        fwrite($pipes[0], $inputString);
+        fclose($pipes[0]);
+        fpassthru($pipes[1]);
+        fclose($pipes[1]);
 
-        if (is_resource($process)) {
-            fwrite($pipes[0], $inputString);
-            fclose($pipes[0]);
-            fpassthru($pipes[1]);
-            fclose($pipes[1]);
+        $result = $this->readMessages($pipes[2], $msgs, $dats);
 
-            $result = $this->readMessages($pipes[2], $msgs, $dats);
+        fclose($pipes[2]);
 
-            fclose($pipes[2]);
+        proc_close($process);
 
-            proc_close($process);
-
-            return ($result == 'success');
-        } else {
-            throw new Exception("Failed to execute $pathAndArgs");
-        }
+        return ($result == 'success');
     }
 
     private function readMessages($pipe, &$msgs, &$dats)
