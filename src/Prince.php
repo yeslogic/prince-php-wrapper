@@ -260,13 +260,9 @@ class Prince
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_file($inputPath, &$msgs = array(), &$dats = array())
+    public function convertFile($inputPath, &$msgs = array(), &$dats = array())
     {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=normal ';
-        $pathAndArgs .= '"' . $inputPath . '"';
-
-        return $this->fileToFile($pathAndArgs, $msgs, $dats);
+        return $this->convert_file($inputPath, $msgs, $dats);
     }
 
     /**
@@ -279,17 +275,13 @@ class Prince
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_file_to_file(
+    public function convertFileToFile(
         $inputPath,
         $pdfPath,
         &$msgs = array(),
         &$dats = array()
     ) {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=normal ';
-        $pathAndArgs .= '"' . $inputPath . '" -o "' . $pdfPath . '"';
-
-        return $this->fileToFile($pathAndArgs, $msgs, $dats);
+        return $this->convert_file_to_file($inputPath, $pdfPath, $msgs, $dats);
     }
 
     /**
@@ -302,22 +294,13 @@ class Prince
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_multiple_files(
+    public function convertMultipleFiles(
         $inputPaths,
         $pdfPath,
         &$msgs = array(),
         &$dats = array()
     ) {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=normal ';
-
-        foreach ($inputPaths as $inputPath) {
-            $pathAndArgs .= '"' . $inputPath . '" ';
-        }
-
-        $pathAndArgs .= '-o "' . $pdfPath . '"';
-
-        return $this->fileToFile($pathAndArgs, $msgs, $dats);
+        return $this->convert_multiple_files($inputPaths, $pdfPath, $msgs, $dats);
     }
 
     /**
@@ -330,21 +313,12 @@ class Prince
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_multiple_files_to_passthru(
+    public function convertMultipleFilesToPassthru(
         $inputPaths,
         &$msgs = array(),
         &$dats = array()
     ) {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=buffered ';
-
-        foreach ($inputPaths as $inputPath) {
-            $pathAndArgs .= '"' . $inputPath . '" ';
-        }
-
-        $pathAndArgs .= '-o -';
-
-        return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
+        return $this->convert_multiple_files_to_passthru($inputPaths, $msgs, $dats);
     }
 
     /**
@@ -357,15 +331,12 @@ class Prince
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_file_to_passthru(
+    public function convertFileToPassthru(
         $inputPath,
         &$msgs = array(),
         &$dats = array()
     ) {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=buffered "' . $inputPath . '" -o -';
-
-        return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
+        return $this->convert_file_to_passthru($inputPath, $msgs, $dats);
     }
 
     /**
@@ -378,15 +349,12 @@ class Prince
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_string_to_passthru(
+    public function convertStringToPassthru(
         $inputString,
         &$msgs = array(),
         &$dats = array()
     ) {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=buffered -';
-
-        return $this->stringToPassthru($pathAndArgs, $inputString, $msgs, $dats);
+        return $this->convert_string_to_passthru($inputString, $msgs, $dats);
     }
 
     /**
@@ -399,17 +367,13 @@ class Prince
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_string_to_file(
+    public function convertStringToFile(
         $inputString,
         $pdfPath,
         &$msgs = array(),
         &$dats = array()
     ) {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=normal ';
-        $pathAndArgs .= ' - -o "' . $pdfPath . '"';
-
-        return $this->stringToFile($pathAndArgs, $inputString, $msgs, $dats);
+        return $this->convert_string_to_file($inputString, $pdfPath, $msgs, $dats);
     }
 
     /* RASTERIZATION METHODS **************************************************/
@@ -2202,5 +2166,191 @@ class Prince
         }
 
         return $argStr;
+    }
+
+    /* PDF CONVERSION METHODS (DEPRECATED) ************************************/
+
+    /**
+     * [DEPRECATED]
+     * Convert an XML or HTML file to a PDF file. The name of the output PDF
+     * file will be the same as the name of the input file but with an extension
+     * of ".pdf".
+     *
+     * @deprecated 1.2.0 Prefer `convertFile` instead.
+     *
+     * @param string $inputPath The filename of the input XML or HTML document.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convert_file($inputPath, &$msgs = array(), &$dats = array())
+    {
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=normal ';
+        $pathAndArgs .= '"' . $inputPath . '"';
+
+        return $this->fileToFile($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * [DEPRECATED]
+     * Convert an XML or HTML file to a PDF file.
+     *
+     * @deprecated 1.2.0 Prefer `convertFileToFile` instead.
+     *
+     * @param string $inputPath The filename of the input XML or HTML document.
+     * @param string $pdfPath The filename of the output PDF file.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convert_file_to_file(
+        $inputPath,
+        $pdfPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=normal ';
+        $pathAndArgs .= '"' . $inputPath . '" -o "' . $pdfPath . '"';
+
+        return $this->fileToFile($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * [DEPRECATED]
+     * Convert multiple XML or HTML files to a PDF file.
+     *
+     * @deprecated 1.2.0 Prefer `convertMultipleFiles` instead.
+     *
+     * @param array $inputPaths An array of the input XML or HTML documents.
+     * @param string $pdfPath The filename of the output PDF file.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convert_multiple_files(
+        $inputPaths,
+        $pdfPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=normal ';
+
+        foreach ($inputPaths as $inputPath) {
+            $pathAndArgs .= '"' . $inputPath . '" ';
+        }
+
+        $pathAndArgs .= '-o "' . $pdfPath . '"';
+
+        return $this->fileToFile($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * [DEPRECATED]
+     * Convert multiple XML or HTML files to a PDF file, which will be passed
+     * through to the output buffer of the current PHP page.
+     *
+     * @deprecated 1.2.0 Prefer `convertMultipleFilesToPassthru` instead.
+     *
+     * @param array $inputPaths An array of the input XML or HTML documents.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convert_multiple_files_to_passthru(
+        $inputPaths,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=buffered ';
+
+        foreach ($inputPaths as $inputPath) {
+            $pathAndArgs .= '"' . $inputPath . '" ';
+        }
+
+        $pathAndArgs .= '-o -';
+
+        return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * [DEPRECATED]
+     * Convert an XML or HTML file to a PDF file, which will be passed through
+     * to the output buffer of the current PHP page.
+     *
+     * @deprecated 1.2.0 Prefer `convertFileToPassthru` instead.
+     *
+     * @param string $inputPath The filename of the input XML or HTML document.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convert_file_to_passthru(
+        $inputPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=buffered "' . $inputPath . '" -o -';
+
+        return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * [DEPRECATED]
+     * Convert an XML or HTML string to a PDF file, which will be passed through
+     * to the output buffer of the current PHP page.
+     *
+     * @deprecated 1.2.0 Prefer `convertStringToPassthru` instead.
+     *
+     * @param string $inputString A string containing an XML or HTML document.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convert_string_to_passthru(
+        $inputString,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=buffered -';
+
+        return $this->stringToPassthru($pathAndArgs, $inputString, $msgs, $dats);
+    }
+
+    /**
+     * [DEPRECATED]
+     * Convert an XML or HTML string to a PDF file.
+     *
+     * @deprecated 1.2.0 Prefer `convertStringToFile` instead.
+     *
+     * @param string $inputString A string containing an XML or HTML document.
+     * @param string $pdfPath The filename of the output PDF file.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convert_string_to_file(
+        $inputString,
+        $pdfPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= '--structured-log=normal ';
+        $pathAndArgs .= ' - -o "' . $pdfPath . '"';
+
+        return $this->stringToFile($pathAndArgs, $inputString, $msgs, $dats);
     }
 }
