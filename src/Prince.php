@@ -425,13 +425,12 @@ class Prince
         &$dats = array()
     ) {
         $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=normal ';
 
         foreach ($inputPaths as $inputPath) {
-            $pathAndArgs .= '"' . $inputPath . '" ';
+            $pathAndArgs .= self::cmdArg($inputPath);
         }
 
-        $pathAndArgs .= '--raster-output="' . $rasterPath . '"';
+        $pathAndArgs .= self::cmdArg('--raster-output', $rasterPath);
 
         return $this->fileToFile($pathAndArgs, $msgs, $dats);
     }
@@ -480,14 +479,13 @@ class Prince
             throw new Exception('rasterFormat has to be set to "jpeg" or "png"');
         }
 
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=buffered ';
+        $pathAndArgs = $this->getCommandLine('buffered');
 
         foreach ($inputPaths as $inputPath) {
-            $pathAndArgs .= '"' . $inputPath . '" ';
+            $pathAndArgs .= self::cmdArg($inputPath);
         }
 
-        $pathAndArgs .= '--raster-output=-';
+        $pathAndArgs .= self::cmdArg('--raster-output', '-');
 
         return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
     }
@@ -514,10 +512,10 @@ class Prince
             throw new Exception('rasterFormat has to be set to "jpeg" or "png"');
         }
 
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=buffered ';
+        $pathAndArgs = $this->getCommandLine('buffered');
 
-        $pathAndArgs .= '- --raster-output=-';
+        $pathAndArgs .= self::cmdArg('--raster-output', '-');
+        $pathAndArgs .= self::cmdArg('-');
 
         return $this->stringToPassthru($pathAndArgs, $inputString, $msgs, $dats);
     }
@@ -542,9 +540,9 @@ class Prince
         &$dats = array()
     ) {
         $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=normal ';
 
-        $pathAndArgs .= '- --raster-output="' . $rasterPath . '"';
+        $pathAndArgs .= self::cmdArg('--raster-output', $rasterPath);
+        $pathAndArgs .= self::cmdArg('-');
 
         return $this->stringToFile($pathAndArgs, $inputString, $msgs, $dats);
     }
@@ -673,7 +671,7 @@ class Prince
      */
     public function addRemap($url, $dir)
     {
-        $this->remaps .= '--remap="' . $url . '"="' . $dir . '" ';
+        $this->remaps .= self::cmdArg('--remap', "$url=$dir");
     }
 
     /**
@@ -770,7 +768,7 @@ class Prince
      */
     public function setAuthUser($authUser)
     {
-        $this->authUser = $this->cmdlineArgEscape($authUser);
+        $this->authUser = $authUser;
     }
 
     /**
@@ -781,7 +779,7 @@ class Prince
      */
     public function setAuthPassword($authPassword)
     {
-        $this->authPassword = $this->cmdlineArgEscape($authPassword);
+        $this->authPassword = $authPassword;
     }
 
     /**
@@ -906,7 +904,7 @@ class Prince
      */
     public function addCookie($cookie)
     {
-        $this->cookies .= '--cookie="' . $cookie . '" ';
+        $this->cookies .= self::cmdArg('--cookie', $cookie);
     }
 
     /**
@@ -1099,7 +1097,7 @@ class Prince
      */
     public function addScript($jsPath)
     {
-        $this->scripts .= '--script "' . $jsPath . '" ';
+        $this->scripts .= self::cmdArg('--script', $jsPath);
     }
 
     /**
@@ -1137,7 +1135,7 @@ class Prince
      */
     public function addStyleSheet($cssPath)
     {
-        $this->styleSheets .= '-s "' . $cssPath . '" ';
+        $this->styleSheets .= self::cmdArg('--style', $cssPath);
     }
 
     /**
@@ -1299,7 +1297,7 @@ class Prince
      */
     public function addFileAttachment($filePath)
     {
-        $this->fileAttachments .= '--attach=' . '"' . $filePath .  '" ';
+        $this->fileAttachments .= self::cmdArg('--attach', $filePath);
     }
 
     /**
@@ -1560,34 +1558,32 @@ class Prince
 
         $this->encrypt = true;
 
-        $this->encryptInfo =
-            ' --key-bits ' . $keyBits .
-            ' --user-password="' . $this->cmdlineArgEscape($userPassword) .
-            '" --owner-password="' . $this->cmdlineArgEscape($ownerPassword) .
-            '" ';
+        $this->encryptInfo = self::cmdArg('--key-bits', $keyBits);
+        $this->encryptInfo .= self::cmdArg('--user-password', $userPassword);
+        $this->encryptInfo .= self::cmdArg('--owner-password', $ownerPassword);
 
         if ($disallowPrint) {
-            $this->encryptInfo .= '--disallow-print ';
+            $this->encryptInfo .= self::cmdArg('--disallow-print');
         }
 
         if ($disallowModify) {
-            $this->encryptInfo .= '--disallow-modify ';
+            $this->encryptInfo .= self::cmdArg('--disallow-modify');
         }
 
         if ($disallowCopy) {
-            $this->encryptInfo .= '--disallow-copy ';
+            $this->encryptInfo .= self::cmdArg('--disallow-copy');
         }
 
         if ($disallowAnnotate) {
-            $this->encryptInfo .= '--disallow-annotate ';
+            $this->encryptInfo .= self::cmdArg('--disallow-annotate');
         }
 
         if ($allowCopyForAccessibility) {
-            $this->encryptInfo .= '--allow-copy-for-accessibility ';
+            $this->encryptInfo .= self::cmdArg('--allow-copy-for-accessibility');
         }
 
         if ($allowAssembly) {
-            $this->encryptInfo .= '--allow-assembly ';
+            $this->encryptInfo .= self::cmdArg('--allow-assembly');
         }
     }
 
@@ -1722,250 +1718,253 @@ class Prince
 
     /* PRIVATE HELPER METHODS *************************************************/
 
-    private function getCommandLine()
+    private function getCommandLine($logType = 'normal')
     {
-        $cmdline = '"' . $this->exePath . '" ';
+        $cmdline = self::escape($this->exePath, true, true) . ' ';
+
+        $cmdline .= self::cmdArg('--structured-log', $logType);
 
         // Logging options.
         if ($this->verbose) {
-            $cmdline .= '--verbose ';
+            $cmdline .= self::cmdArg('--verbose');
         }
         if ($this->debug) {
-            $cmdline .= '--debug ';
+            $cmdline .= self::cmdArg('--debug');
         }
         if ($this->logFile != '') {
-            $cmdline .= '--log="' . $this->logFile . '" ';
+            $cmdline .= self::cmdArg('--log', $this->logFile);
         }
         if ($this->noWarnCssUnknown) {
-            $cmdline .= '--no-warn-css-unknown ';
+            $cmdline .= self::cmdArg('--no-warn-css-unknown');
         }
         if ($this->noWarnCssUnsupported) {
-            $cmdline .= '--no-warn-css-unsupported ';
+            $cmdline .= self::cmdArg('--no-warn-css-unsupported');
         }
 
         // Input options.
         if ($this->inputType != 'auto') {
-            $cmdline .=  '-i "' . $this->inputType . '" ';
+            $cmdline .= self::cmdArg('--input', $this->inputType);
         }
         if ($this->baseURL != '') {
-            $cmdline .= '--baseurl="' . $this->baseURL . '" ';
+            $cmdline .= self::cmdArg('--baseurl', $this->baseURL);
         }
         $cmdline .= $this->remaps;
         if ($this->fileRoot != '') {
-            $cmdline .= '--fileroot="' . $this->fileRoot . '" ';
+            $cmdline .= self::cmdArg('--fileroot', $this->fileRoot);
         }
         if ($this->doXInclude) {
-            $cmdline .= '--xinclude ';
+            $cmdline .= self::cmdArg('--xinclude');
         }
         if ($this->xmlExternalEntities) {
-            $cmdline .= '--xml-external-entities ';
+            $cmdline .= self::cmdArg('--xml-external-entities');
         }
         if ($this->noLocalFiles) {
-            $cmdline .= '--no-local-files ';
+            $cmdline .= self::cmdArg('--no-local-files');
         }
 
         // Network options.
         if ($this->noNetwork) {
-            $cmdline .= '--no-network ';
+            $cmdline .= self::cmdArg('--no-network');
         }
         if ($this->noRedirects) {
-            $cmdline .= '--no-redirects ';
+            $cmdline .= self::cmdArg('--no-redirects');
         }
         if ($this->authUser != '') {
-            $cmdline .= '--auth-user="' . $this->cmdlineArgEscape($this->authUser) . '" ';
+            $cmdline .= self::cmdArg('--auth-user', $this->authUser);
         }
         if ($this->authPassword != '') {
-            $cmdline .= '--auth-password="' . $this->cmdlineArgEscape($this->authPassword) . '" ';
+            $cmdline .= self::cmdArg('--auth-password', $this->authPassword);
         }
         if ($this->authServer != '') {
-            $cmdline .= '--auth-server="' . $this->cmdlineArgEscape($this->authServer) . '" ';
+            $cmdline .= self::cmdArg('--auth-server', $this->authServer);
         }
         if ($this->authScheme != '') {
-            $cmdline .= '--auth-scheme="' . $this->cmdlineArgEscape($this->authScheme) . '" ';
+            $cmdline .= self::cmdArg('--auth-scheme', $this->authScheme);
         }
         if ($this->authMethods != '') {
-            $cmdline .=  '--auth-method="' . $this->cmdlineArgEscape($this->authMethods) . '" ';
+            $cmdline .= self::cmdArg('--auth-method', $this->authMethods);
         }
         if ($this->noAuthPreemptive) {
-            $cmdline .= '--no-auth-preemptive ';
+            $cmdline .= self::cmdArg('--no-auth-preemptive');
         }
         if ($this->httpProxy != '') {
-            $cmdline .= '--http-proxy="' . $this->httpProxy . '" ';
+            $cmdline .= self::cmdArg('--http-proxy', $this->httpProxy);
         }
         if ($this->httpTimeout > 0) {
-            $cmdline .= '--http-timeout="' . $this->httpTimeout . '" ';
+            $cmdline .= self::cmdArg('--http-timeout', $this->httpTimeout);
         }
         if ($this->cookie != '') {
-            $cmdline .= '--cookie="' . $this->cookie . '" ';
+            $cmdline .= self::cmdArg('--cookie', $this->cookie);
         }
         $cmdline .= $this->cookies;
         if ($this->cookieJar != '') {
-            $cmdline .= '--cookiejar="' . $this->cookieJar . '" ';
+            $cmdline .= self::cmdArg('--cookiejar', $this->cookieJar);
         }
         if ($this->sslCaCert != '') {
-            $cmdline .= '--ssl-cacert="' . $this->sslCaCert . '" ';
+            $cmdline .= self::cmdArg('--ssl-cacert', $this->sslCaCert);
         }
         if ($this->sslCaPath != '') {
-            $cmdline .= '--ssl-capath="' . $this->sslCaPath . '" ';
+            $cmdline .= self::cmdArg('--ssl-capath', $this->sslCaPath);
         }
         if ($this->sslCert != '') {
-            $cmdline .= '--ssl-cert="' . $this->sslCert . '" ';
+            $cmdline .= self::cmdArg('--ssl-cert', $this->sslCert);
         }
         if ($this->sslCertType != '') {
-            $cmdline .= '--ssl-cert-type="' . $this->sslCertType . '" ';
+            $cmdline .= self::cmdArg('--ssl-cert-type', $this->sslCertType);
         }
         if ($this->sslKey != '') {
-            $cmdline .= '--ssl-key="' . $this->sslKey . '" ';
+            $cmdline .= self::cmdArg('--ssl-key', $this->sslKey);
         }
         if ($this->sslKeyType != '') {
-            $cmdline .= '--ssl-key-type="' . $this->sslKeyType . '" ';
+            $cmdline .= self::cmdArg('--ssl-key-type', $this->sslKeyType);
         }
         if ($this->sslKeyPassword != '') {
-            $cmdline .= '--ssl-key-password="' . $this->cmdlineArgEscape($this->sslKeyPassword) . '" ';
+            $cmdline .= self::cmdArg('--ssl-key-password', $this->sslKeyPassword);
         }
         if ($this->sslVersion != '') {
-            $cmdline .= '--ssl-version="' . $this->sslVersion . '" ';
+            $cmdline .= self::cmdArg('--ssl-version', $this->sslVersion);
         }
         if ($this->insecure) {
-            $cmdline .= '--insecure ';
+            $cmdline .= self::cmdArg('--insecure');
         }
         if ($this->noParallelDownloads) {
-            $cmdline .= '--no-parallel-downloads ';
+            $cmdline .= self::cmdArg('--no-parallel-downloads');
         }
 
         // JavaScript options.
         if ($this->javascript) {
-            $cmdline .= '--javascript ';
+            $cmdline .= self::cmdArg('--javascript');
         }
         $cmdline .= $this->scripts;
         if ($this->maxPasses > 0) {
-            $cmdline .= '--max-passes="' . $this->maxPasses . '" ';
+            $cmdline .= self::cmdArg('--max-passes', $this->maxPasses);
         }
 
         // CSS options.
         $cmdline .= $this->styleSheets;
         if ($this->media != '') {
-            $cmdline .= '--media="' . $this->cmdlineArgEscape($this->media) . '" ';
+            $cmdline .= self::cmdArg('--media', $this->media);
         }
         if ($this->pageSize != '') {
-            $cmdline .= '--page-size="' . $this->cmdlineArgEscape($this->pageSize) . '" ';
+            $cmdline .= self::cmdArg('--page-size', $this->pageSize);
         }
         if ($this->pageMargin != '') {
-            $cmdline .= '--page-margin="' . $this->cmdlineArgEscape($this->pageMargin) . '" ';
+            $cmdline .= self::cmdArg('--page-margin', $this->pageMargin);
         }
         if ($this->noAuthorStyle) {
-            $cmdline .= '--no-author-style ';
+            $cmdline .= self::cmdArg('--no-author-style');
         }
         if ($this->noDefaultStyle) {
-            $cmdline .= '--no-default-style ';
+            $cmdline .= self::cmdArg('--no-default-style');
         }
 
         // PDF output options.
         if ($this->pdfId != '') {
-            $cmdline .= '--pdf-id="' . $this->cmdlineArgEscape($this->pdfId) . '" ';
+            $cmdline .= self::cmdArg('--pdf-id', $this->pdfId);
         }
         if ($this->pdfLang != '') {
-            $cmdline .= '--pdf-lang="' . $this->cmdlineArgEscape($this->pdfLang) . '" ';
+            $cmdline .= self::cmdArg('--pdf-lang', $this->pdfLang);
         }
         if ($this->pdfProfile != '') {
-            $cmdline .= '--pdf-profile="' . $this->cmdlineArgEscape($this->pdfProfile) . '" ';
+            $cmdline .= self::cmdArg('--pdf-profile', $this->pdfProfile);
         }
         if ($this->pdfOutputIntent != '') {
-            $cmdline .= '--pdf-output-intent="' . $this->cmdlineArgEscape($this->pdfOutputIntent) . '" ';
+            $cmdline .= self::cmdArg('--pdf-output-intent', $this->pdfOutputIntent);
 
             if ($this->convertColors) {
-                $cmdline .= '--convert-colors ';
+                $cmdline .= self::cmdArg('--convert-colors');
             }
         }
         $cmdline .= $this->fileAttachments;
         if ($this->noArtificialFonts) {
-            $cmdline .= '--no-artificial-fonts ';
+            $cmdline .= self::cmdArg('--no-artificial-fonts');
         }
         if (!$this->embedFonts) {
-            $cmdline .= '--no-embed-fonts ';
+            $cmdline .= self::cmdArg('--no-embed-fonts');
         }
         if (!$this->subsetFonts) {
-            $cmdline .= '--no-subset-fonts ';
+            $cmdline .= self::cmdArg('--no-subset-fonts');
         }
         if (!$this->systemFonts) {
-            $cmdline .= '--no-system-fonts ';
+            $cmdline .= self::cmdArg('--no-system-fonts');
         }
         if ($this->forceIdentityEncoding) {
-            $cmdline .= '--force-identity-encoding ';
+            $cmdline .= self::cmdArg('--force-identity-encoding');
         }
         if (!$this->compress) {
-            $cmdline .= '--no-compress ';
+            $cmdline .= self::cmdArg('--no-compress');
         }
         if ($this->noObjectStreams) {
-            $cmdline .= '--no-object-streams ';
+            $cmdline .= self::cmdArg('--no-object-streams');
         }
         if ($this->fallbackCmykProfile != '') {
-            $cmdline .= '--fallback-cmyk-profile="' . $this->cmdlineArgEscape($this->fallbackCmykProfile) . '" ';
+            $cmdline .= self::cmdArg('--fallback-cmyk-profile', $this->fallbackCmykProfile);
         }
         if ($this->taggedPdf) {
-            $cmdline .= '--tagged-pdf ';
+            $cmdline .= self::cmdArg('--tagged-pdf');
         }
         if ($this->cssDpi > 0) {
-            $cmdline .= '--css-dpi="' . $this->cssDpi . '" ';
+            $cmdline .= self::cmdArg('--css-dpi', $this->cssDpi);
         }
 
         // PDF metadata options.
         if ($this->pdfTitle != '') {
-            $cmdline .= '--pdf-title="' . $this->cmdlineArgEscape($this->pdfTitle) . '" ';
+            $cmdline .= self::cmdArg('--pdf-title', $this->pdfTitle);
         }
         if ($this->pdfSubject != '') {
-            $cmdline .= '--pdf-subject="' . $this->cmdlineArgEscape($this->pdfSubject) . '" ';
+            $cmdline .= self::cmdArg('--pdf-subject', $this->pdfSubject);
         }
         if ($this->pdfAuthor != '') {
-            $cmdline .= '--pdf-author="' . $this->cmdlineArgEscape($this->pdfAuthor) . '" ';
+            $cmdline .= self::cmdArg('--pdf-author', $this->pdfAuthor);
         }
         if ($this->pdfKeywords != '') {
-            $cmdline .= '--pdf-keywords="' . $this->cmdlineArgEscape($this->pdfKeywords) . '" ';
+            $cmdline .= self::cmdArg('--pdf-keywords', $this->pdfKeywords);
         }
         if ($this->pdfCreator != '') {
-            $cmdline .= '--pdf-creator="' . $this->cmdlineArgEscape($this->pdfCreator) . '" ';
+            $cmdline .= self::cmdArg('--pdf-creator', $this->pdfCreator);
         }
         if ($this->pdfXmp != '') {
-            $cmdline .= '--pdf-xmp="' . $this->pdfXmp . '" ';
+            $cmdline .= self::cmdArg('--pdf-xmp', $this->pdfXmp);
         }
 
         // PDF encryption options.
         if ($this->encrypt) {
-            $cmdline .= '--encrypt ' . $this->encryptInfo;
+            $cmdline .= self::cmdArg('--encrypt');
+            $cmdline .= $this->encryptInfo;
         }
 
         // Raster output options.
         if ($this->rasterFormat != 'auto') {
-            $cmdline .= '--raster-format="' . $this->rasterFormat . '" ';
+            $cmdline .= self::cmdArg('--raster-format', $this->rasterFormat);
         }
         if ($this->rasterJpegQuality > -1) {
-            $cmdline .= '--raster-jpeg-quality="' . $this->rasterJpegQuality . '" ';
+            $cmdline .= self::cmdArg('--raster-jpeg-quality', $this->rasterJpegQuality);
         }
         if ($this->rasterPage > 0) {
-            $cmdline .= '--raster-pages="' . $this->rasterPage . '" ';
+            $cmdline .= self::cmdArg('--raster-pages', $this->rasterPage);
         }
         if ($this->rasterDpi > 0) {
-            $cmdline .= '--raster-dpi="' . $this->rasterDpi . '" ';
+            $cmdline .= self::cmdArg('--raster-dpi', $this->rasterDpi);
         }
         if ($this->rasterThreads > -1) {
-            $cmdline .= '--raster-threads="' . $this->rasterThreads . '" ';
+            $cmdline .= self::cmdArg('--raster-threads', $this->rasterThreads);
         }
         if ($this->rasterBackground != '') {
-            $cmdline .= '--raster-background="' . $this->rasterBackground . '" ';
+            $cmdline .= self::cmdArg('--raster-background', $this->rasterBackground);
         }
 
         // License options.
         if ($this->licenseFile != '') {
-            $cmdline .= '--license-file="' . $this->licenseFile . '" ';
+            $cmdline .= self::cmdArg('--license-file', $this->licenseFile);
         }
 
         if ($this->licenseKey != '') {
-            $cmdline .= '--license-key="' . $this->licenseKey . '" ';
+            $cmdline .= self::cmdArg('--license-key', $this->licenseKey);
         }
 
         // Additional options.
         if ($this->options != '') {
-            $cmdline .= $this->cmdlineArgEscape($this->options) . ' ';
+            $cmdline .= self::cmdArg($this->options);
         }
 
         return $cmdline;
@@ -2094,78 +2093,73 @@ class Prince
         return '';
     }
 
-    private function cmdlineArgEscape($argStr)
+    private static function cmdArg($key, $value = '')
     {
-        return $this->cmdlineArgEscape2($this->cmdlineArgEscape1($argStr));
-    }
-
-    // In the input string $argStr, a double quote with zero or more preceding
-    // backslash(es) will be replaced with:
-    // n*backslash + doublequote => (2*n+1)*backslash + doublequote
-    private function cmdlineArgEscape1($argStr)
-    {
-        // chr(34) is character double quote ( " ),
-        // chr(92) is character backslash ( \ ).
-        $len = strlen($argStr);
-
-        $outputStr = '';
-        $numSlashes = 0;
-        $subStrStart = 0;
-
-        for ($i = 0; $i < $len; $i++) {
-            if ($argStr[$i] == chr(34)) {
-                $numSlashes = 0;
-                $j = $i - 1;
-                while ($j >= 0) {
-                    if ($argStr[$j] == chr(92)) {
-                        $numSlashes += 1;
-                        $j -= 1;
-                    } else {
-                        break;
-                    }
-                }
-
-                $outputStr .= substr(
-                    $argStr,
-                    $subStrStart,
-                    ($i - $numSlashes - $subStrStart)
-                );
-
-                for ($k = 0; $k < $numSlashes; $k++) {
-                    $outputStr .= chr(92) . chr(92);
-                }
-                $outputStr .= chr(92) . chr(34);
-
-                $subStrStart = $i + 1;
-            }
+        $cmd = $key;
+        if ($value != '') {
+            $cmd .= "=$value";
         }
-        $outputStr .= substr($argStr, $subStrStart, ($i - $subStrStart));
 
-        return $outputStr;
+        return self::escape($cmd) . ' ';
     }
 
-    // Double the number of trailing backslash(es):
-    // n*trailing backslash => (2*n)*trailing backslash.
-    private function cmdlineArgEscape2($argStr)
+    /**
+     * Escapes a string to be used as a shell argument
+     *
+     * Provides a more robust method on Windows than escapeshellarg. When $meta
+     * is true cmd.exe meta-characters will also be escaped. If $module is true,
+     * the argument will be treated as the name of the module (executable) to
+     * be invoked, with an additional check for edge-case characters that cannot
+     * be reliably escaped for cmd.exe. This has no effect if $meta is false.
+     *
+     * Feel free to copy this function, but please keep the following notice:
+     * MIT Licensed (c) John Stevenson <john-stevenson@blueyonder.co.uk>
+     * See https://github.com/johnstevenson/winbox-args for more information.
+     *
+     * @param string $arg The argument to be escaped
+     * @param bool $meta Additionally escape cmd.exe meta characters
+     * @param bool $module The argument is the module to invoke
+     *
+     * @return string The escaped argument
+     */
+    private static function escape($arg, $meta = true, $module = false)
     {
-        // chr(92) is character backslash ( \ ).
-        $len = strlen($argStr);
+        if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
+            // Escape single-quotes and enclose in single-quotes
+            return "'" . str_replace("'", "'\\''", $arg) . "'";
+        }
 
-        $numTrailingSlashes = 0;
-        for ($i = ($len - 1); $i >= 0; $i--) {
-            if ($argStr[$i] == chr(92)) {
-                $numTrailingSlashes += 1;
-            } else {
-                break;
+        // Check for whitespace or an empty value
+        $quote = strpbrk($arg, " \t") !== false || (string) $arg === '';
+
+        // Escape double-quotes and double-up preceding backslashes
+        $arg = preg_replace('/(\\\\*)"/', '$1$1\\"', $arg, -1, $dquotes);
+
+        if ($meta) {
+            // Check for expansion %..% sequences
+            $meta = $dquotes || preg_match('/%[^%]+%/', $arg);
+
+            if (!$meta) {
+                // Check for characters that can be escaped in double-quotes
+                $quote = $quote || strpbrk($arg, '^&|<>()') !== false;
+            } elseif ($module && !$dquotes && $quote) {
+                // Caret-escaping a module name with whitespace will split the
+                // argument, so just quote it and hope there is no expansion
+                $meta = false;
             }
         }
 
-        while ($numTrailingSlashes > 0) {
-            $argStr .= chr(92);
-            $numTrailingSlashes -= 1;
+        if ($quote) {
+            // Double-up trailing backslashes and enclose in double-quotes
+            $arg = '"' . preg_replace('/(\\\\*)$/', '$1$1', $arg) . '"';
         }
 
-        return $argStr;
+        if ($meta) {
+            // Caret-escape all meta characters
+            $arg = preg_replace('/(["^&|<>()%])/', '^$1', $arg);
+        }
+
+        return $arg;
     }
 
     /* PDF CONVERSION METHODS (DEPRECATED) ************************************/
@@ -2187,8 +2181,7 @@ class Prince
     public function convert_file($inputPath, &$msgs = array(), &$dats = array())
     {
         $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=normal ';
-        $pathAndArgs .= '"' . $inputPath . '"';
+        $pathAndArgs .= self::cmdArg($inputPath);
 
         return $this->fileToFile($pathAndArgs, $msgs, $dats);
     }
@@ -2213,8 +2206,8 @@ class Prince
         &$dats = array()
     ) {
         $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=normal ';
-        $pathAndArgs .= '"' . $inputPath . '" -o "' . $pdfPath . '"';
+        $pathAndArgs .= self::cmdArg($inputPath);
+        $pathAndArgs .= self::cmdArg('--output', $pdfPath);
 
         return $this->fileToFile($pathAndArgs, $msgs, $dats);
     }
@@ -2239,13 +2232,12 @@ class Prince
         &$dats = array()
     ) {
         $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=normal ';
 
         foreach ($inputPaths as $inputPath) {
-            $pathAndArgs .= '"' . $inputPath . '" ';
+            $pathAndArgs .= self::cmdArg($inputPath);
         }
 
-        $pathAndArgs .= '-o "' . $pdfPath . '"';
+        $pathAndArgs .= self::cmdArg('--output', $pdfPath);
 
         return $this->fileToFile($pathAndArgs, $msgs, $dats);
     }
@@ -2268,14 +2260,13 @@ class Prince
         &$msgs = array(),
         &$dats = array()
     ) {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=buffered ';
+        $pathAndArgs = $this->getCommandLine('buffered');
 
         foreach ($inputPaths as $inputPath) {
-            $pathAndArgs .= '"' . $inputPath . '" ';
+            $pathAndArgs .= self::cmdArg($inputPath);
         }
 
-        $pathAndArgs .= '-o -';
+        $pathAndArgs .= self::cmdArg('--output', '-');
 
         return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
     }
@@ -2298,8 +2289,9 @@ class Prince
         &$msgs = array(),
         &$dats = array()
     ) {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=buffered "' . $inputPath . '" -o -';
+        $pathAndArgs = $this->getCommandLine('buffered');
+        $pathAndArgs .= self::cmdArg($inputPath);
+        $pathAndArgs .= self::cmdArg('--output', '-');
 
         return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
     }
@@ -2322,8 +2314,8 @@ class Prince
         &$msgs = array(),
         &$dats = array()
     ) {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=buffered -';
+        $pathAndArgs = $this->getCommandLine('buffered');
+        $pathAndArgs .= self::cmdArg('-');
 
         return $this->stringToPassthru($pathAndArgs, $inputString, $msgs, $dats);
     }
@@ -2348,8 +2340,8 @@ class Prince
         &$dats = array()
     ) {
         $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=normal ';
-        $pathAndArgs .= ' - -o "' . $pdfPath . '"';
+        $pathAndArgs .= self::cmdArg('--output', $pdfPath);
+        $pathAndArgs .= self::cmdArg('-');
 
         return $this->stringToFile($pathAndArgs, $inputString, $msgs, $dats);
     }
