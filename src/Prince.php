@@ -13,6 +13,8 @@
 
 namespace Prince;
 
+use Exception;
+
 /**
  * A class that provides an interface to Prince, where each document conversion
  * invokes a new Prince process.
@@ -38,7 +40,8 @@ class Prince
     private $verbose;
     private $debug;
     private $logFile;
-    private $noWarnCss;
+    private $noWarnCssUnknown;
+    private $noWarnCssUnsupported;
 
     // Input options.
     private $inputType;
@@ -51,18 +54,25 @@ class Prince
 
     // Network options.
     private $noNetwork;
+    private $noRedirects;
     private $authUser;
     private $authPassword;
     private $authServer;
     private $authScheme;
-    private $authMethod;
+    private $authMethods;
     private $noAuthPreemptive;
     private $httpProxy;
     private $httpTimeout;
-    private $cookie;
+    private $cookie; // Deprecated.
+    private $cookies;
     private $cookieJar;
     private $sslCaCert;
     private $sslCaPath;
+    private $sslCert;
+    private $sslCertType;
+    private $sslKey;
+    private $sslKeyType;
+    private $sslKeyPassword;
     private $sslVersion;
     private $insecure;
     private $noParallelDownloads;
@@ -70,6 +80,7 @@ class Prince
     // JavaScript options.
     private $javascript;
     private $scripts;
+    private $maxPasses;
 
     // CSS options.
     private $styleSheets;
@@ -80,16 +91,22 @@ class Prince
     private $noDefaultStyle;
 
     // PDF output options.
+    private $pdfId;
+    private $pdfLang;
     private $pdfProfile;
     private $pdfOutputIntent;
     private $fileAttachments;
     private $noArtificialFonts;
     private $embedFonts;
     private $subsetFonts;
+    private $systemFonts;
     private $forceIdentityEncoding;
     private $compress;
+    private $noObjectStreams;
     private $convertColors;
     private $fallbackCmykProfile;
+    private $taggedPdf;
+    private $cssDpi;
 
     // PDF metadata options.
     private $pdfTitle;
@@ -97,10 +114,19 @@ class Prince
     private $pdfAuthor;
     private $pdfKeywords;
     private $pdfCreator;
+    private $pdfXmp;
 
     // PDF encryption options.
     private $encrypt;
     private $encryptInfo;
+
+    // Raster output options.
+    private $rasterFormat;
+    private $rasterJpegQuality;
+    private $rasterPage;
+    private $rasterDpi;
+    private $rasterThreads;
+    private $rasterBackground;
 
     // License options.
     private $licenseFile;
@@ -125,7 +151,8 @@ class Prince
         $this->verbose = false;
         $this->debug = false;
         $this->logFile = '';
-        $this->noWarnCss = false;
+        $this->noWarnCssUnknown = false;
+        $this->noWarnCssUnsupported = false;
 
         // Input options.
         $this->inputType = 'auto';
@@ -138,18 +165,25 @@ class Prince
 
         // Network options.
         $this->noNetwork = false;
+        $this->noRedirects = false;
         $this->authUser = '';
         $this->authPassword = '';
         $this->authServer = '';
         $this->authScheme = '';
-        $this->authMethod = '';
+        $this->authMethods = '';
         $this->noAuthPreemptive = false;
         $this->httpProxy = '';
-        $this->httpTimeout = '';
-        $this->cookie = '';
+        $this->httpTimeout = 0;
+        $this->cookie = ''; // Deprecated.
+        $this->cookies = '';
         $this->cookieJar = '';
         $this->sslCaCert = '';
         $this->sslCaPath = '';
+        $this->sslCert = '';
+        $this->sslCertType = '';
+        $this->sslKey = '';
+        $this->sslKeyType = '';
+        $this->sslKeyPassword = '';
         $this->sslVersion = '';
         $this->insecure = false;
         $this->noParallelDownloads = false;
@@ -157,6 +191,7 @@ class Prince
         // JavaScript options.
         $this->javascript = false;
         $this->scripts = '';
+        $this->maxPasses = 0;
 
         // CSS options.
         $this->styleSheets = '';
@@ -167,16 +202,22 @@ class Prince
         $this->noDefaultStyle = false;
 
         // PDF output options.
+        $this->pdfId = '';
+        $this->pdfLang = '';
         $this->pdfProfile = '';
         $this->pdfOutputIntent = '';
         $this->fileAttachments = '';
         $this->noArtificialFonts = false;
         $this->embedFonts = true;
         $this->subsetFonts = true;
+        $this->systemFonts = true;
         $this->forceIdentityEncoding = false;
         $this->compress = true;
+        $this->noObjectStreams = false;
         $this->convertColors = false;
         $this->fallbackCmykProfile = '';
+        $this->taggedPdf = false;
+        $this->cssDpi = 0;
 
         // PDF metadata options.
         $this->pdfTitle = '';
@@ -184,10 +225,19 @@ class Prince
         $this->pdfAuthor = '';
         $this->pdfKeywords = '';
         $this->pdfCreator = '';
+        $this->pdfXmp = '';
 
         // PDF encryption options.
         $this->encrypt = false;
         $this->encryptInfo = '';
+
+        // Raster output options.
+        $this->rasterFormat = 'auto';
+        $this->rasterJpegQuality = -1;
+        $this->rasterPage = 0;
+        $this->rasterDpi = 0;
+        $this->rasterThreads = -1;
+        $this->rasterBackground = '';
 
         // License options.
         $this->licenseFile = '';
@@ -204,172 +254,297 @@ class Prince
      * file will be the same as the name of the input file but with an extension
      * of ".pdf".
      *
-     * @param string $xmlPath The filename of the input XML or HTML document.
+     * @param string $inputPath The filename of the input XML or HTML document.
      * @param array $msgs An optional array in which to return error and warning
      *                    messages.
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_file($xmlPath, &$msgs = array(), &$dats = array())
+    public function convertFile($inputPath, &$msgs = array(), &$dats = array())
     {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=normal ';
-        $pathAndArgs .= '"' . $xmlPath . '"';
-
-        return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
+        return $this->convert_file($inputPath, $msgs, $dats);
     }
 
     /**
      * Convert an XML or HTML file to a PDF file.
      *
-     * @param string $xmlPath The filename of the input XML or HTML document.
+     * @param string $inputPath The filename of the input XML or HTML document.
      * @param string $pdfPath The filename of the output PDF file.
      * @param array $msgs An optional array in which to return error and warning
      *                    messages.
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_file_to_file(
-        $xmlPath,
+    public function convertFileToFile(
+        $inputPath,
         $pdfPath,
         &$msgs = array(),
         &$dats = array()
     ) {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=normal ';
-        $pathAndArgs .= '"' . $xmlPath . '" -o "' . $pdfPath . '"';
-
-        return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
+        return $this->convert_file_to_file($inputPath, $pdfPath, $msgs, $dats);
     }
 
     /**
      * Convert multiple XML or HTML files to a PDF file.
      *
-     * @param array $xmlPaths An array of the input XML or HTML documents.
+     * @param array $inputPaths An array of the input XML or HTML documents.
      * @param string $pdfPath The filename of the output PDF file.
      * @param array $msgs An optional array in which to return error and warning
      *                    messages.
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_multiple_files(
-        $xmlPaths,
+    public function convertMultipleFiles(
+        $inputPaths,
         $pdfPath,
         &$msgs = array(),
         &$dats = array()
     ) {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=normal ';
-
-        foreach ($xmlPaths as $xmlPath) {
-            $pathAndArgs .= '"' . $xmlPath . '" ';
-        }
-
-        $pathAndArgs .= '-o "' . $pdfPath . '"';
-
-        return $this->convert_internal_file_to_file($pathAndArgs, $msgs, $dats);
+        return $this->convert_multiple_files($inputPaths, $pdfPath, $msgs, $dats);
     }
 
     /**
      * Convert multiple XML or HTML files to a PDF file, which will be passed
      * through to the output buffer of the current PHP page.
      *
-     * @param array $xmlPaths An array of the input XML or HTML documents.
+     * @param array $inputPaths An array of the input XML or HTML documents.
      * @param array $msgs An optional array in which to return error and warning
      *                    messages.
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_multiple_files_to_passthru(
-        $xmlPaths,
+    public function convertMultipleFilesToPassthru(
+        $inputPaths,
         &$msgs = array(),
         &$dats = array()
     ) {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=buffered ';
-
-        foreach ($xmlPaths as $xmlPath) {
-            $pathAndArgs .= '"' . $xmlPath . '" ';
-        }
-
-        $pathAndArgs .= '-o -';
-
-        return $this->convert_internal_file_to_passthru($pathAndArgs, $msgs, $dats);
+        return $this->convert_multiple_files_to_passthru($inputPaths, $msgs, $dats);
     }
 
     /**
      * Convert an XML or HTML file to a PDF file, which will be passed through
      * to the output buffer of the current PHP page.
      *
-     * @param string $xmlPath The filename of the input XML or HTML document.
+     * @param string $inputPath The filename of the input XML or HTML document.
      * @param array $msgs An optional array in which to return error and warning
      *                    messages.
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_file_to_passthru(
-        $xmlPath,
+    public function convertFileToPassthru(
+        $inputPath,
         &$msgs = array(),
         &$dats = array()
     ) {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=buffered "' . $xmlPath . '" -o -';
-
-        return $this->convert_internal_file_to_passthru($pathAndArgs, $msgs, $dats);
+        return $this->convert_file_to_passthru($inputPath, $msgs, $dats);
     }
 
     /**
      * Convert an XML or HTML string to a PDF file, which will be passed through
      * to the output buffer of the current PHP page.
      *
-     * @param string $xmlString A string containing an XML or HTML document.
+     * @param string $inputString A string containing an XML or HTML document.
      * @param array $msgs An optional array in which to return error and warning
      *                    messages.
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_string_to_passthru(
-        $xmlString,
+    public function convertStringToPassthru(
+        $inputString,
         &$msgs = array(),
         &$dats = array()
     ) {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=buffered -';
-
-        return $this->convert_internal_string_to_passthru(
-            $pathAndArgs,
-            $xmlString,
-            $msgs,
-            $dats
-        );
+        return $this->convert_string_to_passthru($inputString, $msgs, $dats);
     }
 
     /**
      * Convert an XML or HTML string to a PDF file.
      *
-     * @param string $xmlString A string containing an XML or HTML document.
+     * @param string $inputString A string containing an XML or HTML document.
      * @param string $pdfPath The filename of the output PDF file.
      * @param array $msgs An optional array in which to return error and warning
      *                    messages.
      * @param array $dats An optional array in which to return data messages.
      * @return bool `true` if a PDF file was generated successfully.
      */
-    public function convert_string_to_file(
-        $xmlString,
+    public function convertStringToFile(
+        $inputString,
         $pdfPath,
         &$msgs = array(),
         &$dats = array()
     ) {
-        $pathAndArgs = $this->getCommandLine();
-        $pathAndArgs .= '--structured-log=normal ';
-        $pathAndArgs .= ' - -o "' . $pdfPath . '"';
+        return $this->convert_string_to_file($inputString, $pdfPath, $msgs, $dats);
+    }
 
-        return $this->convert_internal_string_to_file(
-            $pathAndArgs,
-            $xmlString,
+    /* RASTERIZATION METHODS **************************************************/
+
+    /**
+     * Rasterize an XML or HTML file.
+     *
+     * @param string $inputPath The filename of the input XML or HTML document.
+     * @param string $rasterPath A template string from which the raster files
+     *                           will be named (e.g. "page_%02d.png" will cause
+     *                           Prince to generate page_01.png, page_02.png,
+     *                           ..., page_10.png etc.).
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if the input was successfully rasterized.
+     */
+    public function rasterizeFile(
+        $inputPath,
+        $rasterPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        return $this->rasterizeMultipleFiles(
+            array($inputPath),
+            $rasterPath,
             $msgs,
             $dats
         );
+    }
+
+    /**
+     * Rasterize multiple XML or HTML files.
+     *
+     * @param array $inputPaths An array of the input XML or HTML documents.
+     * @param string $rasterPath A template string from which the raster files
+     *                           will be named (e.g. "page_%02d.png" will cause
+     *                           Prince to generate page_01.png, page_02.png,
+     *                           ..., page_10.png etc.).
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if the input was successfully rasterized.
+     */
+    public function rasterizeMultipleFiles(
+        $inputPaths,
+        $rasterPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine();
+
+        foreach ($inputPaths as $inputPath) {
+            $pathAndArgs .= self::cmdArg($inputPath);
+        }
+
+        $pathAndArgs .= self::cmdArg('--raster-output', $rasterPath);
+
+        return $this->fileToFile($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * Rasterize an XML or HTML file, which will be passed through to the output
+     * buffer of the current PHP page.
+     *
+     * @param string $inputPath The filename of the input XML or HTML document.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if the input was successfully rasterized.
+     */
+    public function rasterizeFileToPassthru(
+        $inputPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        return $this->rasterizeMultipleFilesToPassthru(
+            array($inputPath),
+            $msgs,
+            $dats
+        );
+    }
+
+    /**
+     * Rasterize multiple XML or HTML files, which will be passed through to the
+     * output buffer of the current PHP page.
+     *
+     * @param array $inputPaths An array of the input XML or HTML documents.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if the input was successfully rasterized.
+     */
+    public function rasterizeMultipleFilesToPassthru(
+        $inputPaths,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        if ($this->rasterPage < 1) {
+            throw new Exception('rasterPage has to be set to a value of > 0');
+        }
+        if ($this->rasterFormat == 'auto') {
+            throw new Exception('rasterFormat has to be set to "jpeg" or "png"');
+        }
+
+        $pathAndArgs = $this->getCommandLine('buffered');
+
+        foreach ($inputPaths as $inputPath) {
+            $pathAndArgs .= self::cmdArg($inputPath);
+        }
+
+        $pathAndArgs .= self::cmdArg('--raster-output', '-');
+
+        return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * Rasterize an XML or HTML string, which will be passed through to the
+     * output buffer of the current PHP page.
+     *
+     * @param string $inputString A string containing an XML or HTML document.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if the input was successfully rasterized.
+     */
+    public function rasterizeStringToPassthru(
+        $inputString,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        if ($this->rasterPage < 1) {
+            throw new Exception('rasterPage has to be set to a value of > 0');
+        }
+        if ($this->rasterFormat == 'auto') {
+            throw new Exception('rasterFormat has to be set to "jpeg" or "png"');
+        }
+
+        $pathAndArgs = $this->getCommandLine('buffered');
+
+        $pathAndArgs .= self::cmdArg('--raster-output', '-');
+        $pathAndArgs .= self::cmdArg('-');
+
+        return $this->stringToPassthru($pathAndArgs, $inputString, $msgs, $dats);
+    }
+
+    /**
+     * Rasterize an XML or HTML string.
+     *
+     * @param string $inputString A string containing an XML or HTML document.
+     * @param string $rasterPath A template string from which the raster files
+     *                           will be named (e.g. "page_%02d.png" will cause
+     *                           Prince to generate page_01.png, page_02.png,
+     *                           ..., page_10.png etc.).
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if the input was successfully rasterized.
+     */
+    public function rasterizeStringToFile(
+        $inputString,
+        $rasterPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine();
+
+        $pathAndArgs .= self::cmdArg('--raster-output', $rasterPath);
+        $pathAndArgs .= self::cmdArg('-');
+
+        return $this->stringToFile($pathAndArgs, $inputString, $msgs, $dats);
     }
 
     /* LOGGING OPTIONS ********************************************************/
@@ -410,14 +585,39 @@ class Prince
     }
 
     /**
-     * Specify whether to warn about CSS.
+     * Specify whether to warn about unknown CSS features.
+     *
+     * @param bool $noWarnCssUnknown `true` to disable warnings. Default value
+     *                               is `false`.
+     * @return void
+     */
+    public function setNoWarnCssUnknown($noWarnCssUnknown)
+    {
+        $this->noWarnCssUnknown = $noWarnCssUnknown;
+    }
+
+    /**
+     * Specify whether to warn about unsupported CSS features.
+     *
+     * @param bool $noWarnCssUnsupported `true` to disable warnings. Default
+     *                                   value is `false`.
+     * @return void
+     */
+    public function setNoWarnCssUnsupported($noWarnCssUnsupported)
+    {
+        $this->noWarnCssUnsupported = $noWarnCssUnsupported;
+    }
+
+    /**
+     * Specify whether to warn about unknown and unsupported CSS features.
      *
      * @param bool $noWarnCss `true` to disable warnings. Default value is `false`.
      * @return void
      */
     public function setNoWarnCss($noWarnCss)
     {
-        $this->noWarnCss = $noWarnCss;
+        $this->noWarnCssUnknown = $noWarnCss;
+        $this->noWarnCssUnsupported = $noWarnCss;
     }
 
     /* INPUT OPTIONS **********************************************************/
@@ -430,7 +630,10 @@ class Prince
      */
     public function setInputType($inputType)
     {
-        $this->inputType = $inputType;
+        $valid = array('xml', 'html', 'auto');
+        $lower = strtolower($inputType);
+
+        $this->inputType = in_array($lower, $valid) ? $lower : 'auto';
     }
 
     /**
@@ -442,9 +645,9 @@ class Prince
     public function setHTML($html)
     {
         if ($html) {
-            $this->inputType = "html";
+            $this->inputType = 'html';
         } else {
-            $this->inputType = "xml";
+            $this->inputType = 'xml';
         }
     }
 
@@ -468,7 +671,7 @@ class Prince
      */
     public function addRemap($url, $dir)
     {
-        $this->remaps .= '--remap="' . $url . '"="' . $dir . '" ';
+        $this->remaps .= self::cmdArg('--remap', "$url=$dir");
     }
 
     /**
@@ -499,7 +702,7 @@ class Prince
      * Specify whether XML Inclusions (XInclude) processing should be applied to
      * input documents.
      *
-     * @param [type] $xinclude `true` to enable XInclude processing. Default
+     * @param bool $xinclude `true` to enable XInclude processing. Default
      *                         value is `false`.
      * @return void
      */
@@ -546,6 +749,18 @@ class Prince
     }
 
     /**
+     * Specify whether to disable all HTTP and HTTPS redirects.
+     *
+     * @param bool $noRedirects `true` to disable redirects. Default value is
+     *                          `false`.
+     * @return void
+     */
+    public function setNoRedirects($noRedirects)
+    {
+        $this->noRedirects = $noRedirects;
+    }
+
+    /**
      * Specify username for HTTP authentication.
      *
      * @param string $authUser The username for HTTP authentication.
@@ -553,7 +768,7 @@ class Prince
      */
     public function setAuthUser($authUser)
     {
-        $this->authUser = $this->cmdlineArgEscape($authUser);
+        $this->authUser = $authUser;
     }
 
     /**
@@ -564,7 +779,7 @@ class Prince
      */
     public function setAuthPassword($authPassword)
     {
-        $this->authPassword = $this->cmdlineArgEscape($authPassword);
+        $this->authPassword = $authPassword;
     }
 
     /**
@@ -587,17 +802,48 @@ class Prince
      */
     public function setAuthScheme($authScheme)
     {
-        if (strcasecmp($authScheme, 'http') == 0) {
-            $this->authScheme = 'http';
-        } else if (strcasecmp($authScheme, 'https') == 0) {
-            $this->authScheme = 'https';
-        } else {
-            $this->authScheme = '';
+        $valid = array('http', 'https');
+        $lower = strtolower($authScheme);
+
+        $this->authScheme = in_array($lower, $valid) ? $lower : '';
+    }
+
+    /**
+     * Specify an HTTP authentication method to enable. This method can be called
+     * more than once to add multiple authentication methods.
+     *
+     * @param string $authMethod Can take a value of: `"basic"`, `"digest"`,
+     *                           `"ntlm"`, `"negotiate"`.
+     * @return void
+     */
+    public function addAuthMethod($authMethod)
+    {
+        $valid = array('basic', 'digest', 'ntlm', 'negotiate');
+        $lower = strtolower($authMethod);
+
+        if (in_array($lower, $valid)) {
+            if ($this->authMethods != '') {
+                $this->authMethods .= ',';
+            }
+            $this->authMethods .= $lower;
         }
     }
 
     /**
+     * Clear all of the enabled authentication methods.
+     *
+     * @return void
+     */
+    public function clearAuthMethods()
+    {
+        $this->authMethods = '';
+    }
+
+    /**
+     * [DEPRECATED]
      * Specify HTTP authentication methods.
+     *
+     * @deprecated 1.2.0 Prefer `addAuthMethod` instead.
      *
      * @param string $authMethod Can take a value of: `"basic"`, `"digest"`,
      *                           `"ntlm"`, `"negotiate"`.
@@ -605,17 +851,10 @@ class Prince
      */
     public function setAuthMethod($authMethod)
     {
-        if (strcasecmp($authMethod, 'basic') == 0) {
-            $this->authMethod = 'basic';
-        } else if (strcasecmp($authMethod, 'digest') == 0) {
-            $this->authMethod = 'digest';
-        } else if (strcasecmp($authMethod, 'ntlm') == 0) {
-            $this->authMethod = 'ntlm';
-        } else if (strcasecmp($authMethod, 'negotiate') == 0) {
-            $this->authMethod = 'negotiate';
-        } else {
-            $this->authMethod = '';
-        }
+        $valid = array('basic', 'digest', 'ntlm', 'negotiate');
+        $lower = strtolower($authMethod);
+
+        $this->authMethods = in_array($lower, $valid) ? $lower : '';
     }
 
     /**
@@ -645,16 +884,44 @@ class Prince
      * Specify the HTTP timeout in seconds.
      *
      * @param int $timeout The HTTP timeout in seconds. Value must be greater
-     *                     than 0.
+     *                     than 0. Default value is 60 seconds.
      * @return void
      */
-    public function setHttpTimeout($timeout)
+    public function setHttpTimeout($httpTimeout)
     {
-        $this->httpTimeout = $timeout;
+        if ($httpTimeout < 1) {
+            throw new Exception('invalid httpTimeout value (must be > 0)');
+        }
+        $this->httpTimeout = $httpTimeout;
     }
 
     /**
+     * Specify a Set-Cookie header value. This method can be called more than
+     * once to add multiple header values.
+     *
+     * @param string $cookie The Set-Cookie header value.
+     * @return void
+     */
+    public function addCookie($cookie)
+    {
+        $this->cookies .= self::cmdArg('--cookie', $cookie);
+    }
+
+    /**
+     * Clear all cookies.
+     *
+     * @return void
+     */
+    public function clearCookies()
+    {
+        $this->cookies = '';
+    }
+
+    /**
+     * [DEPRECATED]
      * Specify a Set-Cookie header value.
+     *
+     * @deprecated 1.2.0 Prefer `addCookie` instead.
      *
      * @param string $cookie The Set-Cookie header value.
      * @return void
@@ -698,6 +965,67 @@ class Prince
     }
 
     /**
+     * Specify an SSL client certificate file.
+     *
+     * @param string $sslCert The filename of the SSL client certificate file.
+     * @return void
+     */
+    public function setSslCert($sslCert)
+    {
+        $this->sslCert = $sslCert;
+    }
+
+    /**
+     * Specify the SSL client certificate file type.
+     *
+     * @param string $sslCertType Can take a value of: "PEM", "DER".
+     * @return void
+     */
+    public function setSslCertType($sslCertType)
+    {
+        $valid = array('pem', 'der');
+        $lower = strtolower($sslCertType);
+
+        $this->sslCertType = in_array($lower, $valid) ? $lower : '';
+    }
+
+    /**
+     * Specify an SSL private key file.
+     *
+     * @param string $sslKey The filename of the SSL private key file.
+     * @return void
+     */
+    public function setSslKey($sslKey)
+    {
+        $this->sslKey = $sslKey;
+    }
+
+    /**
+     * Specify the SSL private key file type.
+     *
+     * @param string $sslKeyType Can take a value of: "PEM", "DER".
+     * @return void
+     */
+    public function setSslKeyType($sslKeyType)
+    {
+        $valid = array('pem', 'der');
+        $lower = strtolower($sslKeyType);
+
+        $this->sslKeyType = in_array($lower, $valid) ? $lower : '';
+    }
+
+    /**
+     * Specify a password for the SSL private key.
+     *
+     * @param string $sslKeyPassword The password for the SSL private key.
+     * @return void
+     */
+    public function setSslKeyPassword($sslKeyPassword)
+    {
+        $this->sslKeyPassword = $sslKeyPassword;
+    }
+
+    /**
      * Specify an SSL/TLS version to use.
      *
      * @param string $sslVersion Can take a value of:
@@ -711,7 +1039,17 @@ class Prince
      */
     public function setSslVersion($sslVersion)
     {
-        $this->sslVersion = $sslVersion;
+        $valid = array(
+            'default',
+            'tlsv1',
+            'tlsv1.0',
+            'tlsv1.1',
+            'tlsv1.2',
+            'tlsv1.3'
+        );
+        $lower = strtolower($sslVersion);
+
+        $this->sslVersion = in_array($lower, $valid) ? $lower : '';
     }
 
     /**
@@ -759,7 +1097,7 @@ class Prince
      */
     public function addScript($jsPath)
     {
-        $this->scripts .= '--script "' . $jsPath . '" ';
+        $this->scripts .= self::cmdArg('--script', $jsPath);
     }
 
     /**
@@ -772,6 +1110,21 @@ class Prince
         $this->scripts = '';
     }
 
+    /**
+     * Specify the maximum number of consequent layout passes.
+     *
+     * @param int $maxPasses The maximum number of passes. Value must be greater
+     *                       than 0. Default value is unlimited passes.
+     * @return void
+     */
+    public function setMaxPasses($maxPasses)
+    {
+        if ($maxPasses < 1) {
+            throw new Exception('invalid maxPasses value (must be > 0)');
+        }
+        $this->maxPasses = $maxPasses;
+    }
+
     /* CSS OPTIONS ************************************************************/
 
     /**
@@ -782,7 +1135,7 @@ class Prince
      */
     public function addStyleSheet($cssPath)
     {
-        $this->styleSheets .= '-s "' . $cssPath . '" ';
+        $this->styleSheets .= self::cmdArg('--style', $cssPath);
     }
 
     /**
@@ -855,6 +1208,28 @@ class Prince
     /* PDF OUTPUT OPTIONS *****************************************************/
 
     /**
+     * Specify the PDF ID to use.
+     *
+     * @param string $pdfId The PDF ID to use.
+     * @return void
+     */
+    public function setPdfId($pdfId)
+    {
+        $this->pdfId = $pdfId;
+    }
+
+    /**
+     * Specify the PDF document's Lang entry in the document catalog.
+     *
+     * @param string $pdfLang The PDF document's lang entry.
+     * @return void
+     */
+    public function setPdfLang($pdfLang)
+    {
+        $this->pdfLang = $pdfLang;
+    }
+
+    /**
      * Specify the PDF profile to use.
      *
      * @param string $pdfProfile Can take a value of:
@@ -877,7 +1252,26 @@ class Prince
      */
     public function setPDFProfile($pdfProfile)
     {
-        $this->pdfProfile = $pdfProfile;
+        $valid = array(
+            'pdf/a-1a',
+            'pdf/a-1a+pdf/ua-1',
+            'pdf/a-1b',
+            'pdf/a-2a',
+            'pdf/a-2a+pdf/ua-1',
+            'pdf/a-2b',
+            'pdf/a-3a',
+            'pdf/a-3a+pdf/ua-1',
+            'pdf/a-3b',
+            'pdf/ua-1',
+            'pdf/x-1a:2001',
+            'pdf/x-1a:2003',
+            'pdf/x-3:2002',
+            'pdf/x-3:2003',
+            'pdf/x-4'
+        );
+        $lower = strtolower($pdfProfile);
+
+        $this->pdfProfile = in_array($lower, $valid) ? $lower : '';
     }
 
     /**
@@ -903,7 +1297,7 @@ class Prince
      */
     public function addFileAttachment($filePath)
     {
-        $this->fileAttachments .= '--attach=' . '"' . $filePath .  '" ';
+        $this->fileAttachments .= self::cmdArg('--attach', $filePath);
     }
 
     /**
@@ -954,6 +1348,18 @@ class Prince
     }
 
     /**
+     * Specify whether system fonts should be enabled.
+     *
+     * @param bool $systemFonts `false` to disable system fonts. Default value
+     *                          is `true`.
+     * @return void
+     */
+    public function setSystemFonts($systemFonts)
+    {
+        $this->systemFonts = $systemFonts;
+    }
+
+    /**
      * Specify whether to use force identity encoding.
      *
      * @param bool $forceIdentityEncoding `true` to force identity encoding.
@@ -978,6 +1384,18 @@ class Prince
     }
 
     /**
+     * Specify whether object streams should be disabled.
+     *
+     * @param bool $noObjectStreams `true` to disable object streams. Default
+     *                              value is `false`.
+     * @return void
+     */
+    public function setNoObjectStreams($noObjectStreams)
+    {
+        $this->noObjectStreams = $noObjectStreams;
+    }
+
+    /**
      * Specify fallback ICC profile for uncalibrated CMYK.
      *
      * @param string $fallbackCmykProfile The fallback ICC profile.
@@ -986,6 +1404,32 @@ class Prince
     public function setFallbackCmykProfile($fallbackCmykProfile)
     {
         $this->fallbackCmykProfile = $fallbackCmykProfile;
+    }
+
+    /**
+     * Specify whether to enable tagged PDF.
+     *
+     * @param bool $taggedPdf `true` to enable tagged PDF. Default value is `false`.
+     * @return void
+     */
+    public function setTaggedPdf($taggedPdf)
+    {
+        $this->taggedPdf = $taggedPdf;
+    }
+
+    /**
+     * Specify the DPI of the "px" units in CSS.
+     *
+     * @param int $cssDpi The DPI of the "px" units. Value must be greater than
+     *                    0. Default value is 96.
+     * @return void
+     */
+    public function setCssDpi($cssDpi)
+    {
+        if ($cssDpi < 1) {
+            throw new Exception('invalid cssDpi value (must be > 0)');
+        }
+        $this->cssDpi = $cssDpi;
     }
 
     /* PDF METADATA OPTIONS ***************************************************/
@@ -1046,6 +1490,18 @@ class Prince
         $this->pdfCreator = $pdfCreator;
     }
 
+    /**
+     * Specify an XMP file that contains XMP metadata to be included in the
+     * output PDF file.
+     *
+     * @param string $pdfXmp The filename of the XMP file.
+     * @return void
+     */
+    public function setPDFXmp($pdfXmp)
+    {
+        $this->pdfXmp = $pdfXmp;
+    }
+
     /* PDF ENCRYPTION OPTIONS *************************************************/
 
     /**
@@ -1076,6 +1532,12 @@ class Prince
      *                           Default value is `false`.
      * @param bool $disallowAnnotate `true` to disallow annotation of the PDF file.
      *                               Default value is `false`.
+     * @param bool $allowCopyForAccessibility `true` to allow copying content for
+     *                                        accessibility purposes. Default
+     *                                        value is `false`.
+     * @param bool $allowAssembly `true` to allow the document to be inserted into
+     *                            another document or other pages to be added.
+     *                            Default value is `false`.
      * @return void
      */
     public function setEncryptInfo(
@@ -1085,36 +1547,135 @@ class Prince
         $disallowPrint = false,
         $disallowModify = false,
         $disallowCopy = false,
-        $disallowAnnotate = false
+        $disallowAnnotate = false,
+        $allowCopyForAccessibility = false,
+        $allowAssembly = false
     ) {
         if ($keyBits != 40 && $keyBits != 128) {
             throw new Exception("Invalid value for keyBits: $keyBits" .
-                " (must be 40 or 128)");
+                ' (must be 40 or 128)');
         }
 
         $this->encrypt = true;
 
-        $this->encryptInfo =
-            ' --key-bits ' . $keyBits .
-            ' --user-password="' . $this->cmdlineArgEscape($userPassword) .
-            '" --owner-password="' . $this->cmdlineArgEscape($ownerPassword) .
-            '" ';
+        $this->encryptInfo = self::cmdArg('--key-bits', $keyBits);
+        $this->encryptInfo .= self::cmdArg('--user-password', $userPassword);
+        $this->encryptInfo .= self::cmdArg('--owner-password', $ownerPassword);
 
         if ($disallowPrint) {
-            $this->encryptInfo .= '--disallow-print ';
+            $this->encryptInfo .= self::cmdArg('--disallow-print');
         }
 
         if ($disallowModify) {
-            $this->encryptInfo .= '--disallow-modify ';
+            $this->encryptInfo .= self::cmdArg('--disallow-modify');
         }
 
         if ($disallowCopy) {
-            $this->encryptInfo .= '--disallow-copy ';
+            $this->encryptInfo .= self::cmdArg('--disallow-copy');
         }
 
         if ($disallowAnnotate) {
-            $this->encryptInfo .= '--disallow-annotate ';
+            $this->encryptInfo .= self::cmdArg('--disallow-annotate');
         }
+
+        if ($allowCopyForAccessibility) {
+            $this->encryptInfo .= self::cmdArg('--allow-copy-for-accessibility');
+        }
+
+        if ($allowAssembly) {
+            $this->encryptInfo .= self::cmdArg('--allow-assembly');
+        }
+    }
+
+    /* RASTER OUTPUT OPTIONS **************************************************/
+
+    /**
+     * Specify the format for the raster output.
+     *
+     * @param string $rasterFormat Can take a value of: `"auto"`, `"png"`, `"jpeg"`.
+     * @return void
+     */
+    public function setRasterFormat($rasterFormat)
+    {
+        $valid = array('auto', 'png', 'jpeg');
+        $lower = strtolower($rasterFormat);
+
+        $this->rasterFormat = in_array($lower, $valid) ? $lower : 'auto';
+    }
+
+    /**
+     * Specify the level of JPEG compression when generating raster output in
+     * JPEG format.
+     *
+     * @param int $rasterJpegQuality The level of JPEG compression. Valid range
+     *                               is between 0 and 100 inclusive. Default
+     *                               value is 92 percent.
+     * @return void
+     */
+    public function setRasterJpegQuality($rasterJpegQuality)
+    {
+        if ($rasterJpegQuality < 0 || $rasterJpegQuality > 100) {
+            throw new Exception('invalid rasterJpegQuality value (must be [0, 100])');
+        }
+        $this->rasterJpegQuality = $rasterJpegQuality;
+    }
+
+    /**
+     * Specify the page number to be rasterized.
+     *
+     * @param int $rasterPage The page number to be rasterized. Value must be
+     *                        greater than 0. Defaults to rasterizing all pages.
+     * @return void
+     */
+    public function setRasterPage($rasterPage)
+    {
+        if ($rasterPage < 1) {
+            throw new Exception('invalid rasterPage value (must be > 0)');
+        }
+        $this->rasterPage = $rasterPage;
+    }
+
+    /**
+     * Specify the resolution of the raster output.
+     *
+     * @param int $rasterDpi The resolution of the raster output. Value must be
+     *                       greater than 0. Default value is 96 dpi.
+     * @return void
+     */
+    public function setRasterDpi($rasterDpi)
+    {
+        if ($rasterDpi < 1) {
+            throw new Exception('invalid rasterDpi value (must be > 0)');
+        }
+        $this->rasterDpi = $rasterDpi;
+    }
+
+    /**
+     * Specify the number of threads to use for multi-threaded rasterization.
+     *
+     * @param int $rasterThreads The number of threads to use. Default value is
+     *                           the number of cores and hyperthreads the system
+     *                           provides.
+     * @return void
+     */
+    public function setRasterThreads($rasterThreads)
+    {
+        $this->rasterThreads = $rasterThreads;
+    }
+
+    /**
+     * Specify the background. Can be used when rasterizing to an image format
+     * that supports transparency.
+     *
+     * @param string $rasterBackground Can take a value of: `"white"`, `"transparent"`.
+     * @return void
+     */
+    public function setRasterBackground($rasterBackground)
+    {
+        $valid = array('white', 'transparent');
+        $lower = strtolower($rasterBackground);
+
+        $this->rasterBackground = in_array($lower, $valid) ? $lower : '';
     }
 
     /* LICENSE OPTIONS ********************************************************/
@@ -1157,244 +1718,269 @@ class Prince
 
     /* PRIVATE HELPER METHODS *************************************************/
 
-    private function getCommandLine()
+    private function getCommandLine($logType = 'normal')
     {
-        $cmdline = '"' . $this->exePath . '" ' . $this->styleSheets .
-            $this->scripts . $this->fileAttachments . $this->remaps;
+        $cmdline = self::escape($this->exePath, true, true) . ' ';
 
-        if (strcasecmp($this->inputType, 'auto') == 0) {
-        } else {
-            $cmdline .=  '-i "' . $this->inputType . '" ';
-        }
+        $cmdline .= self::cmdArg('--structured-log', $logType);
 
-        if ($this->javascript) {
-            $cmdline .= '--javascript ';
-        }
-
-        if ($this->baseURL != '') {
-            $cmdline .= '--baseurl="' . $this->baseURL . '" ';
-        }
-
-        if ($this->doXInclude == false) {
-            $cmdline .= '--no-xinclude ';
-        } else {
-            $cmdline .= '--xinclude ';
-        }
-
-        if ($this->xmlExternalEntities == true) {
-            $cmdline .= '--xml-external-entities ';
-        }
-
-        if ($this->noLocalFiles == true) {
-            $cmdline .= '--no-local-files ';
-        }
-
-        if ($this->noNetwork == true) {
-            $cmdline .= '--no-network ';
-        }
-
-        if ($this->httpProxy != '') {
-            $cmdline .= '--http-proxy="' . $this->httpProxy . '" ';
-        }
-
-        if ($this->httpTimeout != '') {
-            $cmdline .= '--http-timeout="' . $this->httpTimeout . '" ';
-        }
-
-        if ($this->cookie != '') {
-            $cmdline .= '--cookie="' . $this->cookie . '" ';
-        }
-
-        if ($this->cookieJar != '') {
-            $cmdline .= '--cookiejar="' . $this->cookieJar . '" ';
-        }
-
-        if ($this->sslCaCert != '') {
-            $cmdline .= '--ssl-cacert="' . $this->sslCaCert . '" ';
-        }
-
-        if ($this->sslCaPath != '') {
-            $cmdline .= '--ssl-capath="' . $this->sslCaPath . '" ';
-        }
-
-        if ($this->sslVersion != '') {
-            $cmdline .= '--ssl-version="' . $this->sslVersion . '" ';
-        }
-
-        if ($this->insecure) {
-            $cmdline .= '--insecure ';
-        }
-
-        if ($this->noParallelDownloads) {
-            $cmdline .= '--no-parallel-downloads ';
-        }
-
-        if ($this->logFile != '') {
-            $cmdline .= '--log="' . $this->logFile . '" ';
-        }
-
+        // Logging options.
         if ($this->verbose) {
-            $cmdline .= '--verbose ';
+            $cmdline .= self::cmdArg('--verbose');
         }
-
         if ($this->debug) {
-            $cmdline .= '--debug ';
+            $cmdline .= self::cmdArg('--debug');
+        }
+        if ($this->logFile != '') {
+            $cmdline .= self::cmdArg('--log', $this->logFile);
+        }
+        if ($this->noWarnCssUnknown) {
+            $cmdline .= self::cmdArg('--no-warn-css-unknown');
+        }
+        if ($this->noWarnCssUnsupported) {
+            $cmdline .= self::cmdArg('--no-warn-css-unsupported');
         }
 
-        if ($this->noWarnCss) {
-            $cmdline .= '--no-warn-css ';
+        // Input options.
+        if ($this->inputType != 'auto') {
+            $cmdline .= self::cmdArg('--input', $this->inputType);
         }
-
+        if ($this->baseURL != '') {
+            $cmdline .= self::cmdArg('--baseurl', $this->baseURL);
+        }
+        $cmdline .= $this->remaps;
         if ($this->fileRoot != '') {
-            $cmdline .= '--fileroot="' . $this->fileRoot . '" ';
+            $cmdline .= self::cmdArg('--fileroot', $this->fileRoot);
+        }
+        if ($this->doXInclude) {
+            $cmdline .= self::cmdArg('--xinclude');
+        }
+        if ($this->xmlExternalEntities) {
+            $cmdline .= self::cmdArg('--xml-external-entities');
+        }
+        if ($this->noLocalFiles) {
+            $cmdline .= self::cmdArg('--no-local-files');
         }
 
+        // Network options.
+        if ($this->noNetwork) {
+            $cmdline .= self::cmdArg('--no-network');
+        }
+        if ($this->noRedirects) {
+            $cmdline .= self::cmdArg('--no-redirects');
+        }
+        if ($this->authUser != '') {
+            $cmdline .= self::cmdArg('--auth-user', $this->authUser);
+        }
+        if ($this->authPassword != '') {
+            $cmdline .= self::cmdArg('--auth-password', $this->authPassword);
+        }
+        if ($this->authServer != '') {
+            $cmdline .= self::cmdArg('--auth-server', $this->authServer);
+        }
+        if ($this->authScheme != '') {
+            $cmdline .= self::cmdArg('--auth-scheme', $this->authScheme);
+        }
+        if ($this->authMethods != '') {
+            $cmdline .= self::cmdArg('--auth-method', $this->authMethods);
+        }
+        if ($this->noAuthPreemptive) {
+            $cmdline .= self::cmdArg('--no-auth-preemptive');
+        }
+        if ($this->httpProxy != '') {
+            $cmdline .= self::cmdArg('--http-proxy', $this->httpProxy);
+        }
+        if ($this->httpTimeout > 0) {
+            $cmdline .= self::cmdArg('--http-timeout', $this->httpTimeout);
+        }
+        if ($this->cookie != '') {
+            $cmdline .= self::cmdArg('--cookie', $this->cookie);
+        }
+        $cmdline .= $this->cookies;
+        if ($this->cookieJar != '') {
+            $cmdline .= self::cmdArg('--cookiejar', $this->cookieJar);
+        }
+        if ($this->sslCaCert != '') {
+            $cmdline .= self::cmdArg('--ssl-cacert', $this->sslCaCert);
+        }
+        if ($this->sslCaPath != '') {
+            $cmdline .= self::cmdArg('--ssl-capath', $this->sslCaPath);
+        }
+        if ($this->sslCert != '') {
+            $cmdline .= self::cmdArg('--ssl-cert', $this->sslCert);
+        }
+        if ($this->sslCertType != '') {
+            $cmdline .= self::cmdArg('--ssl-cert-type', $this->sslCertType);
+        }
+        if ($this->sslKey != '') {
+            $cmdline .= self::cmdArg('--ssl-key', $this->sslKey);
+        }
+        if ($this->sslKeyType != '') {
+            $cmdline .= self::cmdArg('--ssl-key-type', $this->sslKeyType);
+        }
+        if ($this->sslKeyPassword != '') {
+            $cmdline .= self::cmdArg('--ssl-key-password', $this->sslKeyPassword);
+        }
+        if ($this->sslVersion != '') {
+            $cmdline .= self::cmdArg('--ssl-version', $this->sslVersion);
+        }
+        if ($this->insecure) {
+            $cmdline .= self::cmdArg('--insecure');
+        }
+        if ($this->noParallelDownloads) {
+            $cmdline .= self::cmdArg('--no-parallel-downloads');
+        }
+
+        // JavaScript options.
+        if ($this->javascript) {
+            $cmdline .= self::cmdArg('--javascript');
+        }
+        $cmdline .= $this->scripts;
+        if ($this->maxPasses > 0) {
+            $cmdline .= self::cmdArg('--max-passes', $this->maxPasses);
+        }
+
+        // CSS options.
+        $cmdline .= $this->styleSheets;
+        if ($this->media != '') {
+            $cmdline .= self::cmdArg('--media', $this->media);
+        }
+        if ($this->pageSize != '') {
+            $cmdline .= self::cmdArg('--page-size', $this->pageSize);
+        }
+        if ($this->pageMargin != '') {
+            $cmdline .= self::cmdArg('--page-margin', $this->pageMargin);
+        }
+        if ($this->noAuthorStyle) {
+            $cmdline .= self::cmdArg('--no-author-style');
+        }
+        if ($this->noDefaultStyle) {
+            $cmdline .= self::cmdArg('--no-default-style');
+        }
+
+        // PDF output options.
+        if ($this->pdfId != '') {
+            $cmdline .= self::cmdArg('--pdf-id', $this->pdfId);
+        }
+        if ($this->pdfLang != '') {
+            $cmdline .= self::cmdArg('--pdf-lang', $this->pdfLang);
+        }
+        if ($this->pdfProfile != '') {
+            $cmdline .= self::cmdArg('--pdf-profile', $this->pdfProfile);
+        }
+        if ($this->pdfOutputIntent != '') {
+            $cmdline .= self::cmdArg('--pdf-output-intent', $this->pdfOutputIntent);
+
+            if ($this->convertColors) {
+                $cmdline .= self::cmdArg('--convert-colors');
+            }
+        }
+        $cmdline .= $this->fileAttachments;
+        if ($this->noArtificialFonts) {
+            $cmdline .= self::cmdArg('--no-artificial-fonts');
+        }
+        if (!$this->embedFonts) {
+            $cmdline .= self::cmdArg('--no-embed-fonts');
+        }
+        if (!$this->subsetFonts) {
+            $cmdline .= self::cmdArg('--no-subset-fonts');
+        }
+        if (!$this->systemFonts) {
+            $cmdline .= self::cmdArg('--no-system-fonts');
+        }
+        if ($this->forceIdentityEncoding) {
+            $cmdline .= self::cmdArg('--force-identity-encoding');
+        }
+        if (!$this->compress) {
+            $cmdline .= self::cmdArg('--no-compress');
+        }
+        if ($this->noObjectStreams) {
+            $cmdline .= self::cmdArg('--no-object-streams');
+        }
+        if ($this->fallbackCmykProfile != '') {
+            $cmdline .= self::cmdArg('--fallback-cmyk-profile', $this->fallbackCmykProfile);
+        }
+        if ($this->taggedPdf) {
+            $cmdline .= self::cmdArg('--tagged-pdf');
+        }
+        if ($this->cssDpi > 0) {
+            $cmdline .= self::cmdArg('--css-dpi', $this->cssDpi);
+        }
+
+        // PDF metadata options.
+        if ($this->pdfTitle != '') {
+            $cmdline .= self::cmdArg('--pdf-title', $this->pdfTitle);
+        }
+        if ($this->pdfSubject != '') {
+            $cmdline .= self::cmdArg('--pdf-subject', $this->pdfSubject);
+        }
+        if ($this->pdfAuthor != '') {
+            $cmdline .= self::cmdArg('--pdf-author', $this->pdfAuthor);
+        }
+        if ($this->pdfKeywords != '') {
+            $cmdline .= self::cmdArg('--pdf-keywords', $this->pdfKeywords);
+        }
+        if ($this->pdfCreator != '') {
+            $cmdline .= self::cmdArg('--pdf-creator', $this->pdfCreator);
+        }
+        if ($this->pdfXmp != '') {
+            $cmdline .= self::cmdArg('--pdf-xmp', $this->pdfXmp);
+        }
+
+        // PDF encryption options.
+        if ($this->encrypt) {
+            $cmdline .= self::cmdArg('--encrypt');
+            $cmdline .= $this->encryptInfo;
+        }
+
+        // Raster output options.
+        if ($this->rasterFormat != 'auto') {
+            $cmdline .= self::cmdArg('--raster-format', $this->rasterFormat);
+        }
+        if ($this->rasterJpegQuality > -1) {
+            $cmdline .= self::cmdArg('--raster-jpeg-quality', $this->rasterJpegQuality);
+        }
+        if ($this->rasterPage > 0) {
+            $cmdline .= self::cmdArg('--raster-pages', $this->rasterPage);
+        }
+        if ($this->rasterDpi > 0) {
+            $cmdline .= self::cmdArg('--raster-dpi', $this->rasterDpi);
+        }
+        if ($this->rasterThreads > -1) {
+            $cmdline .= self::cmdArg('--raster-threads', $this->rasterThreads);
+        }
+        if ($this->rasterBackground != '') {
+            $cmdline .= self::cmdArg('--raster-background', $this->rasterBackground);
+        }
+
+        // License options.
         if ($this->licenseFile != '') {
-            $cmdline .= '--license-file="' . $this->licenseFile . '" ';
+            $cmdline .= self::cmdArg('--license-file', $this->licenseFile);
         }
 
         if ($this->licenseKey != '') {
-            $cmdline .= '--license-key="' . $this->licenseKey . '" ';
+            $cmdline .= self::cmdArg('--license-key', $this->licenseKey);
         }
 
-        if ($this->embedFonts == false) {
-            $cmdline .= '--no-embed-fonts ';
-        }
-
-        if ($this->subsetFonts == false) {
-            $cmdline .= '--no-subset-fonts ';
-        }
-
-        if ($this->noArtificialFonts == true) {
-            $cmdline .= '--no-artificial-fonts ';
-        }
-
-        if ($this->authMethod != '') {
-            $cmdline .=  '--auth-method="' .
-                $this->cmdlineArgEscape($this->authMethod) . '" ';
-        }
-
-        if ($this->authUser != '') {
-            $cmdline .= '--auth-user="' .
-                $this->cmdlineArgEscape($this->authUser) . '" ';
-        }
-
-        if ($this->authPassword != '') {
-            $cmdline .= '--auth-password="' .
-                $this->cmdlineArgEscape($this->authPassword) . '" ';
-        }
-
-        if ($this->authServer != '') {
-            $cmdline .= '--auth-server="' .
-                $this->cmdlineArgEscape($this->authServer) . '" ';
-        }
-
-        if ($this->authScheme != '') {
-            $cmdline .= '--auth-scheme="' .
-                $this->cmdlineArgEscape($this->authScheme) . '" ';
-        }
-
-        if ($this->noAuthPreemptive) {
-            $cmdline .= '--no-auth-preemptive ';
-        }
-
-        if ($this->media != '') {
-            $cmdline .= '--media="' .
-                $this->cmdlineArgEscape($this->media) . '" ';
-        }
-
-        if ($this->pageSize != '') {
-            $cmdline .= '--page-size="' .
-                $this->cmdlineArgEscape($this->pageSize) . '" ';
-        }
-
-        if ($this->pageMargin != '') {
-            $cmdline .= '--page-margin="' .
-                $this->cmdlineArgEscape($this->pageMargin) . '" ';
-        }
-
-        if ($this->noAuthorStyle == true) {
-            $cmdline .= '--no-author-style ';
-        }
-
-        if ($this->noDefaultStyle == true) {
-            $cmdline .= '--no-default-style ';
-        }
-
-        if ($this->forceIdentityEncoding == true) {
-            $cmdline .= '--force-identity-encoding ';
-        }
-
-        if ($this->compress == false) {
-            $cmdline .= '--no-compress ';
-        }
-
-        if ($this->pdfOutputIntent != '') {
-            $cmdline .= '--pdf-output-intent="' .
-                $this->cmdlineArgEscape($this->pdfOutputIntent) . '" ';
-
-            if ($this->convertColors == true) {
-                $cmdline .= '--convert-colors ';
-            }
-        }
-
-        if ($this->fallbackCmykProfile != '') {
-            $cmdline .= '--fallback-cmyk-profile="' .
-                $this->cmdlineArgEscape($this->fallbackCmykProfile) . '" ';
-        }
-
-        if ($this->pdfProfile != '') {
-            $cmdline .= '--pdf-profile="' .
-                $this->cmdlineArgEscape($this->pdfProfile) . '" ';
-        }
-
-        if ($this->pdfTitle != '') {
-            $cmdline .= '--pdf-title="' .
-                $this->cmdlineArgEscape($this->pdfTitle) . '" ';
-        }
-
-        if ($this->pdfSubject != '') {
-            $cmdline .= '--pdf-subject="' .
-                $this->cmdlineArgEscape($this->pdfSubject) . '" ';
-        }
-
-        if ($this->pdfAuthor != '') {
-            $cmdline .= '--pdf-author="' .
-                $this->cmdlineArgEscape($this->pdfAuthor) . '" ';
-        }
-
-        if ($this->pdfKeywords != '') {
-            $cmdline .= '--pdf-keywords="' .
-                $this->cmdlineArgEscape($this->pdfKeywords) . '" ';
-        }
-
-        if ($this->pdfCreator != '') {
-            $cmdline .= '--pdf-creator="' .
-                $this->cmdlineArgEscape($this->pdfCreator) . '" ';
-        }
-
-        if ($this->encrypt) {
-            $cmdline .= '--encrypt ' . $this->encryptInfo;
-        }
-
+        // Additional options.
         if ($this->options != '') {
-            $cmdline .= $this->cmdlineArgEscape($this->options) . ' ';
+            $cmdline .= self::cmdArg($this->options);
         }
 
         return $cmdline;
     }
 
-    private function convert_internal_file_to_file($pathAndArgs, &$msgs, &$dats)
+    private function startPrince($pathAndArgs, &$pipes)
     {
-        $descriptorspec = array(
-            0 => array("pipe", "r"),
-            1 => array("pipe", "w"),
-            2 => array("pipe", "w")
+        $descriptorSpec = array(
+            0 => array('pipe', 'r'),
+            1 => array('pipe', 'w'),
+            2 => array('pipe', 'w')
         );
 
         $process = proc_open(
             $pathAndArgs,
-            $descriptorspec,
+            $descriptorSpec,
             $pipes,
             NULL,
             NULL,
@@ -1402,132 +1988,77 @@ class Prince
         );
 
         if (is_resource($process)) {
-            $result = $this->readMessages($pipes[2], $msgs, $dats);
-
-            fclose($pipes[0]);
-            fclose($pipes[1]);
-            fclose($pipes[2]);
-
-            proc_close($process);
-
-            return ($result == 'success');
+            return $process;
         } else {
             throw new Exception("Failed to execute $pathAndArgs");
         }
     }
 
-    private function convert_internal_string_to_file(
-        $pathAndArgs,
-        $xmlString,
-        &$msgs,
-        &$dats
-    ) {
-        $descriptorspec = array(
-            0 => array("pipe", "r"),
-            1 => array("pipe", "w"),
-            2 => array("pipe", "w")
-        );
+    private function fileToFile($pathAndArgs, &$msgs, &$dats)
+    {
+        $process = $this->startPrince($pathAndArgs, $pipes);
 
-        $process = proc_open(
-            $pathAndArgs,
-            $descriptorspec,
-            $pipes,
-            NULL,
-            NULL,
-            array('bypass_shell' => TRUE)
-        );
+        $result = $this->readMessages($pipes[2], $msgs, $dats);
 
-        if (is_resource($process)) {
-            fwrite($pipes[0], $xmlString);
-            fclose($pipes[0]);
-            fclose($pipes[1]);
+        fclose($pipes[0]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
 
-            $result = $this->readMessages($pipes[2], $msgs, $dats);
+        proc_close($process);
 
-            fclose($pipes[2]);
-
-            proc_close($process);
-
-            return ($result == 'success');
-        } else {
-            throw new Exception("Failed to execute $pathAndArgs");
-        }
+        return ($result == 'success');
     }
 
-    private function convert_internal_file_to_passthru(
-        $pathAndArgs,
-        &$msgs,
-        &$dats
-    ) {
-        $descriptorspec = array(
-            0 => array("pipe", "r"),
-            1 => array("pipe", "w"),
-            2 => array("pipe", "w")
-        );
+    private function stringToFile($pathAndArgs, $inputString, &$msgs, &$dats)
+    {
+        $process = $this->startPrince($pathAndArgs, $pipes);
 
-        $process = proc_open(
-            $pathAndArgs,
-            $descriptorspec,
-            $pipes,
-            NULL,
-            NULL,
-            array('bypass_shell' => TRUE)
-        );
+        fwrite($pipes[0], $inputString);
+        fclose($pipes[0]);
+        fclose($pipes[1]);
 
-        if (is_resource($process)) {
-            fclose($pipes[0]);
-            fpassthru($pipes[1]);
-            fclose($pipes[1]);
+        $result = $this->readMessages($pipes[2], $msgs, $dats);
 
-            $result = $this->readMessages($pipes[2], $msgs, $dats);
+        fclose($pipes[2]);
 
-            fclose($pipes[2]);
+        proc_close($process);
 
-            proc_close($process);
-
-            return ($result == 'success');
-        } else {
-            throw new Exception("Failed to execute $pathAndArgs");
-        }
+        return ($result == 'success');
     }
 
-    private function convert_internal_string_to_passthru(
-        $pathAndArgs,
-        $xmlString,
-        &$msgs,
-        &$dats
-    ) {
-        $descriptorspec = array(
-            0 => array("pipe", "r"),
-            1 => array("pipe", "w"),
-            2 => array("pipe", "w")
-        );
+    private function fileToPassthru($pathAndArgs, &$msgs, &$dats)
+    {
+        $process = $this->startPrince($pathAndArgs, $pipes);
 
-        $process = proc_open(
-            $pathAndArgs,
-            $descriptorspec,
-            $pipes,
-            NULL,
-            NULL,
-            array('bypass_shell' => TRUE)
-        );
+        fclose($pipes[0]);
+        fpassthru($pipes[1]);
+        fclose($pipes[1]);
 
-        if (is_resource($process)) {
-            fwrite($pipes[0], $xmlString);
-            fclose($pipes[0]);
-            fpassthru($pipes[1]);
-            fclose($pipes[1]);
+        $result = $this->readMessages($pipes[2], $msgs, $dats);
 
-            $result = $this->readMessages($pipes[2], $msgs, $dats);
+        fclose($pipes[2]);
 
-            fclose($pipes[2]);
+        proc_close($process);
 
-            proc_close($process);
+        return ($result == 'success');
+    }
 
-            return ($result == 'success');
-        } else {
-            throw new Exception("Failed to execute $pathAndArgs");
-        }
+    private function stringToPassthru($pathAndArgs, $inputString, &$msgs, &$dats)
+    {
+        $process = $this->startPrince($pathAndArgs, $pipes);
+
+        fwrite($pipes[0], $inputString);
+        fclose($pipes[0]);
+        fpassthru($pipes[1]);
+        fclose($pipes[1]);
+
+        $result = $this->readMessages($pipes[2], $msgs, $dats);
+
+        fclose($pipes[2]);
+
+        proc_close($process);
+
+        return ($result == 'success');
     }
 
     private function readMessages($pipe, &$msgs, &$dats)
@@ -1562,77 +2093,256 @@ class Prince
         return '';
     }
 
-    private function cmdlineArgEscape($argStr)
+    private static function cmdArg($key, $value = '')
     {
-        return $this->cmdlineArgEscape2($this->cmdlineArgEscape1($argStr));
-    }
-
-    // In the input string $argStr, a double quote with zero or more preceding
-    // backslash(es) will be replaced with:
-    // n*backslash + doublequote => (2*n+1)*backslash + doublequote
-    private function cmdlineArgEscape1($argStr)
-    {
-        // chr(34) is character double quote ( " ),
-        // chr(92) is character backslash ( \ ).
-        $len = strlen($argStr);
-
-        $outputStr = '';
-        $numSlashes = 0;
-        $subStrStart = 0;
-
-        for ($i = 0; $i < $len; $i++) {
-            if ($argStr[$i] == chr(34)) {
-                $numSlashes = 0;
-                $j = $i - 1;
-                while ($j >= 0) {
-                    if ($argStr[$j] == chr(92)) {
-                        $numSlashes += 1;
-                        $j -= 1;
-                    } else {
-                        break;
-                    }
-                }
-
-                $outputStr .= substr(
-                    $argStr,
-                    $subStrStart,
-                    ($i - $numSlashes - $subStrStart)
-                );
-
-                for ($k = 0; $k < $numSlashes; $k++) {
-                    $outputStr .= chr(92) . chr(92);
-                }
-                $outputStr .= chr(92) . chr(34);
-
-                $subStrStart = $i + 1;
-            }
+        $cmd = $key;
+        if ($value != '') {
+            $cmd .= "=$value";
         }
-        $outputStr .= substr($argStr, $subStrStart, ($i - $subStrStart));
 
-        return $outputStr;
+        return self::escape($cmd) . ' ';
     }
 
-    // Double the number of trailing backslash(es):
-    // n*trailing backslash => (2*n)*trailing backslash.
-    private function cmdlineArgEscape2($argStr)
+    /**
+     * Escapes a string to be used as a shell argument
+     *
+     * Provides a more robust method on Windows than escapeshellarg. When $meta
+     * is true cmd.exe meta-characters will also be escaped. If $module is true,
+     * the argument will be treated as the name of the module (executable) to
+     * be invoked, with an additional check for edge-case characters that cannot
+     * be reliably escaped for cmd.exe. This has no effect if $meta is false.
+     *
+     * Feel free to copy this function, but please keep the following notice:
+     * MIT Licensed (c) John Stevenson <john-stevenson@blueyonder.co.uk>
+     * See https://github.com/johnstevenson/winbox-args for more information.
+     *
+     * @param string $arg The argument to be escaped
+     * @param bool $meta Additionally escape cmd.exe meta characters
+     * @param bool $module The argument is the module to invoke
+     *
+     * @return string The escaped argument
+     */
+    private static function escape($arg, $meta = true, $module = false)
     {
-        // chr(92) is character backslash ( \ ).
-        $len = strlen($argStr);
+        if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
+            // Escape single-quotes and enclose in single-quotes
+            return "'" . str_replace("'", "'\\''", $arg) . "'";
+        }
 
-        $numTrailingSlashes = 0;
-        for ($i = ($len - 1); $i >= 0; $i--) {
-            if ($argStr[$i] == chr(92)) {
-                $numTrailingSlashes += 1;
-            } else {
-                break;
+        // Check for whitespace or an empty value
+        $quote = strpbrk($arg, " \t") !== false || (string) $arg === '';
+
+        // Escape double-quotes and double-up preceding backslashes
+        $arg = preg_replace('/(\\\\*)"/', '$1$1\\"', $arg, -1, $dquotes);
+
+        if ($meta) {
+            // Check for expansion %..% sequences
+            $meta = $dquotes || preg_match('/%[^%]+%/', $arg);
+
+            if (!$meta) {
+                // Check for characters that can be escaped in double-quotes
+                $quote = $quote || strpbrk($arg, '^&|<>()') !== false;
+            } elseif ($module && !$dquotes && $quote) {
+                // Caret-escaping a module name with whitespace will split the
+                // argument, so just quote it and hope there is no expansion
+                $meta = false;
             }
         }
 
-        while ($numTrailingSlashes > 0) {
-            $argStr .= chr(92);
-            $numTrailingSlashes -= 1;
+        if ($quote) {
+            // Double-up trailing backslashes and enclose in double-quotes
+            $arg = '"' . preg_replace('/(\\\\*)$/', '$1$1', $arg) . '"';
         }
 
-        return $argStr;
+        if ($meta) {
+            // Caret-escape all meta characters
+            $arg = preg_replace('/(["^&|<>()%])/', '^$1', $arg);
+        }
+
+        return $arg;
+    }
+
+    /* PDF CONVERSION METHODS (DEPRECATED) ************************************/
+
+    /**
+     * [DEPRECATED]
+     * Convert an XML or HTML file to a PDF file. The name of the output PDF
+     * file will be the same as the name of the input file but with an extension
+     * of ".pdf".
+     *
+     * @deprecated 1.2.0 Prefer `convertFile` instead.
+     *
+     * @param string $inputPath The filename of the input XML or HTML document.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convert_file($inputPath, &$msgs = array(), &$dats = array())
+    {
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= self::cmdArg($inputPath);
+
+        return $this->fileToFile($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * [DEPRECATED]
+     * Convert an XML or HTML file to a PDF file.
+     *
+     * @deprecated 1.2.0 Prefer `convertFileToFile` instead.
+     *
+     * @param string $inputPath The filename of the input XML or HTML document.
+     * @param string $pdfPath The filename of the output PDF file.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convert_file_to_file(
+        $inputPath,
+        $pdfPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= self::cmdArg($inputPath);
+        $pathAndArgs .= self::cmdArg('--output', $pdfPath);
+
+        return $this->fileToFile($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * [DEPRECATED]
+     * Convert multiple XML or HTML files to a PDF file.
+     *
+     * @deprecated 1.2.0 Prefer `convertMultipleFiles` instead.
+     *
+     * @param array $inputPaths An array of the input XML or HTML documents.
+     * @param string $pdfPath The filename of the output PDF file.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convert_multiple_files(
+        $inputPaths,
+        $pdfPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine();
+
+        foreach ($inputPaths as $inputPath) {
+            $pathAndArgs .= self::cmdArg($inputPath);
+        }
+
+        $pathAndArgs .= self::cmdArg('--output', $pdfPath);
+
+        return $this->fileToFile($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * [DEPRECATED]
+     * Convert multiple XML or HTML files to a PDF file, which will be passed
+     * through to the output buffer of the current PHP page.
+     *
+     * @deprecated 1.2.0 Prefer `convertMultipleFilesToPassthru` instead.
+     *
+     * @param array $inputPaths An array of the input XML or HTML documents.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convert_multiple_files_to_passthru(
+        $inputPaths,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine('buffered');
+
+        foreach ($inputPaths as $inputPath) {
+            $pathAndArgs .= self::cmdArg($inputPath);
+        }
+
+        $pathAndArgs .= self::cmdArg('--output', '-');
+
+        return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * [DEPRECATED]
+     * Convert an XML or HTML file to a PDF file, which will be passed through
+     * to the output buffer of the current PHP page.
+     *
+     * @deprecated 1.2.0 Prefer `convertFileToPassthru` instead.
+     *
+     * @param string $inputPath The filename of the input XML or HTML document.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convert_file_to_passthru(
+        $inputPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine('buffered');
+        $pathAndArgs .= self::cmdArg($inputPath);
+        $pathAndArgs .= self::cmdArg('--output', '-');
+
+        return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * [DEPRECATED]
+     * Convert an XML or HTML string to a PDF file, which will be passed through
+     * to the output buffer of the current PHP page.
+     *
+     * @deprecated 1.2.0 Prefer `convertStringToPassthru` instead.
+     *
+     * @param string $inputString A string containing an XML or HTML document.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convert_string_to_passthru(
+        $inputString,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine('buffered');
+        $pathAndArgs .= self::cmdArg('-');
+
+        return $this->stringToPassthru($pathAndArgs, $inputString, $msgs, $dats);
+    }
+
+    /**
+     * [DEPRECATED]
+     * Convert an XML or HTML string to a PDF file.
+     *
+     * @deprecated 1.2.0 Prefer `convertStringToFile` instead.
+     *
+     * @param string $inputString A string containing an XML or HTML document.
+     * @param string $pdfPath The filename of the output PDF file.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convert_string_to_file(
+        $inputString,
+        $pdfPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= self::cmdArg('--output', $pdfPath);
+        $pathAndArgs .= self::cmdArg('-');
+
+        return $this->stringToFile($pathAndArgs, $inputString, $msgs, $dats);
     }
 }
