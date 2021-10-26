@@ -11,40 +11,70 @@ Search.appendIndex(
             "summary": "Constructor\u0020for\u0020Prince.",
             "url": "classes/Prince-Prince.html#method___construct"
         },                {
-            "fqsen": "\\Prince\\Prince\u003A\u003Aconvert_file\u0028\u0029",
-            "name": "convert_file",
+            "fqsen": "\\Prince\\Prince\u003A\u003AconvertFile\u0028\u0029",
+            "name": "convertFile",
             "summary": "Convert\u0020an\u0020XML\u0020or\u0020HTML\u0020file\u0020to\u0020a\u0020PDF\u0020file.\u0020The\u0020name\u0020of\u0020the\u0020output\u0020PDF\nfile\u0020will\u0020be\u0020the\u0020same\u0020as\u0020the\u0020name\u0020of\u0020the\u0020input\u0020file\u0020but\u0020with\u0020an\u0020extension\nof\u0020\u0022.pdf\u0022.",
-            "url": "classes/Prince-Prince.html#method_convert_file"
+            "url": "classes/Prince-Prince.html#method_convertFile"
         },                {
-            "fqsen": "\\Prince\\Prince\u003A\u003Aconvert_file_to_file\u0028\u0029",
-            "name": "convert_file_to_file",
+            "fqsen": "\\Prince\\Prince\u003A\u003AconvertFileToFile\u0028\u0029",
+            "name": "convertFileToFile",
             "summary": "Convert\u0020an\u0020XML\u0020or\u0020HTML\u0020file\u0020to\u0020a\u0020PDF\u0020file.",
-            "url": "classes/Prince-Prince.html#method_convert_file_to_file"
+            "url": "classes/Prince-Prince.html#method_convertFileToFile"
         },                {
-            "fqsen": "\\Prince\\Prince\u003A\u003Aconvert_multiple_files\u0028\u0029",
-            "name": "convert_multiple_files",
+            "fqsen": "\\Prince\\Prince\u003A\u003AconvertMultipleFiles\u0028\u0029",
+            "name": "convertMultipleFiles",
             "summary": "Convert\u0020multiple\u0020XML\u0020or\u0020HTML\u0020files\u0020to\u0020a\u0020PDF\u0020file.",
-            "url": "classes/Prince-Prince.html#method_convert_multiple_files"
+            "url": "classes/Prince-Prince.html#method_convertMultipleFiles"
         },                {
-            "fqsen": "\\Prince\\Prince\u003A\u003Aconvert_multiple_files_to_passthru\u0028\u0029",
-            "name": "convert_multiple_files_to_passthru",
+            "fqsen": "\\Prince\\Prince\u003A\u003AconvertMultipleFilesToPassthru\u0028\u0029",
+            "name": "convertMultipleFilesToPassthru",
             "summary": "Convert\u0020multiple\u0020XML\u0020or\u0020HTML\u0020files\u0020to\u0020a\u0020PDF\u0020file,\u0020which\u0020will\u0020be\u0020passed\nthrough\u0020to\u0020the\u0020output\u0020buffer\u0020of\u0020the\u0020current\u0020PHP\u0020page.",
-            "url": "classes/Prince-Prince.html#method_convert_multiple_files_to_passthru"
+            "url": "classes/Prince-Prince.html#method_convertMultipleFilesToPassthru"
         },                {
-            "fqsen": "\\Prince\\Prince\u003A\u003Aconvert_file_to_passthru\u0028\u0029",
-            "name": "convert_file_to_passthru",
+            "fqsen": "\\Prince\\Prince\u003A\u003AconvertFileToPassthru\u0028\u0029",
+            "name": "convertFileToPassthru",
             "summary": "Convert\u0020an\u0020XML\u0020or\u0020HTML\u0020file\u0020to\u0020a\u0020PDF\u0020file,\u0020which\u0020will\u0020be\u0020passed\u0020through\nto\u0020the\u0020output\u0020buffer\u0020of\u0020the\u0020current\u0020PHP\u0020page.",
-            "url": "classes/Prince-Prince.html#method_convert_file_to_passthru"
+            "url": "classes/Prince-Prince.html#method_convertFileToPassthru"
         },                {
-            "fqsen": "\\Prince\\Prince\u003A\u003Aconvert_string_to_passthru\u0028\u0029",
-            "name": "convert_string_to_passthru",
+            "fqsen": "\\Prince\\Prince\u003A\u003AconvertStringToPassthru\u0028\u0029",
+            "name": "convertStringToPassthru",
             "summary": "Convert\u0020an\u0020XML\u0020or\u0020HTML\u0020string\u0020to\u0020a\u0020PDF\u0020file,\u0020which\u0020will\u0020be\u0020passed\u0020through\nto\u0020the\u0020output\u0020buffer\u0020of\u0020the\u0020current\u0020PHP\u0020page.",
-            "url": "classes/Prince-Prince.html#method_convert_string_to_passthru"
+            "url": "classes/Prince-Prince.html#method_convertStringToPassthru"
         },                {
-            "fqsen": "\\Prince\\Prince\u003A\u003Aconvert_string_to_file\u0028\u0029",
-            "name": "convert_string_to_file",
+            "fqsen": "\\Prince\\Prince\u003A\u003AconvertStringToFile\u0028\u0029",
+            "name": "convertStringToFile",
             "summary": "Convert\u0020an\u0020XML\u0020or\u0020HTML\u0020string\u0020to\u0020a\u0020PDF\u0020file.",
-            "url": "classes/Prince-Prince.html#method_convert_string_to_file"
+            "url": "classes/Prince-Prince.html#method_convertStringToFile"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003ArasterizeFile\u0028\u0029",
+            "name": "rasterizeFile",
+            "summary": "Rasterize\u0020an\u0020XML\u0020or\u0020HTML\u0020file.",
+            "url": "classes/Prince-Prince.html#method_rasterizeFile"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003ArasterizeMultipleFiles\u0028\u0029",
+            "name": "rasterizeMultipleFiles",
+            "summary": "Rasterize\u0020multiple\u0020XML\u0020or\u0020HTML\u0020files.",
+            "url": "classes/Prince-Prince.html#method_rasterizeMultipleFiles"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003ArasterizeFileToPassthru\u0028\u0029",
+            "name": "rasterizeFileToPassthru",
+            "summary": "Rasterize\u0020an\u0020XML\u0020or\u0020HTML\u0020file,\u0020which\u0020will\u0020be\u0020passed\u0020through\u0020to\u0020the\u0020output\nbuffer\u0020of\u0020the\u0020current\u0020PHP\u0020page.",
+            "url": "classes/Prince-Prince.html#method_rasterizeFileToPassthru"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003ArasterizeMultipleFilesToPassthru\u0028\u0029",
+            "name": "rasterizeMultipleFilesToPassthru",
+            "summary": "Rasterize\u0020multiple\u0020XML\u0020or\u0020HTML\u0020files,\u0020which\u0020will\u0020be\u0020passed\u0020through\u0020to\u0020the\noutput\u0020buffer\u0020of\u0020the\u0020current\u0020PHP\u0020page.",
+            "url": "classes/Prince-Prince.html#method_rasterizeMultipleFilesToPassthru"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003ArasterizeStringToPassthru\u0028\u0029",
+            "name": "rasterizeStringToPassthru",
+            "summary": "Rasterize\u0020an\u0020XML\u0020or\u0020HTML\u0020string,\u0020which\u0020will\u0020be\u0020passed\u0020through\u0020to\u0020the\noutput\u0020buffer\u0020of\u0020the\u0020current\u0020PHP\u0020page.",
+            "url": "classes/Prince-Prince.html#method_rasterizeStringToPassthru"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003ArasterizeStringToFile\u0028\u0029",
+            "name": "rasterizeStringToFile",
+            "summary": "Rasterize\u0020an\u0020XML\u0020or\u0020HTML\u0020string.",
+            "url": "classes/Prince-Prince.html#method_rasterizeStringToFile"
         },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetVerbose\u0028\u0029",
             "name": "setVerbose",
@@ -61,9 +91,19 @@ Search.appendIndex(
             "summary": "Specify\u0020a\u0020file\u0020that\u0020Prince\u0020should\u0020use\u0020to\u0020log\u0020error\/warning\u0020messages.",
             "url": "classes/Prince-Prince.html#method_setLog"
         },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetNoWarnCssUnknown\u0028\u0029",
+            "name": "setNoWarnCssUnknown",
+            "summary": "Specify\u0020whether\u0020to\u0020warn\u0020about\u0020unknown\u0020CSS\u0020features.",
+            "url": "classes/Prince-Prince.html#method_setNoWarnCssUnknown"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetNoWarnCssUnsupported\u0028\u0029",
+            "name": "setNoWarnCssUnsupported",
+            "summary": "Specify\u0020whether\u0020to\u0020warn\u0020about\u0020unsupported\u0020CSS\u0020features.",
+            "url": "classes/Prince-Prince.html#method_setNoWarnCssUnsupported"
+        },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetNoWarnCss\u0028\u0029",
             "name": "setNoWarnCss",
-            "summary": "Specify\u0020whether\u0020to\u0020warn\u0020about\u0020CSS.",
+            "summary": "Specify\u0020whether\u0020to\u0020warn\u0020about\u0020unknown\u0020and\u0020unsupported\u0020CSS\u0020features.",
             "url": "classes/Prince-Prince.html#method_setNoWarnCss"
         },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetInputType\u0028\u0029",
@@ -116,6 +156,11 @@ Search.appendIndex(
             "summary": "Specify\u0020whether\u0020to\u0020disable\u0020network\u0020access.",
             "url": "classes/Prince-Prince.html#method_setNoNetwork"
         },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetNoRedirects\u0028\u0029",
+            "name": "setNoRedirects",
+            "summary": "Specify\u0020whether\u0020to\u0020disable\u0020all\u0020HTTP\u0020and\u0020HTTPS\u0020redirects.",
+            "url": "classes/Prince-Prince.html#method_setNoRedirects"
+        },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetAuthUser\u0028\u0029",
             "name": "setAuthUser",
             "summary": "Specify\u0020username\u0020for\u0020HTTP\u0020authentication.",
@@ -136,9 +181,19 @@ Search.appendIndex(
             "summary": "Only\u0020send\u0020USER\u003APASS\u0020for\u0020this\u0020scheme.",
             "url": "classes/Prince-Prince.html#method_setAuthScheme"
         },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AaddAuthMethod\u0028\u0029",
+            "name": "addAuthMethod",
+            "summary": "Specify\u0020an\u0020HTTP\u0020authentication\u0020method\u0020to\u0020enable.\u0020This\u0020method\u0020can\u0020be\u0020called\nmore\u0020than\u0020once\u0020to\u0020add\u0020multiple\u0020authentication\u0020methods.",
+            "url": "classes/Prince-Prince.html#method_addAuthMethod"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AclearAuthMethods\u0028\u0029",
+            "name": "clearAuthMethods",
+            "summary": "Clear\u0020all\u0020of\u0020the\u0020enabled\u0020authentication\u0020methods.",
+            "url": "classes/Prince-Prince.html#method_clearAuthMethods"
+        },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetAuthMethod\u0028\u0029",
             "name": "setAuthMethod",
-            "summary": "Specify\u0020HTTP\u0020authentication\u0020methods.",
+            "summary": "\u005BDEPRECATED\u005D\nSpecify\u0020HTTP\u0020authentication\u0020methods.",
             "url": "classes/Prince-Prince.html#method_setAuthMethod"
         },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetNoAuthPreemptive\u0028\u0029",
@@ -156,9 +211,19 @@ Search.appendIndex(
             "summary": "Specify\u0020the\u0020HTTP\u0020timeout\u0020in\u0020seconds.",
             "url": "classes/Prince-Prince.html#method_setHttpTimeout"
         },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AaddCookie\u0028\u0029",
+            "name": "addCookie",
+            "summary": "Specify\u0020a\u0020Set\u002DCookie\u0020header\u0020value.\u0020This\u0020method\u0020can\u0020be\u0020called\u0020more\u0020than\nonce\u0020to\u0020add\u0020multiple\u0020header\u0020values.",
+            "url": "classes/Prince-Prince.html#method_addCookie"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AclearCookies\u0028\u0029",
+            "name": "clearCookies",
+            "summary": "Clear\u0020all\u0020cookies.",
+            "url": "classes/Prince-Prince.html#method_clearCookies"
+        },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetCookie\u0028\u0029",
             "name": "setCookie",
-            "summary": "Specify\u0020a\u0020Set\u002DCookie\u0020header\u0020value.",
+            "summary": "\u005BDEPRECATED\u005D\nSpecify\u0020a\u0020Set\u002DCookie\u0020header\u0020value.",
             "url": "classes/Prince-Prince.html#method_setCookie"
         },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetCookieJar\u0028\u0029",
@@ -175,6 +240,31 @@ Search.appendIndex(
             "name": "setSslCaPath",
             "summary": "Specify\u0020an\u0020SSL\u0020certificate\u0020directory.",
             "url": "classes/Prince-Prince.html#method_setSslCaPath"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetSslCert\u0028\u0029",
+            "name": "setSslCert",
+            "summary": "Specify\u0020an\u0020SSL\u0020client\u0020certificate\u0020file.",
+            "url": "classes/Prince-Prince.html#method_setSslCert"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetSslCertType\u0028\u0029",
+            "name": "setSslCertType",
+            "summary": "Specify\u0020the\u0020SSL\u0020client\u0020certificate\u0020file\u0020type.",
+            "url": "classes/Prince-Prince.html#method_setSslCertType"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetSslKey\u0028\u0029",
+            "name": "setSslKey",
+            "summary": "Specify\u0020an\u0020SSL\u0020private\u0020key\u0020file.",
+            "url": "classes/Prince-Prince.html#method_setSslKey"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetSslKeyType\u0028\u0029",
+            "name": "setSslKeyType",
+            "summary": "Specify\u0020the\u0020SSL\u0020private\u0020key\u0020file\u0020type.",
+            "url": "classes/Prince-Prince.html#method_setSslKeyType"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetSslKeyPassword\u0028\u0029",
+            "name": "setSslKeyPassword",
+            "summary": "Specify\u0020a\u0020password\u0020for\u0020the\u0020SSL\u0020private\u0020key.",
+            "url": "classes/Prince-Prince.html#method_setSslKeyPassword"
         },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetSslVersion\u0028\u0029",
             "name": "setSslVersion",
@@ -205,6 +295,11 @@ Search.appendIndex(
             "name": "clearScripts",
             "summary": "Clear\u0020all\u0020of\u0020the\u0020scripts.",
             "url": "classes/Prince-Prince.html#method_clearScripts"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetMaxPasses\u0028\u0029",
+            "name": "setMaxPasses",
+            "summary": "Specify\u0020the\u0020maximum\u0020number\u0020of\u0020consequent\u0020layout\u0020passes.",
+            "url": "classes/Prince-Prince.html#method_setMaxPasses"
         },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AaddStyleSheet\u0028\u0029",
             "name": "addStyleSheet",
@@ -241,6 +336,16 @@ Search.appendIndex(
             "summary": "Specify\u0020whether\u0020to\u0020ignore\u0020default\u0020style\u0020sheets.",
             "url": "classes/Prince-Prince.html#method_setNoDefaultStyle"
         },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetPdfId\u0028\u0029",
+            "name": "setPdfId",
+            "summary": "Specify\u0020the\u0020PDF\u0020ID\u0020to\u0020use.",
+            "url": "classes/Prince-Prince.html#method_setPdfId"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetPdfLang\u0028\u0029",
+            "name": "setPdfLang",
+            "summary": "Specify\u0020the\u0020PDF\u0020document\u0027s\u0020Lang\u0020entry\u0020in\u0020the\u0020document\u0020catalog.",
+            "url": "classes/Prince-Prince.html#method_setPdfLang"
+        },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetPDFProfile\u0028\u0029",
             "name": "setPDFProfile",
             "summary": "Specify\u0020the\u0020PDF\u0020profile\u0020to\u0020use.",
@@ -276,6 +381,11 @@ Search.appendIndex(
             "summary": "Specify\u0020whether\u0020embedded\u0020fonts\u0020should\u0020be\u0020subset.",
             "url": "classes/Prince-Prince.html#method_setSubsetFonts"
         },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetSystemFonts\u0028\u0029",
+            "name": "setSystemFonts",
+            "summary": "Specify\u0020whether\u0020system\u0020fonts\u0020should\u0020be\u0020enabled.",
+            "url": "classes/Prince-Prince.html#method_setSystemFonts"
+        },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetForceIdentityEncoding\u0028\u0029",
             "name": "setForceIdentityEncoding",
             "summary": "Specify\u0020whether\u0020to\u0020use\u0020force\u0020identity\u0020encoding.",
@@ -286,10 +396,25 @@ Search.appendIndex(
             "summary": "Specify\u0020whether\u0020compression\u0020should\u0020be\u0020applied\u0020to\u0020the\u0020output\u0020PDF\u0020file.",
             "url": "classes/Prince-Prince.html#method_setCompress"
         },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetNoObjectStreams\u0028\u0029",
+            "name": "setNoObjectStreams",
+            "summary": "Specify\u0020whether\u0020object\u0020streams\u0020should\u0020be\u0020disabled.",
+            "url": "classes/Prince-Prince.html#method_setNoObjectStreams"
+        },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetFallbackCmykProfile\u0028\u0029",
             "name": "setFallbackCmykProfile",
             "summary": "Specify\u0020fallback\u0020ICC\u0020profile\u0020for\u0020uncalibrated\u0020CMYK.",
             "url": "classes/Prince-Prince.html#method_setFallbackCmykProfile"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetTaggedPdf\u0028\u0029",
+            "name": "setTaggedPdf",
+            "summary": "Specify\u0020whether\u0020to\u0020enable\u0020tagged\u0020PDF.",
+            "url": "classes/Prince-Prince.html#method_setTaggedPdf"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetCssDpi\u0028\u0029",
+            "name": "setCssDpi",
+            "summary": "Specify\u0020the\u0020DPI\u0020of\u0020the\u0020\u0022px\u0022\u0020units\u0020in\u0020CSS.",
+            "url": "classes/Prince-Prince.html#method_setCssDpi"
         },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetPDFTitle\u0028\u0029",
             "name": "setPDFTitle",
@@ -316,6 +441,11 @@ Search.appendIndex(
             "summary": "Specify\u0020the\u0020document\u0020creator\u0020for\u0020PDF\u0020metadata.",
             "url": "classes/Prince-Prince.html#method_setPDFCreator"
         },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetPDFXmp\u0028\u0029",
+            "name": "setPDFXmp",
+            "summary": "Specify\u0020an\u0020XMP\u0020file\u0020that\u0020contains\u0020XMP\u0020metadata\u0020to\u0020be\u0020included\u0020in\u0020the\noutput\u0020PDF\u0020file.",
+            "url": "classes/Prince-Prince.html#method_setPDFXmp"
+        },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetEncrypt\u0028\u0029",
             "name": "setEncrypt",
             "summary": "Specify\u0020whether\u0020encryption\u0020should\u0020be\u0020applied\u0020to\u0020the\u0020output\u0020PDF\u0020file.",
@@ -325,6 +455,36 @@ Search.appendIndex(
             "name": "setEncryptInfo",
             "summary": "Set\u0020the\u0020parameters\u0020used\u0020for\u0020PDF\u0020encryption.\u0020Calling\u0020this\u0020method\u0020will\u0020also\nenable\u0020PDF\u0020encryption,\u0020equivalent\u0020to\u0020calling\u0020setEncrypt\u0028true\u0029.",
             "url": "classes/Prince-Prince.html#method_setEncryptInfo"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetRasterFormat\u0028\u0029",
+            "name": "setRasterFormat",
+            "summary": "Specify\u0020the\u0020format\u0020for\u0020the\u0020raster\u0020output.",
+            "url": "classes/Prince-Prince.html#method_setRasterFormat"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetRasterJpegQuality\u0028\u0029",
+            "name": "setRasterJpegQuality",
+            "summary": "Specify\u0020the\u0020level\u0020of\u0020JPEG\u0020compression\u0020when\u0020generating\u0020raster\u0020output\u0020in\nJPEG\u0020format.",
+            "url": "classes/Prince-Prince.html#method_setRasterJpegQuality"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetRasterPage\u0028\u0029",
+            "name": "setRasterPage",
+            "summary": "Specify\u0020the\u0020page\u0020number\u0020to\u0020be\u0020rasterized.",
+            "url": "classes/Prince-Prince.html#method_setRasterPage"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetRasterDpi\u0028\u0029",
+            "name": "setRasterDpi",
+            "summary": "Specify\u0020the\u0020resolution\u0020of\u0020the\u0020raster\u0020output.",
+            "url": "classes/Prince-Prince.html#method_setRasterDpi"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetRasterThreads\u0028\u0029",
+            "name": "setRasterThreads",
+            "summary": "Specify\u0020the\u0020number\u0020of\u0020threads\u0020to\u0020use\u0020for\u0020multi\u002Dthreaded\u0020rasterization.",
+            "url": "classes/Prince-Prince.html#method_setRasterThreads"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetRasterBackground\u0028\u0029",
+            "name": "setRasterBackground",
+            "summary": "Specify\u0020the\u0020background.\u0020Can\u0020be\u0020used\u0020when\u0020rasterizing\u0020to\u0020an\u0020image\u0020format\nthat\u0020supports\u0020transparency.",
+            "url": "classes/Prince-Prince.html#method_setRasterBackground"
         },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetLicenseFile\u0028\u0029",
             "name": "setLicenseFile",
@@ -340,6 +500,41 @@ Search.appendIndex(
             "name": "setOptions",
             "summary": "Specify\u0020additional\u0020Prince\u0020command\u002Dline\u0020options.",
             "url": "classes/Prince-Prince.html#method_setOptions"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003Aconvert_file\u0028\u0029",
+            "name": "convert_file",
+            "summary": "\u005BDEPRECATED\u005D\nConvert\u0020an\u0020XML\u0020or\u0020HTML\u0020file\u0020to\u0020a\u0020PDF\u0020file.\u0020The\u0020name\u0020of\u0020the\u0020output\u0020PDF\nfile\u0020will\u0020be\u0020the\u0020same\u0020as\u0020the\u0020name\u0020of\u0020the\u0020input\u0020file\u0020but\u0020with\u0020an\u0020extension\nof\u0020\u0022.pdf\u0022.",
+            "url": "classes/Prince-Prince.html#method_convert_file"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003Aconvert_file_to_file\u0028\u0029",
+            "name": "convert_file_to_file",
+            "summary": "\u005BDEPRECATED\u005D\nConvert\u0020an\u0020XML\u0020or\u0020HTML\u0020file\u0020to\u0020a\u0020PDF\u0020file.",
+            "url": "classes/Prince-Prince.html#method_convert_file_to_file"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003Aconvert_multiple_files\u0028\u0029",
+            "name": "convert_multiple_files",
+            "summary": "\u005BDEPRECATED\u005D\nConvert\u0020multiple\u0020XML\u0020or\u0020HTML\u0020files\u0020to\u0020a\u0020PDF\u0020file.",
+            "url": "classes/Prince-Prince.html#method_convert_multiple_files"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003Aconvert_multiple_files_to_passthru\u0028\u0029",
+            "name": "convert_multiple_files_to_passthru",
+            "summary": "\u005BDEPRECATED\u005D\nConvert\u0020multiple\u0020XML\u0020or\u0020HTML\u0020files\u0020to\u0020a\u0020PDF\u0020file,\u0020which\u0020will\u0020be\u0020passed\nthrough\u0020to\u0020the\u0020output\u0020buffer\u0020of\u0020the\u0020current\u0020PHP\u0020page.",
+            "url": "classes/Prince-Prince.html#method_convert_multiple_files_to_passthru"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003Aconvert_file_to_passthru\u0028\u0029",
+            "name": "convert_file_to_passthru",
+            "summary": "\u005BDEPRECATED\u005D\nConvert\u0020an\u0020XML\u0020or\u0020HTML\u0020file\u0020to\u0020a\u0020PDF\u0020file,\u0020which\u0020will\u0020be\u0020passed\u0020through\nto\u0020the\u0020output\u0020buffer\u0020of\u0020the\u0020current\u0020PHP\u0020page.",
+            "url": "classes/Prince-Prince.html#method_convert_file_to_passthru"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003Aconvert_string_to_passthru\u0028\u0029",
+            "name": "convert_string_to_passthru",
+            "summary": "\u005BDEPRECATED\u005D\nConvert\u0020an\u0020XML\u0020or\u0020HTML\u0020string\u0020to\u0020a\u0020PDF\u0020file,\u0020which\u0020will\u0020be\u0020passed\u0020through\nto\u0020the\u0020output\u0020buffer\u0020of\u0020the\u0020current\u0020PHP\u0020page.",
+            "url": "classes/Prince-Prince.html#method_convert_string_to_passthru"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003Aconvert_string_to_file\u0028\u0029",
+            "name": "convert_string_to_file",
+            "summary": "\u005BDEPRECATED\u005D\nConvert\u0020an\u0020XML\u0020or\u0020HTML\u0020string\u0020to\u0020a\u0020PDF\u0020file.",
+            "url": "classes/Prince-Prince.html#method_convert_string_to_file"
         },                {
             "fqsen": "\\",
             "name": "\\",
