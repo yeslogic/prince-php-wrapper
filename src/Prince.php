@@ -106,6 +106,7 @@ class Prince
     private $convertColors;
     private $fallbackCmykProfile;
     private $taggedPdf;
+    private $pdfForms;
     private $cssDpi;
 
     // PDF metadata options.
@@ -217,6 +218,7 @@ class Prince
         $this->convertColors = false;
         $this->fallbackCmykProfile = '';
         $this->taggedPdf = false;
+        $this->pdfForms = false;
         $this->cssDpi = 0;
 
         // PDF metadata options.
@@ -1418,6 +1420,18 @@ class Prince
     }
 
     /**
+     * Specify whether to enable PDF forms by default.
+     *
+     * @param bool $pdfForms `true` to enable PDF forms by default. Default
+     *                       value is `false`.
+     * @return void
+     */
+    public function setPdfForms($pdfForms)
+    {
+        $this->pdfForms = $pdfForms;
+    }
+
+    /**
      * Specify the DPI of the "px" units in CSS.
      *
      * @param int $cssDpi The DPI of the "px" units. Value must be greater than
@@ -1902,6 +1916,9 @@ class Prince
         }
         if ($this->taggedPdf) {
             $cmdline .= self::cmdArg('--tagged-pdf');
+        }
+        if ($this->pdfForms) {
+            $cmdline .= self::cmdArg('--pdf-forms');
         }
         if ($this->cssDpi > 0) {
             $cmdline .= self::cmdArg('--css-dpi', $this->cssDpi);
