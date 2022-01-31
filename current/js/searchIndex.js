@@ -411,6 +411,11 @@ Search.appendIndex(
             "summary": "Specify\u0020whether\u0020to\u0020enable\u0020tagged\u0020PDF.",
             "url": "classes/Prince-Prince.html#method_setTaggedPdf"
         },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetPdfForms\u0028\u0029",
+            "name": "setPdfForms",
+            "summary": "Specify\u0020whether\u0020to\u0020enable\u0020PDF\u0020forms\u0020by\u0020default.",
+            "url": "classes/Prince-Prince.html#method_setPdfForms"
+        },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetCssDpi\u0028\u0029",
             "name": "setCssDpi",
             "summary": "Specify\u0020the\u0020DPI\u0020of\u0020the\u0020\u0022px\u0022\u0020units\u0020in\u0020CSS.",
