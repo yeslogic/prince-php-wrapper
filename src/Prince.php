@@ -50,6 +50,7 @@ class Prince
     private $fileRoot;
     private $doXInclude;
     private $xmlExternalEntities;
+    private $iframes;
     private $noLocalFiles;
 
     // Network options.
@@ -162,6 +163,7 @@ class Prince
         $this->fileRoot = '';
         $this->doXInclude = false;
         $this->xmlExternalEntities = false;
+        $this->iframes = false;
         $this->noLocalFiles = false;
 
         // Network options.
@@ -723,6 +725,17 @@ class Prince
     public function setXmlExternalEntities($xmlExternalEntities)
     {
         $this->xmlExternalEntities = $xmlExternalEntities;
+    }
+
+    /**
+     * Specify whether to enable HTML iframes.
+     *
+     * @param bool $iframes `true` to enable HTML iframes. Default value is `false`.
+     * @return void
+     */
+    public function setIframes($iframes)
+    {
+        $this->iframes = $iframes;
     }
 
     /**
@@ -1771,6 +1784,9 @@ class Prince
         }
         if ($this->xmlExternalEntities) {
             $cmdline .= self::cmdArg('--xml-external-entities');
+        }
+        if ($this->iframes) {
+            $cmdline .= self::cmdArg('--iframes');
         }
         if ($this->noLocalFiles) {
             $cmdline .= self::cmdArg('--no-local-files');
