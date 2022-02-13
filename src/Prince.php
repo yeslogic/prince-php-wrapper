@@ -93,6 +93,7 @@ class Prince
 
     // PDF output options.
     private $pdfId;
+    private $pdfScript;
     private $pdfLang;
     private $pdfProfile;
     private $pdfOutputIntent;
@@ -206,6 +207,7 @@ class Prince
 
         // PDF output options.
         $this->pdfId = '';
+        $this->pdfScript = '';
         $this->pdfLang = '';
         $this->pdfProfile = '';
         $this->pdfOutputIntent = '';
@@ -1234,6 +1236,17 @@ class Prince
     }
 
     /**
+     * Include an AcroJS script to run when the PDF is opened.
+     *
+     * @param string $pdfScript The filename or URL of the AcroJS script.
+     * @return void
+     */
+    public function setPdfScript($pdfScript)
+    {
+        $this->pdfScript = $pdfScript;
+    }
+
+    /**
      * Specify the PDF document's Lang entry in the document catalog.
      *
      * @param string $pdfLang The PDF document's lang entry.
@@ -1891,6 +1904,9 @@ class Prince
         // PDF output options.
         if ($this->pdfId != '') {
             $cmdline .= self::cmdArg('--pdf-id', $this->pdfId);
+        }
+        if ($this->pdfScript != '') {
+            $cmdline .= self::cmdArg('--pdf-script', $this->pdfScript);
         }
         if ($this->pdfLang != '') {
             $cmdline .= self::cmdArg('--pdf-lang', $this->pdfLang);
