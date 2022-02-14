@@ -22,7 +22,7 @@ Download
 
 This wrapper is hosted on [Packagist][2].
 
-Copyright © 2005-2021 YesLogic Pty. Ltd.
+Copyright © 2005-2022 YesLogic Pty. Ltd.
 
 [1]: https://yeslogic.github.io/prince-php-wrapper
 [2]: https://packagist.org/packages/yeslogic/prince-php-wrapper
