@@ -94,6 +94,7 @@ class Prince
     // PDF output options.
     private $pdfId;
     private $pdfScript;
+    private $pdfEventScripts;
     private $pdfLang;
     private $pdfProfile;
     private $pdfOutputIntent;
@@ -208,6 +209,7 @@ class Prince
         // PDF output options.
         $this->pdfId = '';
         $this->pdfScript = '';
+        $this->pdfEventScripts = array();
         $this->pdfLang = '';
         $this->pdfProfile = '';
         $this->pdfOutputIntent = '';
@@ -1247,6 +1249,46 @@ class Prince
     }
 
     /**
+     * Include an AcroJS script to run on a specific event.
+     *
+     * @param string $event Can take a value of:
+     *                      `"will-close"`,
+     *                      `"will-save"`,
+     *                      `"did-save"`,
+     *                      `"will-print"`,
+     *                      `"did-print"`.
+     * @param string $script The filename or URL of the AcroJS script.
+     * @return void
+     */
+    public function addPdfEventScript($event, $script)
+    {
+        $valid = array(
+            'will-close',
+            'will-save',
+            'did-save',
+            'will-print',
+            'did-print'
+        );
+        $lower = strtolower($event);
+
+        if (in_array($lower, $valid)) {
+            $this->pdfEventScripts[$lower] = $script;
+        } else {
+            throw new Exception('invalid event value');
+        }
+    }
+
+    /**
+     * Clear all of the AcroJS event scripts.
+     *
+     * @return void
+     */
+    public function clearPdfEventScripts()
+    {
+        $this->pdfEventScripts = array();
+    }
+
+    /**
      * Specify the PDF document's Lang entry in the document catalog.
      *
      * @param string $pdfLang The PDF document's lang entry.
@@ -1907,6 +1949,9 @@ class Prince
         }
         if ($this->pdfScript != '') {
             $cmdline .= self::cmdArg('--pdf-script', $this->pdfScript);
+        }
+        foreach ($this->pdfEventScripts as $k => $v) {
+            $cmdline .= self::cmdArg('--pdf-event-script', $k . ':' . $v);
         }
         if ($this->pdfLang != '') {
             $cmdline .= self::cmdArg('--pdf-lang', $this->pdfLang);
