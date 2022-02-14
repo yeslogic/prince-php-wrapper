@@ -50,6 +50,7 @@ class Prince
     private $fileRoot;
     private $doXInclude;
     private $xmlExternalEntities;
+    private $iframes;
     private $noLocalFiles;
 
     // Network options.
@@ -92,6 +93,8 @@ class Prince
 
     // PDF output options.
     private $pdfId;
+    private $pdfScript;
+    private $pdfEventScripts;
     private $pdfLang;
     private $pdfProfile;
     private $pdfOutputIntent;
@@ -162,6 +165,7 @@ class Prince
         $this->fileRoot = '';
         $this->doXInclude = false;
         $this->xmlExternalEntities = false;
+        $this->iframes = false;
         $this->noLocalFiles = false;
 
         // Network options.
@@ -204,6 +208,8 @@ class Prince
 
         // PDF output options.
         $this->pdfId = '';
+        $this->pdfScript = '';
+        $this->pdfEventScripts = array();
         $this->pdfLang = '';
         $this->pdfProfile = '';
         $this->pdfOutputIntent = '';
@@ -726,6 +732,17 @@ class Prince
     }
 
     /**
+     * Specify whether to enable HTML iframes.
+     *
+     * @param bool $iframes `true` to enable HTML iframes. Default value is `false`.
+     * @return void
+     */
+    public function setIframes($iframes)
+    {
+        $this->iframes = $iframes;
+    }
+
+    /**
      * Specify whether to disable access to local files.
      *
      * @param bool $noLocalFiles `true` to disable access. Default value is `false`.
@@ -1218,6 +1235,57 @@ class Prince
     public function setPdfId($pdfId)
     {
         $this->pdfId = $pdfId;
+    }
+
+    /**
+     * Include an AcroJS script to run when the PDF is opened.
+     *
+     * @param string $pdfScript The filename or URL of the AcroJS script.
+     * @return void
+     */
+    public function setPdfScript($pdfScript)
+    {
+        $this->pdfScript = $pdfScript;
+    }
+
+    /**
+     * Include an AcroJS script to run on a specific event.
+     *
+     * @param string $event Can take a value of:
+     *                      `"will-close"`,
+     *                      `"will-save"`,
+     *                      `"did-save"`,
+     *                      `"will-print"`,
+     *                      `"did-print"`.
+     * @param string $script The filename or URL of the AcroJS script.
+     * @return void
+     */
+    public function addPdfEventScript($event, $script)
+    {
+        $valid = array(
+            'will-close',
+            'will-save',
+            'did-save',
+            'will-print',
+            'did-print'
+        );
+        $lower = strtolower($event);
+
+        if (in_array($lower, $valid)) {
+            $this->pdfEventScripts[$lower] = $script;
+        } else {
+            throw new Exception('invalid event value');
+        }
+    }
+
+    /**
+     * Clear all of the AcroJS event scripts.
+     *
+     * @return void
+     */
+    public function clearPdfEventScripts()
+    {
+        $this->pdfEventScripts = array();
     }
 
     /**
@@ -1772,6 +1840,9 @@ class Prince
         if ($this->xmlExternalEntities) {
             $cmdline .= self::cmdArg('--xml-external-entities');
         }
+        if ($this->iframes) {
+            $cmdline .= self::cmdArg('--iframes');
+        }
         if ($this->noLocalFiles) {
             $cmdline .= self::cmdArg('--no-local-files');
         }
@@ -1875,6 +1946,12 @@ class Prince
         // PDF output options.
         if ($this->pdfId != '') {
             $cmdline .= self::cmdArg('--pdf-id', $this->pdfId);
+        }
+        if ($this->pdfScript != '') {
+            $cmdline .= self::cmdArg('--pdf-script', $this->pdfScript);
+        }
+        foreach ($this->pdfEventScripts as $k => $v) {
+            $cmdline .= self::cmdArg('--pdf-event-script', $k . ':' . $v);
         }
         if ($this->pdfLang != '') {
             $cmdline .= self::cmdArg('--pdf-lang', $this->pdfLang);
