@@ -1641,8 +1641,12 @@ class Prince
         $this->encrypt = true;
 
         $this->encryptInfo = self::cmdArg('--key-bits', $keyBits);
-        $this->encryptInfo .= self::cmdArg('--user-password', $userPassword);
-        $this->encryptInfo .= self::cmdArg('--owner-password', $ownerPassword);
+        if ($userPassword != '') {
+            $this->encryptInfo .= self::cmdArg('--user-password', $userPassword);
+        }
+        if ($ownerPassword != '') {
+            $this->encryptInfo .= self::cmdArg('--owner-password', $ownerPassword);
+        }
 
         if ($disallowPrint) {
             $this->encryptInfo .= self::cmdArg('--disallow-print');
@@ -2187,10 +2191,10 @@ class Prince
         return '';
     }
 
-    private static function cmdArg($key, $value = '')
+    private static function cmdArg($key, $value = null)
     {
         $cmd = $key;
-        if ($value != '') {
+        if ($value != null) {
             $cmd .= "=$value";
         }
 
