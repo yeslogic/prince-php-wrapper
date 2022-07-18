@@ -2191,10 +2191,10 @@ class Prince
         return '';
     }
 
-    private static function cmdArg($key, $value = '')
+    private static function cmdArg($key, $value = null)
     {
         $cmd = $key;
-        if ($value != '') {
+        if ($value != null) {
             $cmd .= "=$value";
         }
 
