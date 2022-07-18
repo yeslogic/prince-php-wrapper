@@ -146,6 +146,11 @@ Search.appendIndex(
             "summary": "Specifies\u0020whether\u0020XML\u0020external\u0020entities\u0020\u0028XXE\u0029\u0020should\u0020be\u0020allowed.",
             "url": "classes/Prince-Prince.html#method_setXmlExternalEntities"
         },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetIframes\u0028\u0029",
+            "name": "setIframes",
+            "summary": "Specify\u0020whether\u0020to\u0020enable\u0020HTML\u0020iframes.",
+            "url": "classes/Prince-Prince.html#method_setIframes"
+        },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetNoLocalFiles\u0028\u0029",
             "name": "setNoLocalFiles",
             "summary": "Specify\u0020whether\u0020to\u0020disable\u0020access\u0020to\u0020local\u0020files.",
@@ -340,6 +345,21 @@ Search.appendIndex(
             "name": "setPdfId",
             "summary": "Specify\u0020the\u0020PDF\u0020ID\u0020to\u0020use.",
             "url": "classes/Prince-Prince.html#method_setPdfId"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetPdfScript\u0028\u0029",
+            "name": "setPdfScript",
+            "summary": "Include\u0020an\u0020AcroJS\u0020script\u0020to\u0020run\u0020when\u0020the\u0020PDF\u0020is\u0020opened.",
+            "url": "classes/Prince-Prince.html#method_setPdfScript"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AaddPdfEventScript\u0028\u0029",
+            "name": "addPdfEventScript",
+            "summary": "Include\u0020an\u0020AcroJS\u0020script\u0020to\u0020run\u0020on\u0020a\u0020specific\u0020event.",
+            "url": "classes/Prince-Prince.html#method_addPdfEventScript"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AclearPdfEventScripts\u0028\u0029",
+            "name": "clearPdfEventScripts",
+            "summary": "Clear\u0020all\u0020of\u0020the\u0020AcroJS\u0020event\u0020scripts.",
+            "url": "classes/Prince-Prince.html#method_clearPdfEventScripts"
         },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetPdfLang\u0028\u0029",
             "name": "setPdfLang",
