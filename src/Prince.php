@@ -144,11 +144,20 @@ class Prince
      *
      * @param string $exePath The path of the Prince executable. For example, this
      *                        may be `C:\Program Files\Prince\engine\bin\prince.exe`
-     *                        on Windows or `/usr/bin/prince` on Linux.
+     *                        on Windows or `/usr/bin/prince` on Linux. Throws an
+     *                        exception if the executable does not exist, or if the
+     *                        file does not have execute permissions.
      * @return self
      */
     public function __construct($exePath)
     {
+        if (!is_file($exePath)) {
+            throw new Exception("Prince could not be found at $exePath");
+        }
+        if (!is_executable($exePath)) {
+            throw new Exception('Prince does not have execute permissions');
+        }
+
         $this->exePath = $exePath;
 
         // Logging options.
