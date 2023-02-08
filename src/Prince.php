@@ -2342,12 +2342,29 @@ class Prince
 
                     $dats[] = $dat;
                 } else {
-                    // ignore other messages
+                    self::readNonStructuredMessage($line, $msgs);
                 }
             }
         }
 
         return '';
+    }
+
+    private function readNonStructuredMessage($line, &$msgs)
+    {
+        $princeWrn = 'prince: warning: ';
+        $princeErr = 'prince: error: ';
+
+        if (substr($line, 0, strlen($princeWrn)) === $princeWrn) {
+            $msgText = substr($line, strlen($princeWrn));
+            $msgs[] = array('wrn', '', $msgText);
+        } else if (substr($line, 0, strlen($princeErr)) === $princeErr) {
+            $msgText = substr($line, strlen($princeErr));
+            $msgs[] = array('err', '', $msgText);
+        } else {
+            // Just treat everything else as debug messages.
+            $msgs[] = array('dbg', '', $line);
+        }
     }
 
     private static function cmdArg($key, $value = null)
