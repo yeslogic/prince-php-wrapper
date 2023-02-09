@@ -521,6 +521,46 @@ Search.appendIndex(
             "summary": "Specify\u0020the\u0020license\u0020key.",
             "url": "classes/Prince-Prince.html#method_setLicenseKey"
         },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetFailDroppedContent\u0028\u0029",
+            "name": "setFailDroppedContent",
+            "summary": "Fail\u002Dsafe\u0020option\u0020that\u0020aborts\u0020the\u0020creation\u0020of\u0020a\u0020PDF\u0020if\u0020any\u0020content\u0020is\ndropped.",
+            "url": "classes/Prince-Prince.html#method_setFailDroppedContent"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetFailMissingResources\u0028\u0029",
+            "name": "setFailMissingResources",
+            "summary": "Fail\u002Dsafe\u0020option\u0020that\u0020aborts\u0020the\u0020creation\u0020of\u0020a\u0020PDF\u0020if\u0020any\u0020resources\ncannot\u0020be\u0020loaded.",
+            "url": "classes/Prince-Prince.html#method_setFailMissingResources"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetFailStrippedTransparency\u0028\u0029",
+            "name": "setFailStrippedTransparency",
+            "summary": "Fail\u002Dsafe\u0020option\u0020that\u0020aborts\u0020the\u0020creation\u0020of\u0020a\u0020PDF\u0020if\u0020transparent\nimages\u0020are\u0020used\u0020with\u0020a\u0020PDF\u0020profile\u0020that\u0020does\u0020not\u0020support\u0020opacity.",
+            "url": "classes/Prince-Prince.html#method_setFailStrippedTransparency"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetFailMissingGlyphs\u0028\u0029",
+            "name": "setFailMissingGlyphs",
+            "summary": "Fail\u002Dsafe\u0020option\u0020that\u0020aborts\u0020the\u0020creation\u0020of\u0020a\u0020PDF\u0020if\u0020glyphs\u0020cannot\nbe\u0020found\u0020for\u0020any\u0020characters.",
+            "url": "classes/Prince-Prince.html#method_setFailMissingGlyphs"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetFailPdfProfileError\u0028\u0029",
+            "name": "setFailPdfProfileError",
+            "summary": "Fail\u002Dsafe\u0020option\u0020that\u0020aborts\u0020the\u0020creation\u0020of\u0020a\u0020PDF\u0020if\u0020there\u0020are\nproblems\u0020complying\u0020with\u0020the\u0020specified\u0020PDF\u0020profile.",
+            "url": "classes/Prince-Prince.html#method_setFailPdfProfileError"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetFailPdfTagError\u0028\u0029",
+            "name": "setFailPdfTagError",
+            "summary": "Fail\u002Dsafe\u0020option\u0020that\u0020aborts\u0020the\u0020creation\u0020of\u0020a\u0020PDF\u0020if\u0020there\u0020are\nproblems\u0020tagging\u0020the\u0020PDF\u0020for\u0020accessibility.",
+            "url": "classes/Prince-Prince.html#method_setFailPdfTagError"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetFailInvalidLicense\u0028\u0029",
+            "name": "setFailInvalidLicense",
+            "summary": "Fail\u002Dsafe\u0020option\u0020that\u0020aborts\u0020the\u0020creation\u0020of\u0020a\u0020PDF\u0020if\u0020the\u0020Prince\nlicense\u0020is\u0020invalid\u0020or\u0020not\u0020readable.",
+            "url": "classes/Prince-Prince.html#method_setFailInvalidLicense"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AsetFailSafe\u0028\u0029",
+            "name": "setFailSafe",
+            "summary": "Enables\/disables\u0020all\u0020fail\u002Dsafe\u0020options.",
+            "url": "classes/Prince-Prince.html#method_setFailSafe"
+        },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AsetOptions\u0028\u0029",
             "name": "setOptions",
             "summary": "Specify\u0020additional\u0020Prince\u0020command\u002Dline\u0020options.",
