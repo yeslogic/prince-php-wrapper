@@ -136,6 +136,15 @@ class Prince
     private $licenseFile;
     private $licenseKey;
 
+    // Advanced options.
+    private $failDroppedContent;
+    private $failMissingResources;
+    private $failStrippedTransparency;
+    private $failMissingGlyphs;
+    private $failPdfProfileError;
+    private $failPdfTagError;
+    private $failInvalidLicense;
+
     // Additional options.
     private $options;
 
@@ -259,6 +268,15 @@ class Prince
         // License options.
         $this->licenseFile = '';
         $this->licenseKey = '';
+
+        // Advanced options.
+        $this->failDroppedContent = false;
+        $this->failMissingResources = false;
+        $this->failStrippedTransparency = false;
+        $this->failMissingGlyphs = false;
+        $this->failPdfProfileError = false;
+        $this->failPdfTagError = false;
+        $this->failInvalidLicense = false;
 
         // Additional options.
         $this->options = '';
@@ -1798,6 +1816,116 @@ class Prince
         $this->licenseKey = $key;
     }
 
+    /* ADVANCED OPTIONS *******************************************************/
+
+    /**
+     * Fail-safe option that aborts the creation of a PDF if any content is
+     * dropped.
+     *
+     * @param bool $failDroppedContent `true` to enable fail-safe option.
+     *                                 Default value is `false.
+     * @return void
+     */
+    public function setFailDroppedContent($failDroppedContent)
+    {
+        $this->failDroppedContent = $failDroppedContent;
+    }
+
+    /**
+     * Fail-safe option that aborts the creation of a PDF if any resources
+     * cannot be loaded.
+     *
+     * @param bool $failMissingResources `true` to enable fail-safe option.
+     *                                   Default value is `false.
+     * @return void
+     */
+    public function setFailMissingResources($failMissingResources)
+    {
+        $this->failMissingResources = $failMissingResources;
+    }
+
+    /**
+     * Fail-safe option that aborts the creation of a PDF if transparent
+     * images are used with a PDF profile that does not support opacity.
+     *
+     * @param bool $failStrippedTransparency `true` to enable fail-safe option.
+     *                                       Default value is `false.
+     * @return void
+     */
+    public function setFailStrippedTransparency($failStrippedTransparency)
+    {
+        $this->failStrippedTransparency = $failStrippedTransparency;
+    }
+
+    /**
+     * Fail-safe option that aborts the creation of a PDF if glyphs cannot
+     * be found for any characters.
+     *
+     * @param bool $failMissingGlyphs `true` to enable fail-safe option.
+     *                                 Default value is `false.
+     * @return void
+     */
+    public function setFailMissingGlyphs($failMissingGlyphs)
+    {
+        $this->failMissingGlyphs = $failMissingGlyphs;
+    }
+
+    /**
+     * Fail-safe option that aborts the creation of a PDF if there are
+     * problems complying with the specified PDF profile.
+     *
+     * @param bool $failPdfProfileError `true` to enable fail-safe option.
+     *                                  Default value is `false.
+     * @return void
+     */
+    public function setFailPdfProfileError($failPdfProfileError)
+    {
+        $this->failPdfProfileError = $failPdfProfileError;
+    }
+
+    /**
+     * Fail-safe option that aborts the creation of a PDF if there are
+     * problems tagging the PDF for accessibility.
+     *
+     * @param bool $failPdfTagError `true` to enable fail-safe option.
+     *                              Default value is `false.
+     * @return void
+     */
+    public function setFailPdfTagError($failPdfTagError)
+    {
+        $this->failPdfTagError = $failPdfTagError;
+    }
+
+    /**
+     * Fail-safe option that aborts the creation of a PDF if the Prince
+     * license is invalid or not readable.
+     *
+     * @param bool $failInvalidLicense `true` to enable fail-safe option.
+     *                                 Default value is `false.
+     * @return void
+     */
+    public function setFailInvalidLicense($failInvalidLicense)
+    {
+        $this->failInvalidLicense = $failInvalidLicense;
+    }
+
+    /**
+     * Enables/disables all fail-safe options.
+     *
+     * @param bool $failSafe `true` to enable all fail-safe options.
+     * @return void
+     */
+    public function setFailSafe($failSafe)
+    {
+        $this->failDroppedContent = $failSafe;
+        $this->failMissingResources = $failSafe;
+        $this->failStrippedTransparency = $failSafe;
+        $this->failMissingGlyphs = $failSafe;
+        $this->failPdfProfileError = $failSafe;
+        $this->failPdfTagError = $failSafe;
+        $this->failInvalidLicense = $failSafe;
+    }
+
     /* ADDITIONAL OPTIONS *****************************************************/
 
     /**
@@ -2064,9 +2192,31 @@ class Prince
         if ($this->licenseFile != '') {
             $cmdline .= self::cmdArg('--license-file', $this->licenseFile);
         }
-
         if ($this->licenseKey != '') {
             $cmdline .= self::cmdArg('--license-key', $this->licenseKey);
+        }
+
+        // Advanced options.
+        if ($this->failDroppedContent) {
+            $cmdline .= self::cmdArg('--fail-dropped-content');
+        }
+        if ($this->failMissingResources) {
+            $cmdline .= self::cmdArg('--fail-missing-resources');
+        }
+        if ($this->failStrippedTransparency) {
+            $cmdline .= self::cmdArg('--fail-stripped-transparency');
+        }
+        if ($this->failMissingGlyphs) {
+            $cmdline .= self::cmdArg('--fail-missing-glyphs');
+        }
+        if ($this->failPdfProfileError) {
+            $cmdline .= self::cmdArg('--fail-pdf-profile-error');
+        }
+        if ($this->failPdfTagError) {
+            $cmdline .= self::cmdArg('--fail-pdf-tag-error');
+        }
+        if ($this->failInvalidLicense) {
+            $cmdline .= self::cmdArg('--fail-invalid-license');
         }
 
         // Additional options.
@@ -2192,12 +2342,29 @@ class Prince
 
                     $dats[] = $dat;
                 } else {
-                    // ignore other messages
+                    self::readNonStructuredMessage($line, $msgs);
                 }
             }
         }
 
         return '';
+    }
+
+    private function readNonStructuredMessage($line, &$msgs)
+    {
+        $princeWrn = 'prince: warning: ';
+        $princeErr = 'prince: error: ';
+
+        if (substr($line, 0, strlen($princeWrn)) === $princeWrn) {
+            $msgText = substr($line, strlen($princeWrn));
+            $msgs[] = array('wrn', '', $msgText);
+        } else if (substr($line, 0, strlen($princeErr)) === $princeErr) {
+            $msgText = substr($line, strlen($princeErr));
+            $msgs[] = array('err', '', $msgText);
+        } else {
+            // Just treat everything else as debug messages.
+            $msgs[] = array('dbg', '', $line);
+        }
     }
 
     private static function cmdArg($key, $value = null)
