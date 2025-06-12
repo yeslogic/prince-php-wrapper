@@ -15,8 +15,8 @@ jobs:
       - name: Set up PHP with tools
         uses: shivammathur/setup-php@v2
         with:
-          # phpDocumentor appears to require PHP version >=7.2.5 || ^8.0
-          php-version: '8.0'
+          # phpDocumentor appears to require PHP version >=8.1.2
+          php-version: '8.1.2'
           tools: phpdoc
       - name: Build documentation
         run: phpdoc -d src -t docs --visibility=public --title="Prince PHP Wrapper"
