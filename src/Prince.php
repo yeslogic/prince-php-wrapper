@@ -375,6 +375,55 @@ class Prince
     }
 
     /**
+     * Convert multiple XML or HTML files to a PDF file by reading an input list
+     * from a specified file. (An input list is a newline-separated sequence of
+     * file paths / URLs.)
+     *
+     * @param string $inputListPath The path to the input list file.
+     * @param string $pdfPath The filename of the output PDF file.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convertInputList(
+        $inputListPath,
+        $pdfPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= self::cmdArg('--input-list', $inputListPath);
+        $pathAndArgs .= self::cmdArg('--output', $pdfPath);
+
+        return $this->fileToFile($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * Convert multiple XML or HTML files to a PDF file by reading an input list
+     * from a specified file. (An input list is a newline-separated sequence of
+     * file paths / URLs.) The PDF file will be passed through to the output
+     * buffer of the current PHP page.
+     *
+     * @param string $inputListPath The path to the input list file.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if a PDF file was generated successfully.
+     */
+    public function convertInputListToPassthru(
+        $inputListPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine('buffered');
+        $pathAndArgs .= self::cmdArg('--input-list', $inputListPath);
+        $pathAndArgs .= self::cmdArg('--output', '-');
+
+        return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
      * Convert an XML or HTML string to a PDF file, which will be passed through
      * to the output buffer of the current PHP page.
      *
@@ -520,6 +569,65 @@ class Prince
             $pathAndArgs .= self::cmdArg($inputPath);
         }
 
+        $pathAndArgs .= self::cmdArg('--raster-output', '-');
+
+        return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * Rasterize multiple XML or HTML files by reading an input list from a
+     * specified file. (An input list is a newline-separated sequence of file
+     * paths / URLs.)
+     *
+     * @param string $inputListPath The path to the input list file.
+     * @param string $rasterPath A template string from which the raster files
+     *                           will be named (e.g. "page_%02d.png" will cause
+     *                           Prince to generate page_01.png, page_02.png,
+     *                           ..., page_10.png etc.).
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if the input was successfully rasterized.
+     */
+    public function rasterizeInputList(
+        $inputListPath,
+        $rasterPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        $pathAndArgs = $this->getCommandLine();
+        $pathAndArgs .= self::cmdArg('--input-list', $inputListPath);
+        $pathAndArgs .= self::cmdArg('--raster-output', $rasterPath);
+
+        return $this->fileToFile($pathAndArgs, $msgs, $dats);
+    }
+
+    /**
+     * Rasterize multiple XML or HTML files by reading an input list from a
+     * specified file. (An input list is a newline-separated sequence of file
+     * paths / URLs.) The rasterized output will be passed through to the output
+     * buffer of the current PHP page.
+     *
+     * @param string $inputListPath The path to the input list file.
+     * @param array $msgs An optional array in which to return error and warning
+     *                    messages.
+     * @param array $dats An optional array in which to return data messages.
+     * @return bool `true` if the input was successfully rasterized.
+     */
+    public function rasterizeInputListToPassthru(
+        $inputListPath,
+        &$msgs = array(),
+        &$dats = array()
+    ) {
+        if ($this->rasterPage < 1) {
+            throw new Exception('rasterPage has to be set to a value of > 0');
+        }
+        if ($this->rasterFormat == 'auto') {
+            throw new Exception('rasterFormat has to be set to "jpeg" or "png"');
+        }
+
+        $pathAndArgs = $this->getCommandLine('buffered');
+        $pathAndArgs .= self::cmdArg('--input-list', $inputListPath);
         $pathAndArgs .= self::cmdArg('--raster-output', '-');
 
         return $this->fileToPassthru($pathAndArgs, $msgs, $dats);
