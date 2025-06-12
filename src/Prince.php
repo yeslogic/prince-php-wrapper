@@ -7,7 +7,7 @@
  * @author    Michael Day <mikeday@yeslogic.com>
  * @copyright 2005-2023 YesLogic Pty. Ltd.
  * @license   MIT
- * @version   1.5.0
+ * @version   1.6.0
  * @link      https://www.princexml.com
  */
 
