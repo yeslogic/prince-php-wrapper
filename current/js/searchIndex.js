@@ -36,6 +36,16 @@ Search.appendIndex(
             "summary": "Convert\u0020an\u0020XML\u0020or\u0020HTML\u0020file\u0020to\u0020a\u0020PDF\u0020file,\u0020which\u0020will\u0020be\u0020passed\u0020through\nto\u0020the\u0020output\u0020buffer\u0020of\u0020the\u0020current\u0020PHP\u0020page.",
             "url": "classes/Prince-Prince.html#method_convertFileToPassthru"
         },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AconvertInputList\u0028\u0029",
+            "name": "convertInputList",
+            "summary": "Convert\u0020multiple\u0020XML\u0020or\u0020HTML\u0020files\u0020to\u0020a\u0020PDF\u0020file\u0020by\u0020reading\u0020an\u0020input\u0020list\nfrom\u0020a\u0020specified\u0020file.\u0020\u0028An\u0020input\u0020list\u0020is\u0020a\u0020newline\u002Dseparated\u0020sequence\u0020of\nfile\u0020paths\u0020\/\u0020URLs.\u0029",
+            "url": "classes/Prince-Prince.html#method_convertInputList"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003AconvertInputListToPassthru\u0028\u0029",
+            "name": "convertInputListToPassthru",
+            "summary": "Convert\u0020multiple\u0020XML\u0020or\u0020HTML\u0020files\u0020to\u0020a\u0020PDF\u0020file\u0020by\u0020reading\u0020an\u0020input\u0020list\nfrom\u0020a\u0020specified\u0020file.\u0020\u0028An\u0020input\u0020list\u0020is\u0020a\u0020newline\u002Dseparated\u0020sequence\u0020of\nfile\u0020paths\u0020\/\u0020URLs.\u0029\u0020The\u0020PDF\u0020file\u0020will\u0020be\u0020passed\u0020through\u0020to\u0020the\u0020output\nbuffer\u0020of\u0020the\u0020current\u0020PHP\u0020page.",
+            "url": "classes/Prince-Prince.html#method_convertInputListToPassthru"
+        },                {
             "fqsen": "\\Prince\\Prince\u003A\u003AconvertStringToPassthru\u0028\u0029",
             "name": "convertStringToPassthru",
             "summary": "Convert\u0020an\u0020XML\u0020or\u0020HTML\u0020string\u0020to\u0020a\u0020PDF\u0020file,\u0020which\u0020will\u0020be\u0020passed\u0020through\nto\u0020the\u0020output\u0020buffer\u0020of\u0020the\u0020current\u0020PHP\u0020page.",
@@ -65,6 +75,16 @@ Search.appendIndex(
             "name": "rasterizeMultipleFilesToPassthru",
             "summary": "Rasterize\u0020multiple\u0020XML\u0020or\u0020HTML\u0020files,\u0020which\u0020will\u0020be\u0020passed\u0020through\u0020to\u0020the\noutput\u0020buffer\u0020of\u0020the\u0020current\u0020PHP\u0020page.",
             "url": "classes/Prince-Prince.html#method_rasterizeMultipleFilesToPassthru"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003ArasterizeInputList\u0028\u0029",
+            "name": "rasterizeInputList",
+            "summary": "Rasterize\u0020multiple\u0020XML\u0020or\u0020HTML\u0020files\u0020by\u0020reading\u0020an\u0020input\u0020list\u0020from\u0020a\nspecified\u0020file.\u0020\u0028An\u0020input\u0020list\u0020is\u0020a\u0020newline\u002Dseparated\u0020sequence\u0020of\u0020file\npaths\u0020\/\u0020URLs.\u0029",
+            "url": "classes/Prince-Prince.html#method_rasterizeInputList"
+        },                {
+            "fqsen": "\\Prince\\Prince\u003A\u003ArasterizeInputListToPassthru\u0028\u0029",
+            "name": "rasterizeInputListToPassthru",
+            "summary": "Rasterize\u0020multiple\u0020XML\u0020or\u0020HTML\u0020files\u0020by\u0020reading\u0020an\u0020input\u0020list\u0020from\u0020a\nspecified\u0020file.\u0020\u0028An\u0020input\u0020list\u0020is\u0020a\u0020newline\u002Dseparated\u0020sequence\u0020of\u0020file\npaths\u0020\/\u0020URLs.\u0029\u0020The\u0020rasterized\u0020output\u0020will\u0020be\u0020passed\u0020through\u0020to\u0020the\u0020output\nbuffer\u0020of\u0020the\u0020current\u0020PHP\u0020page.",
+            "url": "classes/Prince-Prince.html#method_rasterizeInputListToPassthru"
         },                {
             "fqsen": "\\Prince\\Prince\u003A\u003ArasterizeStringToPassthru\u0028\u0029",
             "name": "rasterizeStringToPassthru",
