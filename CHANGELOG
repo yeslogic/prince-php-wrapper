@@ -1,0 +1,60 @@
+1.6.0 (2025-06-12)
+==================
+* Add support for input lists.
+
+1.5.0 (2023-02-09)
+==================
+* Add support for fail-safe options.
+* Slight improvements to events handling.
+
+1.4.0 (2022-07-19)
+==================
+* Check Prince path and execute permissions.
+
+1.3.1 (2022-07-18)
+==================
+* Add support for:
+  - enabling HTML iframes.
+  - running an AcroJS script when opening a PDF.
+* Check for empty user and owner passwords.
+
+1.3.0 (2022-01-31)
+==================
+* Add support for enabling PDF forms by default.
+
+1.2.0 (2021-10-26)
+==================
+* Verify input for setInputType, setPDFProfile, and setSslVersion.
+* Remove --no-xinclude as it is no longer valid.
+* Split noWarnCss into noWarnCssUnknown and noWarnCssUnsupported.
+* Allow enabling of multiple auth methods.
+* Allow setting of multiple cookies.
+* Add support for the following network options:
+  - --no-redirects
+  - --ssl-cert
+  - --ssl-cert-type
+  - --ssl-key
+  - --ssl-key-type
+  - --ssl-key-password
+* Add support for the --max-passes JavaScript option.
+* Add support for the following PDF output options:
+  - --pdf-id
+  - --pdf-lang
+  - --no-system-fonts
+  - --no-object-streams
+  - --tagged-pdf
+  - --css-dpi
+* Add support for the --pdf-xmp PDF metadata option.
+* Add support for the following PDF encryption options:
+  - --allow-copy-for-accessibility
+  - --allow-assembly
+* Add support for rasterisation.
+
+1.1.0 (2021-10-13)
+==================
+* Rename prince.php to Prince.php for case-sensitive file system autoloading (thanks @jbrinley).
+* Enforce minimum-required PHP version of 5.3.0.
+
+1.0.0 (2020-10-26)
+==================
+Initial release.
